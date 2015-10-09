@@ -17,8 +17,7 @@ abstract class Router
 		{
 			if( $pattern === $request->path )
 			{
-				echo $action;
-
+				call_user_func( 'app\\controller\\' . $action, $request );
 				return;
 			}
 		}

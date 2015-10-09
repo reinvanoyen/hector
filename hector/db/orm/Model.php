@@ -4,5 +4,4 @@ namespace hector\db\orm;
 
 class Model
 {
-
 }
