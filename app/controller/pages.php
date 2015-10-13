@@ -15,7 +15,7 @@ class pages
 	{
 		$tpl = new \hector\core\Template();
 		$tpl->set( 'name', 'Rein' );
-		$tpl->render( 'hello-world.php' );
+		$tpl->render( 'pages/view.php' );
 	}
 
 	public static function about_us( $request )
