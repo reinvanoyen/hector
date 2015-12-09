@@ -17,8 +17,13 @@ abstract class Router
 		{
 			if( $pattern === $request->path )
 			{
-				call_user_func( 'app\\controller\\' . $action, $request );
-				return;
+				$response = call_user_func( 'app\\controller\\' . $action, $request );
+
+				if( $response instanceof \hector\core\http\Response )
+				{
+					$response->execute();
+					return;
+				}
 			}
 		}
 	}

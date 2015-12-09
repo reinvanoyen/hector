@@ -14,6 +14,11 @@ class Template
 	public function render( $template )
 	{
 		extract( $this->data );
-		include 'app/templates/' . $template;
+
+		ob_start();
+		include $template;
+		$output = ob_get_clean();
+
+		return $output;
 	}
 }

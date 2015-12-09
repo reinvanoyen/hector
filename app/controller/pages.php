@@ -8,18 +8,23 @@ class pages
 	{
 		$tpl = new \hector\core\Template();
 		$tpl->set( 'name', 'Ben' );
-		$tpl->render( 'hello-world.php' );
+
+		return new \hector\core\http\HttpResponse( $tpl->render( 'app/templates/hello-world.php' ) );
 	}
 
 	public static function nogiets( $request )
 	{
 		$tpl = new \hector\core\Template();
 		$tpl->set( 'name', 'Rein' );
-		$tpl->render( 'pages/view.php' );
+
+		return new \hector\core\http\HttpResponse( $tpl->render( 'app/templates/hello-world.php' ) );
 	}
 
 	public static function about_us( $request )
 	{
-		echo 'About us page';
+		$tpl = new \hector\core\Template();
+		$tpl->set( 'name', 'Ben' );
+
+		return new \hector\core\http\HttpResponse( $tpl->render( 'app/templates/hello-world.php' ) );
 	}
 }
