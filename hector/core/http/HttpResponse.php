@@ -2,17 +2,22 @@
 
 namespace hector\core\http;
 
-class HttpResponse extends Response
+class HTTPResponse extends Response
 {
-	private $data;
+	protected $output;
+	protected $status;
+	protected $content_type = 'text/html';
 
-	public function __construct( $data )
+	public function __construct( $output, $status = 200 )
 	{
-		$this->data = $data;
+		$this->output = $output;
+		$this->status = $status;
 	}
 
 	public function execute()
 	{
-		echo $this->data;
+		header( 'Content-Type: ' . $this->content_type  );
+
+		echo $this->output;
 	}
 }
