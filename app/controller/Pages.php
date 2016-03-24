@@ -26,7 +26,7 @@ class Pages extends Controller
 		return new http\HTTPResponse( $tpl->render( 'app/templates/hello-world.php' ) );
 	}
 
-	public function about_us()
+	public function viewAboutUs()
 	{
 		$tpl = new Template();
 		$tpl->set( 'name', 'Ben' );

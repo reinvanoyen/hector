@@ -2,14 +2,21 @@
 
 namespace hector\core;
 
+use hector\helpers\regex;
+
 abstract class Router
 {
 	public static $prefix;
 	public static $routes = [];
 
-	public static function get( $pattern, $action )
+	private static function register( $method, $pattern, $action )
 	{
-		self::$routes[ self::$prefix . $pattern ] = $action;
+		if( ! isset( self::$routes[ $method ] ) )
+		{
+			self::$routes[ $method ] = [];
+		}
+
+		self::$routes[ $method ][ self::$prefix . $pattern ] = $action;
 	}
 
 	public static function prefix( $prefix, $callback )
@@ -19,20 +26,27 @@ abstract class Router
 		self::$prefix = NULL;
 	}
 
-	public static function route( $request )
+	public static function getRoutesByRequest( http\Request $request )
 	{
-		foreach( self::$routes as $pattern => $action )
+		if( isset( self::$routes[ $request->method ] ) )
 		{
-			if( preg_match( '@^(' . $pattern . ')$@', $request->path, $matches ) )
+			return self::$routes[ $request->method ];
+		}
+
+		return FALSE;
+	}
+
+	public static function route( http\Request $request )
+	{
+		$routes = self::getRoutesByRequest( $request );
+
+		assert( $routes );
+
+		foreach( $routes as $pattern => $action )
+		{
+			if( regex\preg_match_named( '@^(' . $pattern . ')$@', $request->path, $matches ) )
 			{
-				$args = [];
-				foreach( $matches as $k => $v )
-				{
-					if( is_string( $k ) )
-					{
-						$args[] = $v;
-					}
-				}
+				$args = $matches;
 
 				if( is_callable( $action ) )
 				{
@@ -50,18 +64,23 @@ abstract class Router
 
 				$response = call_user_func_array( $callable, $args );
 
-				if( $response instanceof \hector\core\http\Response )
-				{
-					$response->execute();
-					return;
-				}
-
 				if( is_string( $response ) )
 				{
 					echo $response;
 					return;
 				}
+
+				if( $response instanceof \hector\core\http\Response )
+				{
+					$response->execute();
+					return;
+				}
 			}
 		}
 	}
+
+	public static function get( $pattern, $action ) { self::register( 'GET', $pattern, $action ); }
+	public static function post( $pattern, $action ) { self::register( 'POST', $pattern, $action ); }
+	public static function delete( $pattern, $action ) { self::register( 'DELETE', $pattern, $action ); }
+	public static function put( $pattern, $action ) { self::register( 'PUT', $pattern, $action ); }
 }

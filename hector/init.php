@@ -38,6 +38,7 @@ function bootstrap()
 	spl_autoload_register( 'hector\\autoloader' );
 
 	require_once 'hector/helpers/string.php';
+	require_once 'hector/helpers/regex.php';
 }
 
 function start()
