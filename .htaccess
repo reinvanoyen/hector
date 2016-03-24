@@ -1,6 +1,6 @@
 RewriteEngine on
 
-RewriteRule ^(app|hector)(/.*)?$ index.php [L]
+RewriteRule ^(app|admin|hector)(/.*)?$ index.php [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

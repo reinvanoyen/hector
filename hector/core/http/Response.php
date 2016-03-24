@@ -1,6 +1,6 @@
 <?php
 
-namespace hector\core\http;
+namespace Hector\Core\Http;
 
 abstract class Response
 {

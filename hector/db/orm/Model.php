@@ -1,7 +1,8 @@
 <?php
 
-namespace hector\db\orm;
+namespace Hector\Db\Orm;
 
 class Model
 {
+
 }

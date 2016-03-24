@@ -1,8 +1,8 @@
 <?php
 
-namespace hector\helpers\regex;
+namespace Hector\Helpers\regex;
 
-/*boolean*/ function preg_match_named( /*string*/ $pattern, /*string*/ $subject, /*array*/ &$matches = [] )
+/*boolean*/ function namedPregMatch( /*string*/ $pattern, /*string*/ $subject, /*array*/ &$matches = [] )
 {
 	if( preg_match( $pattern, $subject, $matches ) )
 	{

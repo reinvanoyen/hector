@@ -1,21 +1,21 @@
 <?php
 
-namespace app\controller;
+namespace App\Controller;
 
-use
-	hector\core\Controller,
-	hector\core\Template,
-	hector\core\http
-;
+use Hector\Core\Controller;
+use Hector\Core\Template;
+use Hector\Core\Http\HTTPResponse;
+use Hector\Core\Http\JSONResponse;
+use Hector\Core\Http\Redirect;
 
 class Pages extends Controller
 {
 	public function home()
 	{
 		$tpl = new Template();
-		$tpl->set( 'name', 'Ben' );
+		$tpl->set( 'name', 'Rein' );
 
-		return new http\HTTPResponse( $tpl->render( 'app/templates/hello-world.php' ) );
+		return new HTTPResponse( $tpl->render( 'hello-world.php' ) );
 	}
 
 	public function blog()
@@ -23,7 +23,7 @@ class Pages extends Controller
 		$tpl = new Template();
 		$tpl->set( 'name', 'Rein' );
 
-		return new http\HTTPResponse( $tpl->render( 'app/templates/hello-world.php' ) );
+		return new HTTPResponse( $tpl->render( 'hello-world.php' ) );
 	}
 
 	public function viewAboutUs()
@@ -31,12 +31,12 @@ class Pages extends Controller
 		$tpl = new Template();
 		$tpl->set( 'name', 'Ben' );
 
-		return new http\HTTPResponse( $tpl->render( 'app/templates/hello-world.php' ) );
+		return new HTTPResponse( $tpl->render( 'hello-world.php' ) );
 	}
 
 	public function json()
 	{
-		return new http\JSONResponse( [
+		return new JSONResponse( [
 			'test' => TRUE,
 			'test2' => 'fdfdfd',
 		] );
@@ -44,6 +44,6 @@ class Pages extends Controller
 
 	public function redirect()
 	{
-		return new http\Redirect( 'http://www.tnt.be' );
+		return new Redirect( 'http://www.google.com' );
 	}
 }

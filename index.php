@@ -1,4 +1,6 @@
 <?php
 
-require_once 'hector/init.php';
-require_once 'app/init.php';
+require_once 'Hector/init.php';
+
+\Hector\initPackage( 'App' );
+\Hector\initPackage( 'Admin' );

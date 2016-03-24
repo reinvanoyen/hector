@@ -1,6 +1,6 @@
 <?php
 
-namespace hector\core\http;
+namespace Hector\Core\Http;
 
 class HTTPResponse extends Response
 {

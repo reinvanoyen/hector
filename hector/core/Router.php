@@ -1,8 +1,8 @@
 <?php
 
-namespace hector\core;
+namespace Hector\Core;
 
-use hector\helpers\regex;
+use Hector\Helpers\regex;
 
 abstract class Router
 {
@@ -26,8 +26,9 @@ abstract class Router
 		self::$prefix = NULL;
 	}
 
-	public static function getRoutesByRequest( http\Request $request )
+	public static function getRoutesForRequest( http\Request $request )
 	{
+
 		if( isset( self::$routes[ $request->method ] ) )
 		{
 			return self::$routes[ $request->method ];
@@ -38,13 +39,13 @@ abstract class Router
 
 	public static function route( http\Request $request )
 	{
-		$routes = self::getRoutesByRequest( $request );
+		$routes = self::getRoutesForRequest( $request );
 
 		assert( $routes );
 
 		foreach( $routes as $pattern => $action )
 		{
-			if( regex\preg_match_named( '@^(' . $pattern . ')$@', $request->path, $matches ) )
+			if( regex\namedPregMatch( '@^(' . $pattern . ')$@', $request->path, $matches ) )
 			{
 				$args = $matches;
 
@@ -55,7 +56,7 @@ abstract class Router
 				else
 				{
 					$parts = explode( '.', $action );
-					$controller = 'app\\controller\\' . $parts[ 0 ];
+					$controller = Runtime::getPackage() . '\\Controller\\' . $parts[ 0 ];
 					$method = $parts[ 1 ];
 					$controller = new $controller();
 
@@ -67,13 +68,13 @@ abstract class Router
 				if( is_string( $response ) )
 				{
 					echo $response;
-					return;
+					exit;
 				}
 
-				if( $response instanceof \hector\core\http\Response )
+				if( $response instanceof \Hector\Core\Http\Response )
 				{
 					$response->execute();
-					return;
+					exit;
 				}
 			}
 		}

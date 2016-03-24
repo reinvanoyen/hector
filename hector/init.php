@@ -1,6 +1,6 @@
 <?php
 
-namespace hector;
+namespace Hector;
 
 header( 'X-Powered-By: Hector' );
 
@@ -33,17 +33,24 @@ function exceptionHandler( /*\Exception*/ $exception )
 
 function bootstrap()
 {
-	set_error_handler( array( '\\hector\\PHPException', 'handleError' ) );
-	set_exception_handler( 'hector\\exceptionHandler' );
-	spl_autoload_register( 'hector\\autoloader' );
+	set_error_handler( [ '\\Hector\\PHPException', 'handleError' ] );
+	set_exception_handler( 'Hector\\exceptionHandler' );
+	spl_autoload_register( 'Hector\\autoloader' );
 
-	require_once 'hector/helpers/string.php';
-	require_once 'hector/helpers/regex.php';
+	require_once 'Hector/Helpers/string.php';
+	require_once 'Hector/Helpers/regex.php';
 }
 
 function start()
 {
-	\hector\core\Router::route( new \hector\core\http\Request() );
+	\Hector\Core\Router::route( new \Hector\Core\Http\Request() );
+}
+
+function initPackage( $app )
+{
+	\Hector\Core\Runtime::setPackage( $app );
+	require_once $app . '/init.php';
+	start();
 }
 
 bootstrap();

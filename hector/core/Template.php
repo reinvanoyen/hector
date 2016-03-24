@@ -1,6 +1,6 @@
 <?php
 
-namespace hector\core;
+namespace Hector\Core;
 
 class Template
 {
@@ -16,7 +16,7 @@ class Template
 		extract( $this->data );
 
 		ob_start();
-		include $template;
+		include Runtime::getPackage() . '/View/' . $template;
 		$output = ob_get_clean();
 
 		return $output;

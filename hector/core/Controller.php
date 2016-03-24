@@ -1,6 +1,6 @@
 <?php
 
-namespace hector\core;
+namespace Hector\Core;
 
 class Controller
 {
