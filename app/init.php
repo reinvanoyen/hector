@@ -2,5 +2,8 @@
 
 namespace App;
 
-require_once 'Config/main.php';
-require_once 'Config/routes.php';
+define( 'App\\HOST', 'rein.tnt.lan' );
+define( 'App\\ROOT', 'hector/' );
+
+\Hector\initPackage( 'Front' );
+\Hector\initPackage( 'Admin' );

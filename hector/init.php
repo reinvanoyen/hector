@@ -43,13 +43,14 @@ function bootstrap()
 
 function start()
 {
-	\Hector\Core\Router::route( new \Hector\Core\Http\Request() );
+	\Hector\Core\Routing\Router::route( new \Hector\Core\Http\Request() );
 }
 
 function initPackage( $app )
 {
+	\Hector\Core\Routing\Router::reset();
 	\Hector\Core\Runtime::setPackage( $app );
-	require_once $app . '/init.php';
+	require_once 'App/' . $app . '/init.php';
 	start();
 }
 

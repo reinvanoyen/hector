@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\Config;
+namespace App\Admin\Config;
 
-use Hector\Core\Router;
+use Hector\Core\Routing\Router;
 
 Router::prefix( 'admin/', function()
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Controller;
+namespace App\Admin\Controller;
 
 use Hector\Core\Controller;
 

@@ -2,9 +2,6 @@
 
 namespace Hector\Core;
 
-class Controller
+abstract class Controller
 {
-	public function __construct()
-	{
-	}
 }

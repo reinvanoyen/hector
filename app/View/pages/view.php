@@ -1,1 +1,0 @@
-Pagina view: <?=$name?>

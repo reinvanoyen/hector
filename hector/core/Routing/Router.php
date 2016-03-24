@@ -1,13 +1,16 @@
 <?php
 
-namespace Hector\Core;
+namespace Hector\Core\Routing;
 
+use Hector\Core\Runtime;
+use Hector\Core\Http\Response;
+use Hector\Core\Http\Request;
 use Hector\Helpers\regex;
 
 abstract class Router
 {
-	public static $prefix;
-	public static $routes = [];
+	private static $prefix;
+	private static $routes = [];
 
 	private static function register( $method, $pattern, $action )
 	{
@@ -19,6 +22,11 @@ abstract class Router
 		self::$routes[ $method ][ self::$prefix . $pattern ] = $action;
 	}
 
+	public static function reset()
+	{
+		self::$routes = [];
+	}
+
 	public static function prefix( $prefix, $callback )
 	{
 		self::$prefix = $prefix;
@@ -26,7 +34,7 @@ abstract class Router
 		self::$prefix = NULL;
 	}
 
-	public static function getRoutesForRequest( http\Request $request )
+	public static function getRoutesForRequest( Request $request )
 	{
 
 		if( isset( self::$routes[ $request->method ] ) )
@@ -37,7 +45,7 @@ abstract class Router
 		return FALSE;
 	}
 
-	public static function route( http\Request $request )
+	public static function route( Request $request )
 	{
 		$routes = self::getRoutesForRequest( $request );
 
@@ -56,14 +64,21 @@ abstract class Router
 				else
 				{
 					$parts = explode( '.', $action );
-					$controller = Runtime::getPackage() . '\\Controller\\' . $parts[ 0 ];
+					$controller = 'App\\' . Runtime::getPackage() . '\\Controller\\' . $parts[ 0 ];
 					$method = $parts[ 1 ];
 					$controller = new $controller();
 
 					$callable = [ $controller, $method ];
 				}
 
-				$response = call_user_func_array( $callable, $args );
+				try
+				{
+					$response = call_user_func_array( $callable, $args );
+				}
+				catch( NotFound $e )
+				{
+					continue;
+				}
 
 				if( is_string( $response ) )
 				{
@@ -71,7 +86,7 @@ abstract class Router
 					exit;
 				}
 
-				if( $response instanceof \Hector\Core\Http\Response )
+				if( $response instanceof Response )
 				{
 					$response->execute();
 					exit;
