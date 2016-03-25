@@ -2,7 +2,7 @@
 
 namespace Hector\Core;
 
-class Bootstrapper
+class Bootstrap
 {
 	private static $current_app;
 	private static $apps = [];

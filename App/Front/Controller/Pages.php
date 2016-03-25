@@ -8,9 +8,10 @@ use Hector\Core\Template;
 use Hector\Core\Http\HTTPResponse;
 use Hector\Core\Http\JSONResponse;
 use Hector\Core\Http\Redirect;
+use Hector\Core\Routing\NotFound;
 use Hector\PHPException;
 
-class Pages extends Controller
+class Pages
 {
 	public function viewHome()
 	{
@@ -21,15 +22,15 @@ class Pages extends Controller
 	{
 		try
 		{
-			$title = Page::$slugs[ $slug ];
+			$page = Page::load( $slug );
 		}
-		catch( \Exception $e )
+		catch( PHPException $e )
 		{
-			throw new \Hector\Core\Routing\NotFound();
+			throw new NotFound();
 		}
 
 		$tpl = new Template();
-		$tpl->set( 'page_title', $title );
+		$tpl->set( 'page', $page );
 
 		return new HTTPResponse( $tpl->render( 'pages/view.php' ) );
 	}

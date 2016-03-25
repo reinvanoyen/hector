@@ -2,7 +2,7 @@
 
 namespace Hector\Core\Routing;
 
-use Hector\Core\Runtime;
+use Hector\Core\Bootstrap;
 use Hector\Core\Http\Response;
 use Hector\Core\Http\Request;
 use Hector\Helpers\regex;
@@ -64,7 +64,7 @@ abstract class Router
 				else
 				{
 					$parts = explode( '.', $action );
-					$controller = 'App\\' . \Hector\Core\Bootstrapper::getCurrentApp()->getName() . '\\Controller\\' . $parts[ 0 ];
+					$controller = 'App\\' . Bootstrap::getCurrentApp()->getName() . '\\Controller\\' . $parts[ 0 ];
 					$method = $parts[ 1 ];
 					$controller = new $controller( $request );
 

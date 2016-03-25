@@ -2,12 +2,12 @@
 
 namespace App;
 
-use Hector\Core\Bootstrapper;
+use Hector\Core\Bootstrap;
 
 define( 'App\\HOST', 'rein.tnt.lan' );
 define( 'App\\ROOT', 'hector/' );
 
-Bootstrapper::registerApp( 'Front' );
-Bootstrapper::registerApp( 'Admin' );
+Bootstrap::registerApp( 'Front' );
+Bootstrap::registerApp( 'Admin' );
 
-Bootstrapper::start();
+Bootstrap::start();

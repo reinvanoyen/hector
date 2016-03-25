@@ -6,7 +6,7 @@
 
 	<base href="http://<?=\App\HOST?><?=\App\ROOT?>" />
 
-	<title><?=$page_title?></title>
+	<title><?=$page->slug?></title>
 
 	<meta charset="UTF-8" />
 	<meta name="author" content="Rein Van Oyen" />
@@ -19,7 +19,10 @@
 <body>
 
 	<div>
-		<h1><?=$page_title?></h1>
+		<h1><?=$page->slug?></h1>
+		<p>
+			<?=$page->body?>
+		</p>
 	</div>
 
 </body>

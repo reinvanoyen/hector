@@ -2,6 +2,8 @@
 
 namespace Hector\Core;
 
+use Hector\Core\Bootstrap;
+
 class Template
 {
 	private $data = array();
@@ -16,7 +18,7 @@ class Template
 		extract( $this->data );
 
 		ob_start();
-		include 'App/' . \Hector\Core\Bootstrapper::getCurrentApp()->getName() . '/View/' . $template;
+		include 'App/' . Bootstrap::getCurrentApp()->getName() . '/View/' . $template;
 		$output = ob_get_clean();
 
 		return $output;

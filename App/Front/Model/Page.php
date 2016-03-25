@@ -2,12 +2,9 @@
 
 namespace App\Front\Model;
 
-class Page
+use \Hector\Core\Orm\Model;
+
+class Page extends Model
 {
-	public static $slugs = [
-		'home' => 'Welkom',
-		'blog' => 'Blog',
-		'over-ons' => 'Over ons',
-		'contact' => 'Contacteer ons',
-	];
+	const DATADIR = 'data/pages';
 }

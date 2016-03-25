@@ -24,7 +24,8 @@ class App
 	{
 		Router::reset();
 
-		require_once 'App/' . $this->name . '/init.php';
+		require_once 'App/' . $this->name . '/Config/main.php';
+		require_once 'App/' . $this->name . '/Config/routes.php';
 
 		Router::route( new Request() );
 	}
