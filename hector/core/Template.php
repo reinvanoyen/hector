@@ -16,7 +16,7 @@ class Template
 		extract( $this->data );
 
 		ob_start();
-		include 'App/' . Runtime::getPackage() . '/View/' . $template;
+		include 'App/' . \Hector\Core\Bootstrapper::getCurrentApp()->getName() . '/View/' . $template;
 		$output = ob_get_clean();
 
 		return $output;

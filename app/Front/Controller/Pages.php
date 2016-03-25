@@ -21,9 +21,9 @@ class Pages extends Controller
 	{
 		try
 		{
-			$title = Page::getTitleBySlug( $slug );
+			$title = Page::$slugs[ $slug ];
 		}
-		catch( PHPException $e )
+		catch( \Exception $e )
 		{
 			throw new \Hector\Core\Routing\NotFound();
 		}

@@ -2,8 +2,12 @@
 
 namespace App;
 
+use Hector\Core\Bootstrapper;
+
 define( 'App\\HOST', 'rein.tnt.lan' );
 define( 'App\\ROOT', 'hector/' );
 
-\Hector\initPackage( 'Front' );
-\Hector\initPackage( 'Admin' );
+Bootstrapper::registerApp( 'Front' );
+Bootstrapper::registerApp( 'Admin' );
+
+Bootstrapper::start();

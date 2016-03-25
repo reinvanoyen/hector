@@ -64,9 +64,9 @@ abstract class Router
 				else
 				{
 					$parts = explode( '.', $action );
-					$controller = 'App\\' . Runtime::getPackage() . '\\Controller\\' . $parts[ 0 ];
+					$controller = 'App\\' . \Hector\Core\Bootstrapper::getCurrentApp()->getName() . '\\Controller\\' . $parts[ 0 ];
 					$method = $parts[ 1 ];
-					$controller = new $controller();
+					$controller = new $controller( $request );
 
 					$callable = [ $controller, $method ];
 				}
