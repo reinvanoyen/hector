@@ -5,7 +5,7 @@ namespace Hector\Core\Routing;
 use Hector\Core\Bootstrap;
 use Hector\Core\Http\Response;
 use Hector\Core\Http\Request;
-use Hector\Helpers\regex;
+use function Hector\Helpers\Regex\namedPregMatch;
 
 abstract class Router
 {
@@ -36,7 +36,6 @@ abstract class Router
 
 	public static function getRoutesForRequest( Request $request )
 	{
-
 		if( isset( self::$routes[ $request->method ] ) )
 		{
 			return self::$routes[ $request->method ];
@@ -53,9 +52,10 @@ abstract class Router
 
 		foreach( $routes as $pattern => $action )
 		{
-			if( regex\namedPregMatch( '@^(' . $pattern . ')$@', $request->path, $matches ) )
+			if( namedPregMatch( '@^(' . $pattern . ')$@', $request->path, $matches ) )
 			{
 				$args = $matches;
+				$controller = NULL;
 
 				if( is_callable( $action ) )
 				{
@@ -73,25 +73,51 @@ abstract class Router
 
 				try
 				{
+					if( $controller )
+					{
+						$controller->beforeExecuteRoute();
+					}
+
 					$response = call_user_func_array( $callable, $args );
+
+					if( $controller )
+					{
+						$controller->afterExecuteRoute();
+					}
 				}
 				catch( NotFound $e )
 				{
 					continue;
 				}
 
-				if( is_string( $response ) )
-				{
-					echo $response;
-					exit;
-				}
-
-				if( $response instanceof Response )
-				{
-					$response->execute();
-					exit;
-				}
+				self::executeResponse( $response, $controller );
 			}
+		}
+	}
+
+	public static function executeResponse( $response, $controller )
+	{
+		if( is_string( $response ) )
+		{
+			echo $response;
+			exit;
+		}
+
+		if( $response instanceof Response )
+		{
+			if( $controller )
+			{
+				$controller->beforeAction();
+			}
+
+			$response->execute();
+
+			if( $controller )
+			{
+				$controller->afterAction();
+			}
+
+			exit;
 		}
 	}
 

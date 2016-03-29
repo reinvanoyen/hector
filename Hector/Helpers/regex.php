@@ -1,6 +1,6 @@
 <?php
 
-namespace Hector\Helpers\regex;
+namespace Hector\Helpers\Regex;
 
 /*boolean*/ function namedPregMatch( /*string*/ $pattern, /*string*/ $subject, /*array*/ &$matches = [] )
 {

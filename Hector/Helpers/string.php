@@ -1,6 +1,6 @@
 <?php
 
-namespace Hector\Helpers\string;
+namespace Hector\Helpers\String;
 
 /*boolean*/ function startsWith( /*string*/ $string, /*string*/ $part )
 {

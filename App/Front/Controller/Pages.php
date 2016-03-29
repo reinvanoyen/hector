@@ -3,6 +3,7 @@
 namespace App\Front\Controller;
 
 use App\Front\Model\Page;
+use App\Front\Model\TestRow;
 use Hector\Core\Controller;
 use Hector\Core\Template;
 use Hector\Core\Http\HTTPResponse;
@@ -11,28 +12,13 @@ use Hector\Core\Http\Redirect;
 use Hector\Core\Routing\NotFound;
 use Hector\PHPException;
 
-class Pages
+class Pages extends Controller
 {
-	public function viewHome()
+	public function view( $id )
 	{
-		return $this->view( 'home' );
-	}
+		$testrow = TestRow::load( $id );
 
-	public function view( $slug )
-	{
-		try
-		{
-			$page = Page::load( $slug );
-		}
-		catch( PHPException $e )
-		{
-			throw new NotFound();
-		}
-
-		$tpl = new Template();
-		$tpl->set( 'page', $page );
-
-		return new HTTPResponse( $tpl->render( 'pages/view.php' ) );
+		return new JSONResponse( $testrow );
 	}
 
 	public function redirect()

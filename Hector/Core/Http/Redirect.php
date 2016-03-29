@@ -2,20 +2,19 @@
 
 namespace Hector\Core\Http;
 
-class Redirect extends HTTPResponse
+class Redirect extends Response
 {
 	private $location;
 
 	public function __construct( $location, $status = 301 )
 	{
-		parent::__construct( NULL, $status );
-
+		$this->setStatus( $status );
 		$this->location = $location;
 	}
 
 	public function execute()
 	{
-		http_response_code( $this->status );
+		parent::execute();
 		header( 'Location: ' . $this->location );
 	}
 }
