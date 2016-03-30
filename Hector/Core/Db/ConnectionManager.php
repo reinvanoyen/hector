@@ -10,7 +10,9 @@ class ConnectionManager
 
 	public static function create( /*string*/ $host, /*string*/ $username, /*string*/ $password, /*string*/ $dbname, /*string*/ $name = '' )
 	{
-		self::$storage[ $name ] = new Connection( $host, $username, $password, $dbname );
+		$connection = new Connection( $host, $username, $password, $dbname );
+		self::$storage[ $name ] = $connection;
+		return $connection;
 	}
 
 	public static function get( /*string*/ $name = '' )

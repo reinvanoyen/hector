@@ -2,6 +2,7 @@
 
 namespace Hector\Core\Orm;
 
+use Hector\Core\Db\QueryBuilder\Query;
 use Hector\Core\Util\Arrayable;
 use Hector\Core\Bootstrap;
 use Hector\Core\Db\ConnectionManager;
@@ -22,26 +23,22 @@ abstract class Model extends Arrayable
 
 	final public static /*static*/ function load( $id )
 	{
-		return static::create( self::getConnection()->queryRow( 'SELECT * FROM ' . static::TABLE . ' WHERE ' . static::$primary_key . ' = ?', $id ) );
+		return static::create(
+			Query::select()
+				->from( static::TABLE )
+				->where( [ self::$primary_key => $id ] )
+				->execute( self::getConnection() )
+		);
 	}
 
 	final public static /*static*/ function loadBy( $fields )
 	{
-		$query = 'SELECT * FROM ' . static::TABLE;
-
-		$i = 0;
-		$params = [];
-
-		foreach( $fields as $f => $v )
-		{
-			$query .= ( $i === 0 ? ' WHERE ' : ' AND ' ) . $f . ' = ?';
-			$params[] = $v;
-			$i++;
-		}
-
-		array_unshift( $params, $query );
-
-		return static::create( call_user_func_array( [ self::getConnection(), 'queryRow' ], $params ) );
+		return static::create(
+			Query::select()
+				->from( static::TABLE )
+				->where( $fields )
+				->execute( self::getConnection() )
+		);
 	}
 
 	final public static function all()
