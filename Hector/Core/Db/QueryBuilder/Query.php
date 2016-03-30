@@ -2,62 +2,96 @@
 
 namespace Hector\Core\Db\QueryBuilder;
 
-use Hector\Core\Db\QueryBuilder\QueryPart\QueryPart;
-use Hector\Core\Db\QueryBuilder\QueryPart\Select;
-use Hector\Core\Db\Connection;
+use Hector\Core\Db\QueryBuilder\QueryPart\QueryPart,
+	Hector\Core\Db\QueryBuilder\QueryPart\Select,
+	Hector\Core\Db\QueryBuilder\Expectation\UnmetExpectation,
+	Hector\Core\Db\Connection
+;
 
 class Query
 {
 	private $parts = [];
 	private $bindings = [];
+	private $expectations = [];
 
-	public static function select()
+	const EXPECT_EXACTLY_ONE = 0;
+	const EXPECT_MAX_ONE = 1;
+
+	public static function select( $columns = '*' )
 	{
-		return self::create( 'Select' );
+		return self::init( 'Select', $columns );
 	}
 
-	private static function create( $part )
+	public static function update( $table )
+	{
+		return self::init( 'Update', $table );
+	}
+
+	private static function init( $part )
 	{
 		$instance = new static();
-		$part = $instance->add( $part );
+		$part = $instance->add( $part, array_slice( func_get_args(), 1 ) );
 
 		return $part;
 	}
 
-	private function createPart( /*string*/ $part )
+	public function add( $part, $args = [] )
 	{
 		$part = 'Hector\\Core\\Db\\QueryBuilder\\QueryPart\\' . $part;
-		$part = new $part( $this );
-
-		$part->init();
-
-		return $part;
-	}
-
-	public function add( /*string*/ $part )
-	{
-		$part = $this->createPart( $part );
+		$part = new $part( $this, $args );
 		$this->parts[] = $part;
 		return $part;
 	}
 
-	public function render()
+	public function toString()
 	{
 		$query = '';
 
 		foreach( $this->parts as $p )
 		{
-			$query .= $p->render();
+			$query .= $p->toString() . ' ';
 		}
 
-		return $query;
+		return rtrim( $query, ' ' );
+	}
+
+	public function __toString()
+	{
+		return $this->toString();
+	}
+
+	public function bindValue( $v )
+	{
+		$this->bindings[] = $v;
+	}
+
+	public function bindValues( $values )
+	{
+		$this->bindings = array_merge( $this->bindings, array_values( $values ) );
+	}
+
+	public function setExpectations( array $expectations )
+	{
+		$this->expectations = array_merge( $this->expectations, array_values( $expectations ) );
 	}
 
 	public function execute( Connection $connection )
 	{
-		$args = $this->bindings;
-		array_unshift( $args, $this->render() );
+		$result = $connection->query( (string) $this, $this->bindings );
+		$count = count( $result );
 
-		return call_user_func_array( [ $connection, 'query' ], $args );
+		foreach( $this->expectations as $e )
+		{
+			switch( $e )
+			{
+				case Query::EXPECT_EXACTLY_ONE:
+					if( $count !== 1 )
+					{
+						throw new UnmetExpectation( 'Expected exactly one result, got ' . $count );
+					}
+			}
+		}
+
+		return ( in_array( Query::EXPECT_EXACTLY_ONE, $this->expectations ) ? $result[ 0 ] : $result );
 	}
 }

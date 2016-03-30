@@ -6,28 +6,18 @@ class Select extends QueryPart
 {
 	private $columns;
 
-	public function init()
+	public function init( $columns )
 	{
-		$this->columns = func_get_args();
-		return $this;
+		$this->columns = $columns;
 	}
 
-	public function from()
+	public function from( $table )
 	{
-		return $this->query->add( 'From' );
+		return $this->query->add( 'From', [ $table ] );
 	}
 
-	public function render()
+	public function toString()
 	{
-		$part = 'SELECT ';
-
-		if( is_array( $this->columns ) )
-		{
-			$part .= implode( ',', $this->columns );
-		}
-
-		$part .= $this->columns;
-
-		return $part;
+		return 'SELECT ' . ( is_array( $this->columns ) ? implode( ',', $this->columns ) : $this->columns );
 	}
 }

@@ -2,10 +2,21 @@
 
 namespace Hector\Core\Http;
 
-abstract class Response
+class Response
 {
 	private $status = 200;
-	private $content_type = 'text/html';
+	private $content_type;
+	private $output;
+
+	public function __construct( $output = '' )
+	{
+		$this->setOutput( $output );
+	}
+
+	protected function setOutput( $output )
+	{
+		$this->output = $output;
+	}
 
 	protected function setContentType( $content_type )
 	{
@@ -17,9 +28,20 @@ abstract class Response
 		$this->status = $status;
 	}
 
-	public function execute()
+	protected function setHeaders()
 	{
 		http_response_code( $this->status );
 		header( 'Content-Type: ' . $this->content_type  );
+	}
+
+	protected function output()
+	{
+		echo $this->output;
+	}
+
+	public function execute()
+	{
+		$this->setHeaders();
+		$this->output();
 	}
 }

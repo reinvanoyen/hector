@@ -6,17 +6,22 @@ class From extends QueryPart
 {
 	private $from;
 
-	public function init()
+	public function init( $table )
 	{
-		return $this;
+		$this->from = $table;
 	}
 
-	public function where()
+	public function where( $values )
 	{
-		return $this->query->add( 'Where' );
+		return $this->query->add( 'Where', [ $values ] );
 	}
 
-	public function render()
+	public function limit( $limit )
+	{
+		return $this->query->add( 'Limit', [ $limit ] );
+	}
+
+	public function toString()
 	{
 		return 'FROM ' . $this->quote( $this->from );
 	}

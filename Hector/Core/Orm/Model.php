@@ -2,11 +2,11 @@
 
 namespace Hector\Core\Orm;
 
-use Hector\Core\Db\QueryBuilder\Query;
 use Hector\Core\Util\Arrayable;
 use Hector\Core\Bootstrap;
 use Hector\Core\Db\ConnectionManager;
 use Hector\Core\Db\FetchException;
+use Hector\Core\Db\QueryBuilder\Query;
 
 abstract class Model extends Arrayable
 {
@@ -21,38 +21,55 @@ abstract class Model extends Arrayable
 		return new static( $data );
 	}
 
-	final public static /*static*/ function load( $id )
+	final public static /*static*/ function load( $values )
 	{
+		if( ! is_array( $values ) )
+		{
+			$values = [ static::$primary_key => $values ];
+		}
+
 		return static::create(
 			Query::select()
 				->from( static::TABLE )
-				->where( [ self::$primary_key => $id ] )
+				->where( $values )
+				->setExpectations( [
+					Query::EXPECT_EXACTLY_ONE,
+				] )
 				->execute( self::getConnection() )
 		);
 	}
 
-	final public static /*static*/ function loadBy( $fields )
+	public function save()
 	{
-		return static::create(
-			Query::select()
-				->from( static::TABLE )
-				->where( $fields )
-				->execute( self::getConnection() )
-		);
+		Query::update( static::TABLE )
+			->set( $this->getData() )
+			->where( [ static::$primary_key => $this[ static::$primary_key ] ] )
+			->execute( self::getConnection() )
+		;
 	}
 
 	final public static function all()
 	{
-		// @TODO
+		return Query::select()
+				->from( static::TABLE )
+				->execute( self::getConnection() )
+		;
+	}
+
+	final public static function one()
+	{
+		return static::create( Query::select()
+				->from( static::TABLE )
+				->limit( 1 )
+				->setExpectations( [
+					Query::EXPECT_EXACTLY_ONE,
+				] )
+				->execute( self::getConnection() )
+		);
 	}
 
 	private static /*Connection*/ function getConnection()
 	{
 		return ConnectionManager::get( static::CONNECTION );
-	}
-
-	private static /*string*/ function getClassName()
-	{
-		return get_called_class();
 	}
 }

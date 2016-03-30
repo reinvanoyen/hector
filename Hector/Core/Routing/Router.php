@@ -5,7 +5,7 @@ namespace Hector\Core\Routing;
 use Hector\Core\Bootstrap;
 use Hector\Core\Http\Response;
 use Hector\Core\Http\Request;
-use function Hector\Helpers\Regex\namedPregMatch;
+use Hector\Helpers\Regex;
 
 abstract class Router
 {
@@ -52,7 +52,7 @@ abstract class Router
 
 		foreach( $routes as $pattern => $action )
 		{
-			if( namedPregMatch( '@^(' . $pattern . ')$@', $request->path, $matches ) )
+			if( Regex\namedPregMatch( '@^(' . $pattern . ')$@', $request->path, $matches ) )
 			{
 				$args = $matches;
 				$controller = NULL;

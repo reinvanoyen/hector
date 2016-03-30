@@ -14,13 +14,13 @@ class Api extends Controller
 	{
 		try
 		{
-			$page = Page::load( $slug );
+			$row = TestRow::load( [ 'slug' => $slug, ] );
 		}
 		catch( PHPException $e )
 		{
 			throw new NotFound();
 		}
 
-		return new JSONResponse( $page );
+		return new JSONResponse( $row );
 	}
 }

@@ -3,31 +3,44 @@
 namespace Hector\Core\Db\QueryBuilder\QueryPart;
 
 use Hector\Core\Db\Connection;
+use Hector\Core\Db\ConnectionManager;
 
 abstract class QueryPart
 {
 	protected $query;
 
-	final public function __construct( $query )
+	final public function __construct( $query, $args = [] )
 	{
 		$this->query = $query;
+		
+		call_user_func_array( [ $this, 'init' ], $args );
 	}
 
-	protected function quote( $v )
+	final protected function quote( $v )
 	{
 		return '`' . $v . '`';
 	}
 
-	public function __toString()
+	final public function __toString()
 	{
-		return $this->query->render();
+		return $this->query->toString();
 	}
 
-	public function execute( Connection $connection  )
+	final public function setExpectations( array $expectations )
 	{
-		$this->query->execute( $connection );
+		$this->query->setExpectations( $expectations );
+		return $this;
 	}
 
-	abstract public function init();
-	abstract public function render();
+	final public function execute( Connection $connection = NULL )
+	{
+		if( ! $connection )
+		{
+			$connection = ConnectionManager::get();
+		}
+
+		return $this->query->execute( $connection );
+	}
+
+	abstract public function toString();
 }

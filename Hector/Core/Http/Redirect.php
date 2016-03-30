@@ -8,8 +8,8 @@ class Redirect extends Response
 
 	public function __construct( $location, $status = 301 )
 	{
-		$this->setStatus( $status );
 		$this->location = $location;
+		$this->setStatus( $status );
 	}
 
 	public function execute()

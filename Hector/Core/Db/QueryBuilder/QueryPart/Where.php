@@ -4,15 +4,27 @@ namespace Hector\Core\Db\QueryBuilder\QueryPart;
 
 class Where extends QueryPart
 {
-	public function init()
+	private $conditions;
+
+	public function init( $conditions )
 	{
-		return $this;
+		$this->conditions = $conditions;
+		$this->query->bindValues( $this->conditions );
 	}
 
-	public function render()
+	public function limit( $limit )
 	{
-		$part = 'WHERE ';
+		return $this->query->add( 'Limit', [ $limit ] );
+	}
 
-		return $part;
+	public function toString()
+	{
+		$fields = array_keys( $this->conditions );
+
+		array_walk( $fields, function( &$v ) {
+			$v = $this->quote( $v ) . ' = ?';
+		} );
+
+		return 'WHERE ' . implode( ' AND ', $fields );
 	}
 }
