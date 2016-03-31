@@ -17,6 +17,9 @@ class Query
 	const EXPECT_EXACTLY_ONE = 0;
 	const EXPECT_MAX_ONE = 1;
 
+	const ASC = 'ASC';
+	const DESC = 'DESC';
+
 	public static function select( $columns = '*' )
 	{
 		return self::init( 'Select', $columns );

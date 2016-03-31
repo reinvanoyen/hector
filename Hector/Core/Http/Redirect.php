@@ -16,5 +16,6 @@ class Redirect extends Response
 	{
 		parent::execute();
 		header( 'Location: ' . $this->location );
+		exit;
 	}
 }

@@ -16,15 +16,9 @@ use Hector\Core\Db\FetchException;
 
 class Pages extends Controller
 {
-	public function beforeExecuteRoute()
-	{
-		echo 'before';
-	}
+	public function beforeExecuteRoute() {}
 
-	public function afterExecuteRoute()
-	{
-		echo 'after';
-	}
+	public function afterExecuteRoute() {}
 
 	public function viewHome()
 	{

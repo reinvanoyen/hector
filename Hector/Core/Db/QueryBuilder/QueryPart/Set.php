@@ -17,6 +17,16 @@ class Set extends QueryPart
 		return $this->query->add( 'Where', [ $values ] );
 	}
 
+	public function orderBy( $values )
+	{
+		return $this->query->add( 'OrderBy', [ $values ] );
+	}
+
+	public function limit( $limit )
+	{
+		return $this->query->add( 'Limit', [ $limit ] );
+	}
+
 	public function toString()
 	{
 		$fields = array_keys( $this->values );
