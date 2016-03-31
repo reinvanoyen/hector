@@ -10,6 +10,7 @@ Query::select( [ 'field1', 'field2' ] )
 	->where( [ 'field' => 'value', ] )
 	->orderBy( [ 'field' => Query::ASC ] )
 	->limit( 5 )
+	->execute()
 ;
 ```
 
@@ -22,5 +23,6 @@ Query::update( 'table_name' )
 	->set( [ 'field' => 'value', ] )
 	->where( [ 'field' => 'value', ] )
 	->limit( 5 )
+	->execute()
 ;
 ```
