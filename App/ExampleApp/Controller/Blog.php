@@ -7,7 +7,7 @@ use Hector\Core\Controller;
 use Hector\Core\Http\Response;
 use Hector\Core\Routing\NotFound;
 use Hector\Core\Db\FetchException;
-use Hector\Core\Template;
+use Hector\Core\Tpl\Template;
 
 class Blog extends Controller
 {

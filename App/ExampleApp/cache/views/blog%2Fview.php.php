@@ -28,7 +28,7 @@
 
 			<div>
 
-				trump
+				drumpf
 
 				<h1><?=$blogpost->title?></h1>
 				<p>
