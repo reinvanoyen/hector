@@ -3,9 +3,7 @@
 namespace Hector\Core\Orm;
 
 use Hector\Core\Util\Arrayable;
-use Hector\Core\Bootstrap;
 use Hector\Core\Db\ConnectionManager;
-use Hector\Core\Db\FetchException;
 use Hector\Core\Db\QueryBuilder\Query;
 
 abstract class Model extends Arrayable
@@ -50,10 +48,12 @@ abstract class Model extends Arrayable
 
 	final public static function all()
 	{
-		return Query::select()
+		return new Collection(
+			get_called_class(),
+			Query::select()
 				->from( static::TABLE )
 				->execute( self::getConnection() )
-		;
+		);
 	}
 
 	final public static function one()

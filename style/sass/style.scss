@@ -1,4 +1,69 @@
+@import 'partials/reset';
+@import 'partials/config';
+
+html
+{
+	font-size: 80%;
+	line-height: 1.5;
+}
+
 body
 {
-	background-color: white;
+	background-color: $color-02;
+	font-family: Sans-serif;
+}
+
+#wrapper
+{
+	margin: 0 auto;
+	width: 80%;
+	padding: $rule;
+	background-color: $color-01;
+}
+
+#header
+{
+	border-bottom: 1px solid $color-03;
+	padding-bottom: $rule;
+	margin-bottom: $rule;
+
+	h2
+	{
+		font-size: 1.5rem;
+		font-weight: bold;
+		text-transform: uppercase;
+	}
+}
+
+#footer
+{
+	border-top: 1px solid $color-03;
+	padding-top: $rule;
+	margin-top: $rule;
+	font-size: .75rem;
+	text-transform: uppercase;
+	letter-spacing: .1rem;
+	color: $color-04;
+}
+
+main
+{
+	overflow: hidden;
+
+	>nav
+	{
+		width: 25%;
+		float: left;
+	}
+
+	>div
+	{
+		width: 75%;
+		float: left;
+	}
+
+	h1
+	{
+		font-size: 2rem;
+	}
 }

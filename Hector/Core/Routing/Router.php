@@ -101,6 +101,11 @@ abstract class Router
 
 	public static function executeResponse( $response, $controller )
 	{
+		if( $controller )
+		{
+			$controller->beforeAction();
+		}
+
 		if( is_string( $response ) )
 		{
 			echo $response;
@@ -108,17 +113,12 @@ abstract class Router
 
 		if( $response instanceof Response )
 		{
-			if( $controller )
-			{
-				$controller->beforeAction();
-			}
-
 			$response->execute();
+		}
 
-			if( $controller )
-			{
-				$controller->afterAction();
-			}
+		if( $controller )
+		{
+			$controller->afterAction();
 		}
 	}
 

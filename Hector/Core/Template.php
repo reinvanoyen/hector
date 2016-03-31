@@ -6,11 +6,11 @@ use Hector\Core\Bootstrap;
 
 class Template
 {
-	private $data = array();
+	private $data = [];
 
-	public function set( $key, $value )
+	public function __set( $k, $v )
 	{
-		$this->data[ $key ] = $value;
+		$this->data[ $k ] = $v;
 	}
 
 	public function render( $template )

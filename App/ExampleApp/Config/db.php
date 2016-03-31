@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Front\Config;
+namespace App\ExampleApp\Config;
 
 use Hector\Core\Db\ConnectionManager;
 

@@ -10,6 +10,7 @@ class Response
 
 	public function __construct( $output = '' )
 	{
+		$this->setContentType( 'text/html' );
 		$this->setOutput( $output );
 	}
 
