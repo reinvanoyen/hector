@@ -80,17 +80,21 @@ abstract class Router
 
 					$response = call_user_func_array( $callable, $args );
 
-					if( $controller )
-					{
-						$controller->afterExecuteRoute();
-					}
+					self::executeResponse( $response, $controller );
+
+					throw new Found();
 				}
 				catch( NotFound $e )
 				{
 					continue;
 				}
-
-				self::executeResponse( $response, $controller );
+				finally
+				{
+					if( $controller )
+					{
+						$controller->afterExecuteRoute();
+					}
+				}
 			}
 		}
 	}
@@ -100,7 +104,6 @@ abstract class Router
 		if( is_string( $response ) )
 		{
 			echo $response;
-			exit;
 		}
 
 		if( $response instanceof Response )
@@ -116,8 +119,6 @@ abstract class Router
 			{
 				$controller->afterAction();
 			}
-
-			exit;
 		}
 	}
 

@@ -2,6 +2,8 @@
 
 namespace Hector\Core;
 
+use Hector\Core\Routing\Found;
+
 class Bootstrap
 {
 	private static $current_app;
@@ -19,12 +21,24 @@ class Bootstrap
 
 	public static function start()
 	{
-		foreach( self::$apps as $a )
+		$nothing_found = TRUE;
+
+		try
 		{
-			self::$current_app = $a;
-			$a->run();
+			foreach( self::$apps as $a )
+			{
+				self::$current_app = $a;
+				$a->run();
+			}
+		}
+		catch( Found $e )
+		{
+			$nothing_found = FALSE;
 		}
 
-		echo 'Error 404';
+		if( $nothing_found )
+		{
+			echo 'Error 404';
+		}
 	}
 }
