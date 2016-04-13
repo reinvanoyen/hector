@@ -30,6 +30,11 @@ class Query
 		return self::init( 'Update', $table );
 	}
 
+	public static function insert( $table )
+	{
+		return self::init( 'Insert', $table );
+	}
+
 	private static function init( $part )
 	{
 		$instance = new static();
