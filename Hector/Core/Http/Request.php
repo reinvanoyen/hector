@@ -2,6 +2,8 @@
 
 namespace Hector\Core\Http;
 
+use Hector\Helpers\Type;
+
 class Request
 {
 	public $path;
@@ -33,39 +35,16 @@ class Request
 		$this->get = $_GET;
 		$this->post = $_POST;
 
-		$this->params = $this->{ strtolower( $this->method ) };
+		$this->params = new \Hector\Core\Util\TypeStrictDataWrapper( $this->{ strtolower( $this->method ) } );
 	}
 
-	public function validate( array $required_parameters = [], array $optional_parameters = [] )
+	public function validate( array $required_parameters = [] )
 	{
 		foreach( $required_parameters as $name => $type )
 		{
-			if( ! isset( $this->params[ $name ] ) )
+			if( ! $this->params->has( $name ) )
 			{
 				throw new InvalidRequestException( 'Parameter is missing' );
-			}
-
-			$t = gettype( $this->params[ $name ] );
-
-			if( $t !== $type )
-			{
-				throw new InvalidRequestException( 'Parameter has wrong type' );
-			}
-		}
-
-		foreach( $optional_parameters as $name => $type )
-		{
-			if( isset( $this->params[ $name ] ) )
-			{
-				if( $type !== NULL )
-				{
-					$t = gettype( $this->params[ $name ] );
-
-					if( $t !== $type )
-					{
-						throw new InvalidRequestException( 'Optional parameter has wrong type' );
-					}
-				}
 			}
 		}
 	}
