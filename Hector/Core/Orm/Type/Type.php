@@ -4,15 +4,18 @@ namespace Hector\Core\Orm\Type;
 
 class Type
 {
-	private $value;
+	public $value;
+	protected $options = [];
 
-	public function __construct()
+	public function __construct( $value, $options = [] )
 	{
+		$this->value = $value;
+		$this->options = $options;
 	}
 
 	public function getValue()
 	{
-		return $value;
+		return $this->value;
 	}
 
 	public function setValue( $value )

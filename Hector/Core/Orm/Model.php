@@ -16,9 +16,23 @@ abstract class Model extends Arrayable
 	protected static /*string*/ $primary_key = 'id';
 	protected static /*string*/ $fields = [];
 
+	public function __construct( $data )
+	{
+		$fields = [];
+
+		foreach( static::$fields as $name => $definition )
+		{
+			$type = $definition[ 0 ];
+			$opts = $definition[ 1 ];
+
+			$fields[ $name ] = new $type( $data[ $name ], $opts );
+		}
+
+		parent::__construct( $fields );
+	}
+
 	final public static /*static*/ function create( /*array*/ $data )
 	{
-		// @TODO - only create with defined fields
 		return new static( $data );
 	}
 
@@ -74,5 +88,17 @@ abstract class Model extends Arrayable
 	private static /*Connection*/ function getConnection()
 	{
 		return ConnectionManager::get( static::CONNECTION );
+	}
+
+	public function jsonSerialize()
+	{
+		$fields = [];
+
+		foreach( $this as $field => $value )
+		{
+			$fields[ $field ] = $value->getValue();
+		}
+
+		return $fields;
 	}
 }
