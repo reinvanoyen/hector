@@ -2,6 +2,8 @@
 
 namespace Hector\Core\Routing;
 
-class NotFound extends \Exception
+use \Hector\Core\Hexception;
+
+class NotFound extends Hexception
 {
 }

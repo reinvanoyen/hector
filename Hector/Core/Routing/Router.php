@@ -27,10 +27,10 @@ abstract class Router
 		self::$routes = [];
 	}
 
-	public static function prefix( $prefix, $callback )
+	public static function prefix( $prefix, $cb )
 	{
 		self::$prefix = $prefix;
-		$callback();
+		$cb();
 		self::$prefix = NULL;
 	}
 

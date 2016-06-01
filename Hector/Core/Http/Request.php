@@ -7,9 +7,10 @@ class Request
 	public $path;
 	public $query;
 	public $method;
+	public $params;
+
 	public $get;
 	public $post;
-	public $parameters;
 
 	public function __construct()
 	{
@@ -31,5 +32,41 @@ class Request
 
 		$this->get = $_GET;
 		$this->post = $_POST;
+
+		$this->params = $this->{ strtolower( $this->method ) };
+	}
+
+	public function validate( array $required_parameters = [], array $optional_parameters = [] )
+	{
+		foreach( $required_parameters as $name => $type )
+		{
+			if( ! isset( $this->params[ $name ] ) )
+			{
+				throw new InvalidRequestException( 'Parameter is missing' );
+			}
+
+			$t = gettype( $this->params[ $name ] );
+
+			if( $t !== $type )
+			{
+				throw new InvalidRequestException( 'Parameter has wrong type' );
+			}
+		}
+
+		foreach( $optional_parameters as $name => $type )
+		{
+			if( isset( $this->params[ $name ] ) )
+			{
+				if( $type !== NULL )
+				{
+					$t = gettype( $this->params[ $name ] );
+
+					if( $t !== $type )
+					{
+						throw new InvalidRequestException( 'Optional parameter has wrong type' );
+					}
+				}
+			}
+		}
 	}
 }

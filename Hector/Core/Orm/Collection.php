@@ -2,10 +2,7 @@
 
 namespace Hector\Core\Orm;
 
-class Collection implements
-	\Iterator,
-	\Countable,
-	\JsonSerializable
+class Collection implements \Iterator, \Countable, \JsonSerializable
 {
 	private $rows = [];
 

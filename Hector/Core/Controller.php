@@ -12,7 +12,7 @@ abstract class Controller
 	{
 		$this->request = $request;
 	}
-
+	
 	public function beforeExecuteRoute(){}
 	public function afterExecuteRoute(){}
 	public function beforeAction(){}

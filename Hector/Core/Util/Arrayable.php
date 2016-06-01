@@ -2,11 +2,7 @@
 
 namespace Hector\Core\Util;
 
-class Arrayable implements
-	\ArrayAccess,
-	\Iterator,
-	\Countable,
-	\JsonSerializable
+class Arrayable implements \ArrayAccess, \Iterator, \Countable, \JsonSerializable
 {
 	private $data;
 

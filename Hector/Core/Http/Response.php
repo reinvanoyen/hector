@@ -5,12 +5,11 @@ namespace Hector\Core\Http;
 class Response
 {
 	private $status = 200;
-	private $content_type;
+	private $content_type = 'text/html';
 	private $output;
 
 	public function __construct( $output = '' )
 	{
-		$this->setContentType( 'text/html' );
 		$this->setOutput( $output );
 	}
 
