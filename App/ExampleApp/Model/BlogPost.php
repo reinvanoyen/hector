@@ -8,11 +8,9 @@ use Hector\Core\Orm\Type;
 class BlogPost extends Model
 {
 	const TABLE = 'blogpost';
-
-	public static function getFields()
-	{
-		return [
-			'title' => new Type\Text( [ 'max_length' => 255, ] ),
-		];
-	}
+	
+	public static $fields = [
+		'title' => [ Model::TYPE_TEXT, [] ],
+		'slug' => [ Model::TYPE_TEXT, [] ],
+	];
 }

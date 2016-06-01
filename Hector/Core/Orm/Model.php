@@ -11,11 +11,14 @@ abstract class Model extends Arrayable
 	const TABLE = NULL;
 	const CONNECTION = NULL;
 
+	const TYPE_TEXT = 'Hector\\Core\\Orm\\Type\\Text';
+
 	protected static /*string*/ $primary_key = 'id';
-	protected static /*array*/ $fields = [];
+	protected static /*string*/ $fields = [];
 
 	final public static /*static*/ function create( /*array*/ $data )
 	{
+		// @TODO - only create with defined fields
 		return new static( $data );
 	}
 
