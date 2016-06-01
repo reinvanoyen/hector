@@ -10,7 +10,15 @@ class BlogPost extends Model
 	const TABLE = 'blogpost';
 
 	public static $fields = [
-		'title' => [ Model::TYPE_TEXT, [ 'max_length' => 255, ] ],
-		'slug' => [ Model::TYPE_TEXT, [ 'max_length' => 255, ] ],
+		'id' => Model::TYPE_INT,
+		'title' => [ Model::TYPE_TEXT, [
+			'max_length' => 10,
+			'sync' => 'slug',
+		] ],
+		'slug' => [ Model::TYPE_TEXT, [
+			'max_length' => 10,
+			'slugify' => TRUE,
+		] ],
+		'body' => Model::TYPE_TEXT,
 	];
 }

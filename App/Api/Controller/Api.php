@@ -25,7 +25,35 @@ class Api extends Controller
 		}
 
 		$model = $this->request->params->string( 'model' );
+		$one = $model::one();
 
-		return new JSONResponse( $model::all() );
+		$one->title = 'oknice';
+		$one->save();
+
+		return new JSONResponse( $one );
+	}
+
+	public function save()
+	{
+		try
+		{
+			$this->request->validate( [
+				'model' => 'string',
+			] );
+		}
+		catch( InvalidRequestException $e )
+		{
+			throw new NotFound();
+		}
+
+		$model = $this->request->params->string( 'model' );
+
+		$new = new $model( [
+			'title' => 'ok',
+		] );
+
+		$new->save();
+
+		return new JSONResponse( [ 'success' => TRUE, ] );
 	}
 }
