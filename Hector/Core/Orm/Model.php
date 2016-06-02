@@ -6,7 +6,7 @@ use Hector\Core\Util\Arrayable;
 use Hector\Core\Db\ConnectionManager;
 use Hector\Core\Db\QueryBuilder\Query;
 
-abstract class Model extends Arrayable
+abstract class Model implements \JsonSerializable
 {
 	const TABLE = NULL;
 	const CONNECTION = NULL;
@@ -16,19 +16,16 @@ abstract class Model extends Arrayable
 
 	const TYPE_TEXT = 'Hector\\Core\\Orm\\Type\\Text';
 	const TYPE_INT = 'Hector\\Core\\Orm\\Type\\Integer';
+	const TYPE_JSON = 'Hector\\Core\\Orm\\Type\\JSON';
 
-	public function __construct( $data )
+	private $rowData = [];
+
+	public function __construct( $data = [] )
 	{
-		$fields = [];
-// @TODO fix this mess
-		foreach( static::$fields as $k => $definition )
+		foreach( $data as $field => $value )
 		{
-			$val = ( isset( $data[ $k ] ) ? $data[ $k ] : NULL );
-			$this->createField( $k );
-			$this[ $k ]->setValue( $val );
+			$this->{ $field } = $value;
 		}
-
-		parent::__construct( $fields );
 	}
 
 	final public static /*static*/ function create( /*array*/ $data )
@@ -38,36 +35,42 @@ abstract class Model extends Arrayable
 
 	final private function createField( $k )
 	{
-		if( !isset( $this[ $k ] ) && isset( static::$fields[ $k ] ) )
+		if( !isset( $this->rowData[ $k ] ) && isset( static::$fields[ $k ] ) )
 		{
 			$definition = static::$fields[ $k ];
 
-			$type = ( is_array( $definition ) ? $definition[ 0 ] : $definition );
-			$opts = ( is_array( $definition ) ? $definition[ 1 ] : [] );
-
-			$this[ $k ] = new $type( $this, NULL, $opts );
+			if( is_array( $definition ) )
+			{
+				$this->rowData[ $k ] = new $definition[ 0 ]( $this, NULL, $definition[ 1 ] );
+				return;
+			}
+			else
+			{
+				$this->rowData[ $k ] = new $definition( $this, NULL );
+				return;
+			}
 		}
 	}
 
 	final public function __set( $k, $v )
 	{
 		$this->createField( $k );
-		$this[ $k ]->setValue( $v );
+		$this->rowData[ $k ]->setValue( $v );
 	}
 
 	final public function __get( $k )
 	{
 		$this->createField( $k );
-		return $this[ $k ]->getValue();
+		return $this->rowData[ $k ]->getValue();
 	}
 
 	final protected function getData()
 	{
 		$data = [];
 
-		foreach( $this as $field => $value )
+		foreach( $this->rowData as $field => $value )
 		{
-			$data[ $field ] = $value->getValue();
+			$data[ $field ] = $value->value;
 		}
 
 		return $data;
@@ -91,11 +94,11 @@ abstract class Model extends Arrayable
 
 	public function save()
 	{
-		if( isset( $this[ static::$primary_key ] ) )
+		if( isset( $this->rowData[ static::$primary_key ] ) && $this->rowData[ static::$primary_key ]->value !== NULL )
 		{
 			Query::update( static::TABLE )
 				->set( $this->getData() )
-				->where( [ static::$primary_key => $this[ static::$primary_key ]->getValue() ] )
+				->where( [ static::$primary_key => $this->rowData[ static::$primary_key ]->getValue() ] )
 				->execute( self::getConnection(), TRUE )
 			;
 		}
@@ -121,15 +124,20 @@ abstract class Model extends Arrayable
 	final public static function one()
 	{
 		return static::create( Query::select()
-				->from( static::TABLE )
-				->limit( 1 )
-				->setExpectations( [ Query::EXPECT_EXACTLY_ONE, ] )
-				->execute( self::getConnection() )
+			->from( static::TABLE )
+			->limit( 1 )
+			->setExpectations( [ Query::EXPECT_EXACTLY_ONE, ] )
+			->execute( self::getConnection() )
 		);
 	}
 
 	private static /*Connection*/ function getConnection()
 	{
 		return ConnectionManager::get( static::CONNECTION );
+	}
+
+	public function jsonSerialize()
+	{
+		return $this->rowData;
 	}
 }

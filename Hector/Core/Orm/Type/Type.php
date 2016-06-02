@@ -22,11 +22,26 @@ class Type implements \JsonSerializable
 
 	public function setValue( $value )
 	{
+		// Default option
+		if( isset( $this->options[ 'default' ] ) && $value === NULL )
+		{
+			$value = $this->options[ 'default' ];
+		}
+
+		// Sync option
 		if( isset( $this->options[ 'sync' ] ) )
 		{
-			echo 'FIELD:' . $this->model->{ $this->options[ 'sync' ] };
-
-			$this->model->{ $this->options[ 'sync' ] } = $value;
+			if( is_array( $this->options[ 'sync' ] ) )
+			{
+				foreach( $this->options[ 'sync' ] as $field )
+				{
+					$this->model->{ $field } = $value;
+				}
+			}
+			else
+			{
+				$this->model->{ $this->options[ 'sync' ] } = $value;
+			}
 		}
 
 		$this->value = $value;

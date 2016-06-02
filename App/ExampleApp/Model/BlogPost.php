@@ -11,14 +11,8 @@ class BlogPost extends Model
 
 	public static $fields = [
 		'id' => Model::TYPE_INT,
-		'title' => [ Model::TYPE_TEXT, [
-			'max_length' => 10,
-			'sync' => 'slug',
-		] ],
-		'slug' => [ Model::TYPE_TEXT, [
-			'max_length' => 10,
-			'slugify' => TRUE,
-		] ],
-		'body' => Model::TYPE_TEXT,
+		'title' => [ Model::TYPE_TEXT, [ 'max_length' => 40, 'sync' => 'slug', ] ],
+		'slug' => [ Model::TYPE_TEXT, [ 'max_length' => 20, 'slugify' => TRUE, ] ],
+		'body' => [ Model::TYPE_TEXT, [ 'default' => 'Hier kan je een default waarde instellen', ] ],
 	];
 }

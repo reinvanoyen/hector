@@ -25,12 +25,8 @@ class Api extends Controller
 		}
 
 		$model = $this->request->params->string( 'model' );
-		$one = $model::one();
 
-		$one->title = 'oknice';
-		$one->save();
-
-		return new JSONResponse( $one );
+		return new JSONResponse( $model::all() );
 	}
 
 	public function save()
@@ -39,6 +35,7 @@ class Api extends Controller
 		{
 			$this->request->validate( [
 				'model' => 'string',
+				'title' => 'string',
 			] );
 		}
 		catch( InvalidRequestException $e )
@@ -49,11 +46,14 @@ class Api extends Controller
 		$model = $this->request->params->string( 'model' );
 
 		$new = new $model( [
-			'title' => 'ok',
+			'title' => $this->request->params->string( 'title' ),
 		] );
 
 		$new->save();
 
-		return new JSONResponse( [ 'success' => TRUE, ] );
+		return new JSONResponse( [
+			'success' => TRUE,
+			'result' => $new,
+		] );
 	}
 }

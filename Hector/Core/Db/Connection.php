@@ -2,8 +2,6 @@
 
 namespace Hector\Core\Db;
 
-use Hector\PHPException;
-
 class Connection
 {
 	private $pdo_instance;
