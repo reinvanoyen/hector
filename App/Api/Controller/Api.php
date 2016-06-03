@@ -50,7 +50,7 @@ class Api extends Controller
 		] );
 
 		$new->save();
-
+		
 		return new JSONResponse( [
 			'success' => TRUE,
 			'result' => $new,

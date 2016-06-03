@@ -22,9 +22,16 @@ abstract class Model implements \JsonSerializable
 
 	public function __construct( $data = [] )
 	{
-		foreach( $data as $field => $value )
+		foreach( static::$fields as $field => $definition )
 		{
-			$this->{ $field } = $value;
+			if( isset( $data[ $field ] ) )
+			{
+				$this->{ $field } = $data[ $field ];
+			}
+			else
+			{
+				$this->createField( $field );
+			}
 		}
 	}
 
@@ -70,7 +77,7 @@ abstract class Model implements \JsonSerializable
 
 		foreach( $this->rowData as $field => $value )
 		{
-			$data[ $field ] = $value->value;
+			$data[ $field ] = $value->getRawValue();
 		}
 
 		return $data;
@@ -94,21 +101,22 @@ abstract class Model implements \JsonSerializable
 
 	public function save()
 	{
-		if( isset( $this->rowData[ static::$primary_key ] ) && $this->rowData[ static::$primary_key ]->value !== NULL )
-		{
-			Query::update( static::TABLE )
-				->set( $this->getData() )
-				->where( [ static::$primary_key => $this->rowData[ static::$primary_key ]->getValue() ] )
-				->execute( self::getConnection(), TRUE )
-			;
-		}
-		else
-		{
+//		if( isset( $this->rowData[ static::$primary_key ] ) && $this->rowData[ static::$primary_key ]->value !== NULL )
+//		{
+//			Query::update( static::TABLE )
+//				->set( $this->getData() )
+//				->where( [ static::$primary_key => $this->rowData[ static::$primary_key ]->getValue() ] )
+//				->execute( self::getConnection(), TRUE )
+//			;
+//		}
+//		else
+//		{
+
 			Query::insert( static::TABLE )
 				->values( $this->getData() )
 				->execute( self::getConnection(), TRUE )
 			;
-		}
+//		}
 	}
 
 	final public static function all()

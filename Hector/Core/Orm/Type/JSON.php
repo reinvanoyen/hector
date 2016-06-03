@@ -6,9 +6,12 @@ class JSON extends Type
 {
 	public function setValue( $value )
 	{
-		$value = json_encode( $value );
-
 		parent::setValue( $value );
+	}
+
+	public function getRawValue()
+	{
+		$this->value;
 	}
 
 	public function getValue()
