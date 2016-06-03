@@ -31,6 +31,7 @@ function init()
 	set_exception_handler( 'Hector\\exceptionHandler' );
 
 	require_once 'Hector/autoloader.php';
+
 	require_once 'Hector/Helpers/Type.php';
 	require_once 'Hector/Helpers/String.php';
 	require_once 'Hector/Helpers/Regex.php';

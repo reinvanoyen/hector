@@ -3,7 +3,7 @@
 namespace Hector\Core\Routing;
 
 use Hector\Core\Bootstrap;
-use Hector\Core\Http\Response;
+use Hector\Core\Http\Response\AbstractResponse;
 use Hector\Core\Http\Request;
 use Hector\Helpers\Regex;
 
@@ -111,7 +111,7 @@ abstract class Router
 			echo $response;
 		}
 
-		if( $response instanceof Response )
+		if( $response instanceof AbstractResponse )
 		{
 			$response->execute();
 		}
