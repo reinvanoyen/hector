@@ -7,6 +7,6 @@ use Hector\Core\Bootstrap;
 define( 'App\\HOST', 'rein.tnt.lan' );
 define( 'App\\ROOT', '/hector/' );
 
-Bootstrap::registerApp( 'Backend' );
+Bootstrap::registerApp( 'Example' );
 
 Bootstrap::start();

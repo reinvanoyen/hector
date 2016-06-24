@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Backend\Controller;
+namespace App\Example\Controller;
 
 use Hector\Backend\Module;
 use Hector\Core\Bootstrap;
 use Hector\Core\Controller;
 use Hector\Core\Tpl\Template;
 
-class Backend extends Controller
+class Pages extends Controller
 {
-	public function route()
+	public function view( $slug )
 	{
 		$tpl = new Template();
-		return $tpl->render( 'index.php' );
+		return $tpl->render( 'pages/view' );
 	}
 }
