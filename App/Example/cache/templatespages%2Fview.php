@@ -1,0 +1,1 @@
+Hello! <?php echo htmlspecialchars($this->slug); ?>

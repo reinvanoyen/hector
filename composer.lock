@@ -1,0 +1,64 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "3d045b29777150b97af923e2096aaaf9",
+    "content-hash": "116688b0bb19cf4fa896c0ddbb0258de",
+    "packages": [
+        {
+            "name": "reinvanoyen/aegis",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/reinvanoyen/aegis.git",
+                "reference": "b0c1b698adf62bf8e67243124f9e4de42119b87d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/reinvanoyen/aegis/zipball/b0c1b698adf62bf8e67243124f9e4de42119b87d",
+                "reference": "b0c1b698adf62bf8e67243124f9e4de42119b87d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aegis\\": "lib/Aegis"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Rein Van Oyen",
+                    "email": "reinvanoyen@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Extendable template engine",
+            "keywords": [
+                "template engine",
+                "templating"
+            ],
+            "time": "2016-06-27 13:17:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "reinvanoyen/aegis": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": "^5.6.0"
+    },
+    "platform-dev": []
+}
