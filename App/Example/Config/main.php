@@ -2,5 +2,5 @@
 
 namespace App\Backend\Config;
 
-\Aegis\Template::$cache_directory = 'App/Example/cache/templates';
-\Aegis\Template::$template_directory = 'App/Example/View/';
+\Aegis\Template::$cacheDirectory = 'App/Example/cache/templates';
+\Aegis\Template::$templateDirectory = 'App/Example/View/';

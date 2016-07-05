@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/reinvanoyen/aegis.git",
-                "reference": "b0c1b698adf62bf8e67243124f9e4de42119b87d"
+                "reference": "eaf3ba770588c2a7a248d2fa796d839765b72027"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reinvanoyen/aegis/zipball/b0c1b698adf62bf8e67243124f9e4de42119b87d",
-                "reference": "b0c1b698adf62bf8e67243124f9e4de42119b87d",
+                "url": "https://api.github.com/repos/reinvanoyen/aegis/zipball/eaf3ba770588c2a7a248d2fa796d839765b72027",
+                "reference": "eaf3ba770588c2a7a248d2fa796d839765b72027",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 "template engine",
                 "templating"
             ],
-            "time": "2016-06-27 13:17:00"
+            "time": "2016-07-05 09:30:59"
         }
     ],
     "packages-dev": [],
