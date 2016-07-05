@@ -1,18 +1,41 @@
-<div style="background-color: #ccc; padding: 25px;">
+<html>
 
-	{{ block "home" }}
+	<head>
+		<title>Test</title>
+	</head>
 
-		<h1>Home</h1>
+	<body>
 
-	{{ /block }}
+		{{ block "body" }}
 
-</div>
+			{{ block "header" }}
+				<header>
+					<ul>
+						{{ for @p in @pages }}
+							<li><a href="#" title="{{ @p }}">{{ @p }}</a></li>
+						{{ /for }}
+					</ul>
+				</header>
+			{{ /block }}
 
-<div style="background-color: #f0f0f0; padding: 25px;">
+			{{ block "content" }}
 
-	{{ block "contact" }}
+				<div>
+					{{ block "home" }}
+						<h1>Home</h1>
+					{{ /block }}
+				</div>
 
-		<h1>Contact</h1>
+				<div>
+					{{ block "contact" }}
+						<h1>Contact</h1>
+					{{ /block }}
+				</div>
 
-	{{ /block }}
-</div>
+			{{ /block }}
+
+		{{ /block }}
+
+	</body>
+
+</html>

@@ -14,8 +14,8 @@ abstract class Router
 
 	private static function register( $method, $pattern, $action )
 	{
-		if( ! isset( self::$routes[ $method ] ) )
-		{
+		if( ! isset( self::$routes[ $method ] ) ) {
+
 			self::$routes[ $method ] = [];
 		}
 
@@ -36,8 +36,8 @@ abstract class Router
 
 	public static function getRoutesForRequest( Request $request )
 	{
-		if( isset( self::$routes[ $request->method ] ) )
-		{
+		if( isset( self::$routes[ $request->method ] ) ) {
+
 			return self::$routes[ $request->method ];
 		}
 
@@ -50,19 +50,18 @@ abstract class Router
 
 		assert( $routes );
 
-		foreach( $routes as $pattern => $action )
-		{
-			if( Regex\namedPregMatch( '@^(' . $pattern . ')$@', $request->path, $matches ) )
-			{
+		foreach( $routes as $pattern => $action ) {
+
+			if( Regex\namedPregMatch( '@^(' . $pattern . ')$@', $request->path, $matches ) ) {
+
 				$args = $matches;
 				$controller = NULL;
 
-				if( is_callable( $action ) )
-				{
+				if( is_callable( $action ) ) {
+
 					$callable = $action;
-				}
-				else
-				{
+				} else {
+
 					$parts = explode( '.', $action );
 					$controller = 'App\\' . Bootstrap::getCurrentApp()->getName() . '\\Controller\\' . $parts[ 0 ];
 					$method = $parts[ 1 ];
@@ -71,10 +70,10 @@ abstract class Router
 					$callable = [ $controller, $method ];
 				}
 
-				try
-				{
-					if( $controller )
-					{
+				try {
+
+					if( $controller ) {
+
 						$controller->beforeExecuteRoute();
 					}
 
@@ -83,15 +82,15 @@ abstract class Router
 					self::executeResponse( $response, $controller );
 
 					throw new Found();
-				}
-				catch( NotFound $e )
-				{
+
+				} catch( NotFound $e ) {
+
 					continue;
-				}
-				finally
-				{
-					if( $controller )
-					{
+
+				} finally {
+
+					if( $controller ) {
+
 						$controller->afterExecuteRoute();
 					}
 				}
@@ -101,23 +100,23 @@ abstract class Router
 
 	public static function executeResponse( $response, $controller )
 	{
-		if( $controller )
-		{
+		if( $controller ) {
+
 			$controller->beforeAction();
 		}
 
-		if( is_string( $response ) )
-		{
+		if( is_string( $response ) ) {
+
 			echo $response;
 		}
 
-		if( $response instanceof AbstractResponse )
-		{
+		if( $response instanceof AbstractResponse ) {
+
 			$response->execute();
 		}
 
-		if( $controller )
-		{
+		if( $controller ) {
+
 			$controller->afterAction();
 		}
 	}

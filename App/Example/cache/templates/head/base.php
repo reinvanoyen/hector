@@ -1,9 +1,29 @@
-<?php $this->setBlock( 'home', function() { ?>
+<?php $this->setBlock( 'body', function() { ?>
 
-		<h1>Home</h1>
+			<?php $this->setBlock( 'header', function() { ?>
+				<header>
+					<ul>
+						<?php foreach($this->pages as $this->p): ?>
+							<li><a href="#" title="<?php echo htmlspecialchars( $this->p ); ?>"><?php echo htmlspecialchars( $this->p ); ?></a></li>
+						<?php endforeach; ?>
+					</ul>
+				</header>
+			<?php } ); ?><?php $this->getBlock( 'header'); ?>
 
-	<?php } ); ?><?php $this->setBlock( 'contact', function() { ?>
+			<?php $this->setBlock( 'content', function() { ?>
 
-		<h1>Contact</h1>
+				<div>
+					<?php $this->setBlock( 'home', function() { ?>
+						<h1>Home</h1>
+					<?php } ); ?><?php $this->getBlock( 'home'); ?>
+				</div>
 
-	<?php } ); ?>
+				<div>
+					<?php $this->setBlock( 'contact', function() { ?>
+						<h1>Contact</h1>
+					<?php } ); ?><?php $this->getBlock( 'contact'); ?>
+				</div>
+
+			<?php } ); ?><?php $this->getBlock( 'content'); ?>
+
+		<?php } ); ?>

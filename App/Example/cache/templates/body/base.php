@@ -1,10 +1,13 @@
-<div style="background-color: #ccc; padding: 25px;">
+<html>
 
-	<?php $this->getBlock( 'home'); ?>
+	<head>
+		<title>Test</title>
+	</head>
 
-</div>
+	<body>
 
-<div style="background-color: #f0f0f0; padding: 25px;">
+		<?php $this->getBlock( 'body'); ?>
 
-	<?php $this->getBlock( 'contact'); ?>
-</div>
+	</body>
+
+</html>

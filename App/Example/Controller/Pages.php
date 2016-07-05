@@ -2,15 +2,11 @@
 
 namespace App\Example\Controller;
 
-use Hector\Core\Bootstrap;
-use Hector\Core\Controller;
-
-class Pages extends Controller
+class Pages extends Base
 {
 	public function view( $slug )
 	{
-		$tpl = new \Aegis\Template();
-		$tpl->slug = $slug;
-		$tpl->render( 'pages/view' );
+		$this->tpl->slug = $slug;
+		$this->tpl->render( 'pages/view' );
 	}
 }
