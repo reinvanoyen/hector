@@ -1,7 +1,7 @@
 <html>
 
 	<head>
-		<title>Test</title>
+		<title><?php echo htmlspecialchars( $this->slug ); ?></title>
 	</head>
 
 	<body>

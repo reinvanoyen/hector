@@ -1,38 +1,26 @@
 <html>
 
 	<head>
-		<title>Test</title>
+		<title>{{ @slug }}</title>
 	</head>
 
 	<body>
 
 		{{ block "body" }}
 
-			{{ block "header" }}
-				<header>
-					<ul>
-						{{ for @p in @pages }}
-							<li><a href="#" title="{{ @p }}">{{ @p }}</a></li>
-						{{ /for }}
-					</ul>
-				</header>
-			{{ /block }}
+			<div id="wrapper">
 
-			{{ block "content" }}
+				{{ extends "header" }}
 
-				<div>
-					{{ block "home" }}
-						<h1>Home</h1>
-					{{ /block }}
-				</div>
+					{{ block "title" }}{{ @title }}{{ /block }}
 
-				<div>
-					{{ block "contact" }}
-						<h1>Contact</h1>
-					{{ /block }}
-				</div>
+				{{ /extends }}
 
-			{{ /block }}
+				{{ block "content" }}{{ /block }}
+
+				{{ extends "footer" }}{{ /extends }}
+
+			</div>
 
 		{{ /block }}
 

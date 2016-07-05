@@ -1,29 +1,13 @@
-<?php $this->setBlock( 'body', function() { ?>
+<?php $this->renderHead( 'header'); ?><?php $this->setBlock( 'title', function() { ?><?php echo htmlspecialchars( $this->title ); ?><?php } ); ?><?php $this->setBlock( 'content', function() { ?><?php } ); ?><?php $this->renderHead( 'footer'); ?><?php $this->setBlock( 'body', function() { ?>
 
-			<?php $this->setBlock( 'header', function() { ?>
-				<header>
-					<ul>
-						<?php foreach($this->pages as $this->p): ?>
-							<li><a href="#" title="<?php echo htmlspecialchars( $this->p ); ?>"><?php echo htmlspecialchars( $this->p ); ?></a></li>
-						<?php endforeach; ?>
-					</ul>
-				</header>
-			<?php } ); ?><?php $this->getBlock( 'header'); ?>
+			<div id="wrapper">
 
-			<?php $this->setBlock( 'content', function() { ?>
+				<?php $this->renderBody( 'header'); ?>
 
-				<div>
-					<?php $this->setBlock( 'home', function() { ?>
-						<h1>Home</h1>
-					<?php } ); ?><?php $this->getBlock( 'home'); ?>
-				</div>
+				<?php $this->getBlock( 'content'); ?>
 
-				<div>
-					<?php $this->setBlock( 'contact', function() { ?>
-						<h1>Contact</h1>
-					<?php } ); ?><?php $this->getBlock( 'contact'); ?>
-				</div>
+				<?php $this->renderBody( 'footer'); ?>
 
-			<?php } ); ?><?php $this->getBlock( 'content'); ?>
+			</div>
 
 		<?php } ); ?>
