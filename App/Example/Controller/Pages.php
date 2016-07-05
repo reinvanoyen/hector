@@ -2,7 +2,6 @@
 
 namespace App\Example\Controller;
 
-use Hector\Backend\Module;
 use Hector\Core\Bootstrap;
 use Hector\Core\Controller;
 

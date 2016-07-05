@@ -1,1 +1,1 @@
-Hello! <?php echo htmlspecialchars($this->slug); ?>
+<?php $this->renderHead( 'base'); ?><?php $this->renderBody( 'base'); ?>
