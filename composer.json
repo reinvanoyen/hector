@@ -3,6 +3,7 @@
     "minimum-stability": "dev",
     "require": {
       "php": "^5.6.0",
-        "reinvanoyen/aegis": "dev-master"
+        "reinvanoyen/aegis": "dev-master",
+        "psr/http-message": "^1.0"
     }
 }
