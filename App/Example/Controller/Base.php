@@ -3,13 +3,13 @@
 namespace App\Example\Controller;
 
 use Hector\Core\Controller;
-use Hector\Core\Http\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Base extends Controller
 {
 	protected $tpl;
 
-	public function __construct( Request $request )
+	public function __construct( ServerRequestInterface $request )
 	{
 		$this->tpl = new \Aegis\Template();
 		$this->tpl->pages = [ 'Home', 'About us', 'Contact' ];

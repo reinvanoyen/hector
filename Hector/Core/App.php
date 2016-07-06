@@ -2,9 +2,8 @@
 
 namespace Hector\Core;
 
-use Hector\Core\Runtime;
+use Hector\Core\Http\Psr\ServerRequest;
 use Hector\Core\Routing\Router;
-use Hector\Core\Http\Request;
 
 class App
 {
@@ -27,6 +26,6 @@ class App
 		require_once 'App/' . $this->name . '/Config/main.php';
 		require_once 'App/' . $this->name . '/Config/routes.php';
 
-		Router::route( new Request() );
+		Router::route( ServerRequest::fromGlobals() );
 	}
 }

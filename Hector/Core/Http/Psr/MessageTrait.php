@@ -7,11 +7,8 @@ use Psr\Http\Message\StreamInterface;
 trait MessageTrait
 {
 	private $headers = [];
-
 	private $headerNames  = [];
-
 	private $protocol = '1.1';
-
 	private $stream;
 
 	public function getProtocolVersion()

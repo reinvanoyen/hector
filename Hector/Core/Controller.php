@@ -2,13 +2,13 @@
 
 namespace Hector\Core;
 
-use Hector\Core\Http\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 abstract class Controller
 {
 	protected /*Request*/ $request;
 
-	public function __construct( Request $request )
+	public function __construct( ServerRequestInterface $request )
 	{
 		$this->request = $request;
 	}

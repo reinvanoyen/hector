@@ -2,11 +2,11 @@
 
 namespace App;
 
+use Hector\Core\App;
 use Hector\Core\Bootstrap;
 
 define( 'App\\HOST', 'rein.tnt.lan' );
 define( 'App\\ROOT', '/hector/' );
 
-Bootstrap::registerApp( 'Example' );
-
-Bootstrap::start();
+$app = new App( 'Example' );
+$app->run();
