@@ -21,6 +21,20 @@ define( 'App\\ROOT', '/hector/' );
 
 $app = new Application( 'Example' );
 
-$app->get( '', 'Pages.index' );
+$app->get( '', function( $req, $res ) {
+
+	return 'Welcome';
+} );
+
+$app->group( 'users/', function() use ( $app ) {
+
+	$app->get( '', function( $req, $res ) {
+
+		return 'Users index';
+	} );
+
+	$app->get( 'login/', 'Users.login' );
+
+} )->add( [ new AfterMiddleware(), new BeforeMiddleware() ] );
 
 $app->start();

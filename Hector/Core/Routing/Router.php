@@ -8,26 +8,21 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Router
 {
-	private $prefix;
-	private $routes = [];
+	use RouteableTrait;
 
-	public function group( $prefix, $callable )
-	{
-		$this->prefix = $prefix;
-		$callable();
-		$this->prefix = NULL;
-	}
+	private $groups = [];
 
 	public function route( ServerRequestInterface $request )
 	{
-		$routes = NULL;
+		$method = $request->getMethod();
+		$routes = $this->getRoutesForMethod( $method );
 
-		if( isset( $this->routes[ $request->getMethod() ] ) ) {
+		foreach( $this->groups as $group ) {
 
-			$routes = $this->routes[ $request->getMethod() ];
+			$routes = array_merge( $routes, $group->getRoutesForMethod( $method ) );
 		}
 
-		foreach( $this->routes as $route ) {
+		foreach( $routes as $route ) {
 
 			if( ( $matches = $route->match( $request ) ) !== FALSE ) {
 
@@ -45,22 +40,20 @@ class Router
 		return new Response( 404 );
 	}
 
-	private function register( $method, $pattern, $action )
+	public function group( $prefix, $callable )
 	{
-		if( ! isset( $this->routes[ $method ] ) ) {
+		$group = new Group( $prefix );
 
-			$this->routes[ $method ] = [];
-		}
+		$this->groups[] = $group;
 
-		$route = new Route( $this->prefix . $pattern, $action );
+		$this->registeringParent = $group;
 
-		$this->routes[ $method ] = $route;
+		$callable();
 
-		return $route;
+		$parent = $this->registeringParent;
+
+		$this->registeringParent = NULL;
+
+		return $parent;
 	}
-
-	public function get( $pattern, $action ) { return $this->register( 'GET', $pattern, $action ); }
-	public function post( $pattern, $action ) { return $this->register( 'POST', $pattern, $action ); }
-	public function delete( $pattern, $action ) { return $this->register( 'DELETE', $pattern, $action ); }
-	public function put( $pattern, $action ) { return $this->register( 'PUT', $pattern, $action ); }
 }

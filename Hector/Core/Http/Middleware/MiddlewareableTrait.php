@@ -8,14 +8,25 @@ trait MiddlewareableTrait
 {
 	private $middleware = [];
 
-	public function add( MiddlewareInterface $middleware )
+	public function add( $middleware )
 	{
-		$this->middleware[] = $middleware;
+		if( $middleware instanceof MiddlewareInterface ) {
+
+			$this->middleware[] = $middleware;
+
+		} else if( is_array( $middleware ) ) {
+
+			$this->middleware = array_merge( $this->middleware, $middleware );
+
+		} else {
+
+			throw new \UnexpectedValueException( 'Expected MiddlewareInterface or array' );
+		}
 
 		return $this;
 	}
 
-	public function runMiddlewareStack( $request, $response, Closure $core )
+	private function runMiddlewareStack( $request, $response, Closure $core )
 	{
 		$coreFunction = $this->createCoreFunction( $core );
 

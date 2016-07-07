@@ -2,9 +2,8 @@
 
 namespace Hector\Core\Routing;
 
-use Closure;
 use Hector\Helpers\Regex;
-use Hector\Core\Http\Response;
+use Hector\Helpers\String;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Hector\Core\Http\Middleware\MiddlewareableTrait;
@@ -16,6 +15,7 @@ class Route
 	private $pattern;
 	private $action;
 	private $attributes;
+	private $parent;
 
 	public function __construct( $pattern, $action )
 	{
@@ -27,9 +27,24 @@ class Route
 	{
 		$path = substr( $request->getUri()->getPath(), strlen( \App\ROOT ) );
 
-		if( Regex\namedPregMatch( '@^(' . $this->pattern . ')$@', $path, $matches ) ) {
+		if( $this->parent->getPrefix() ) {
 
-			return ( $this->attributes = $matches );
+			if( String\startsWith( $path, $this->parent->getPrefix() ) ) {
+
+				$pathWithoutPrefix = substr( $path, strlen( $this->parent->getPrefix() ) );
+
+				if( Regex\namedPregMatch( '@^(' . $this->pattern . ')$@', $pathWithoutPrefix, $matches ) ) {
+
+					return ( $this->attributes = $matches );
+				}
+			}
+
+		} else {
+
+			if( Regex\namedPregMatch( '@^(' . $this->pattern . ')$@', $path, $matches ) ) {
+
+				return ( $this->attributes = $matches );
+			}
 		}
 
 		return FALSE;
@@ -85,5 +100,10 @@ class Route
 		}
 
 		return $this->runMiddlewareStack( $request, $response, $this->getCoreFunction() );
+	}
+
+	public function setParent( $parent )
+	{
+		$this->parent = $parent;
 	}
 }

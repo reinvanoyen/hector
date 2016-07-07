@@ -46,6 +46,11 @@ class Application
 		echo $response->getBody()->getContents();
 	}
 
+	public function group( $name, $callable )
+	{
+		return $this->router->group( $name, $callable );
+	}
+
 	public function get( $pattern, $callable )
 	{
 		return $this->router->get( $pattern, $callable );
