@@ -2,21 +2,16 @@
 
 namespace App\Example\Controller;
 
-use Hector\Core\Http\Psr\Request;
-use Hector\Core\Http\Psr\Response;
-use Hector\Core\Http\Psr\ServerRequest;
-use Hector\Core\Http\Psr\Stream;
+use Aegis\Template;
 use Hector\Core\Routing\NotFound;
 
 class Pages extends Base
 {
-	public function test( $req, $res )
+	public function index( $req, $res )
 	{
-		throw new NotFound();
-	}
-
-	public function view( $req, $res )
-	{
-		return 'Ok nice ' . $req->getAttribute( 'page_slug' );
+		$tpl = new Template();
+		$tpl->page = 'Index';
+		
+		return $tpl->render( 'index' );
 	}
 }

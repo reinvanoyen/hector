@@ -3,6 +3,7 @@
 namespace Hector\Core\Http\Middleware;
 
 use Closure;
+use Hector\Core\Http\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

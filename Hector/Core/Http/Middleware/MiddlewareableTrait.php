@@ -6,7 +6,7 @@ use Closure;
 
 trait MiddlewareableTrait
 {
-	private $middleware;
+	private $middleware = [];
 
 	public function add( MiddlewareInterface $middleware )
 	{
