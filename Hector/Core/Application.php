@@ -3,15 +3,17 @@
 namespace Hector\Core;
 
 use Hector\Core\Routing\Router;
-use Hector\Core\Http\Psr\ServerRequest;
+use Hector\Core\Http\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 
 class Application
 {
+	private $name;
 	private $router;
 
-	public function __construct()
+	public function __construct( $name )
 	{
+		$this->name = $name;
 		$this->router = new Router();
 	}
 

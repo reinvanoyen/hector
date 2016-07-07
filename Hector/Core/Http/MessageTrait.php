@@ -1,6 +1,6 @@
 <?php
 
-namespace Hector\Core\Http\Psr;
+namespace Hector\Core\Http;
 
 use Psr\Http\Message\StreamInterface;
 

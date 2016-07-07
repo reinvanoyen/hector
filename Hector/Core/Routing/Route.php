@@ -4,11 +4,10 @@ namespace Hector\Core\Routing;
 
 use Closure;
 use Hector\Helpers\Regex;
-use Hector\Core\Http\Middleware\MiddlewareableTrait;
-use Hector\Core\Http\Psr\Response;
+use Hector\Core\Http\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Hector\Core\Http\Middleware\MiddlewareInterface;
+use Hector\Core\Http\Middleware\MiddlewareableTrait;
 
 class Route
 {

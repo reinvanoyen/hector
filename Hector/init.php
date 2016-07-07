@@ -15,13 +15,21 @@ class PHPException extends \Exception
 
 function exceptionHandler( /*\Exception*/ $exception )
 {
-	try
-	{
-		ob_end_clean();
-	}
-	catch( \Exception $e ) {}
+	try {
 
+		ob_end_clean();
+
+	} catch( \Exception $e ) {}
+
+	echo '<pre>';
 	echo $exception->getMessage();
+	echo '<br />';
+	echo $exception->getFile();
+	echo '<br />';
+	echo $exception->getLine();
+	$trace = $exception->getTraceAsString();
+	echo htmlspecialchars( $trace );
+	echo '</pre>';
 
 	exit;
 }
@@ -31,10 +39,10 @@ function init()
 	set_error_handler( [ '\\Hector\\PHPException', 'handleError' ] );
 	set_exception_handler( 'Hector\\exceptionHandler' );
 
-	require_once 'Hector/autoload.php';
-	require_once 'Hector/Helpers/Type.php';
-	require_once 'Hector/Helpers/String.php';
-	require_once 'Hector/Helpers/Regex.php';
+	require_once __DIR__ . '/autoload.php';
+	require_once __DIR__ . '/Helpers/Type.php';
+	require_once __DIR__ . '/Helpers/String.php';
+	require_once __DIR__ . '/Helpers/Regex.php';
 }
 
 init();

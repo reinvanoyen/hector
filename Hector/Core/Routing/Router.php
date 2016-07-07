@@ -2,10 +2,8 @@
 
 namespace Hector\Core\Routing;
 
-use Hector\Core\Bootstrap;
-use Hector\Core\Http\Psr\Response;
+use Hector\Core\Http\Response;
 use Hector\Helpers\Regex;
-use Hector\Core\Http\Response\AbstractResponse;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Router

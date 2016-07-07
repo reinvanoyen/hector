@@ -19,12 +19,12 @@ namespace Hector\Helpers\String;
 
 /*string*/ function clipOnWord( /*string*/ $string, /*integer*/ $length, /*string*/ $terminator = '...' )
 {
-	if( strlen( $string ) > $length )
-	{
+	if( strlen( $string ) > $length ) {
+
 		return rtrim( preg_replace( '/^(.{0,' . $length . '})\b.*$/s', '\\1', $string ) ) . $terminator;
-	}
-	else
-	{
+
+	} else {
+
 		return $string;
 	}
 }
@@ -32,16 +32,19 @@ namespace Hector\Helpers\String;
 /*string*/ function random( /*integer*/ $length )
 {
 	static $alphabet = NULL;
-	if( $alphabet === NULL )
-	{
+
+	if( $alphabet === NULL ) {
+
 		$alphabet = array_merge( range( 'a', 'z' ), range( 'A', 'Z' ), range( '0', '9' ) );
 	}
 
 	$str = '';
-	for( $i = 0 ; $i < $length ; $i += 1 )
-	{
+
+	for( $i = 0 ; $i < $length ; $i += 1 ) {
+
 		$str .= $alphabet[ rand( 0, count( $alphabet ) - 1 ) ];
 	}
+
 	return $str;
 }
 

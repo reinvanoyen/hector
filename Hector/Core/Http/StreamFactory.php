@@ -1,8 +1,6 @@
 <?php
 
-namespace Hector\Core\Http\Psr;
-
-use Psr\Http\Message\StreamInterface;
+namespace Hector\Core\Http;
 
 class StreamFactory
 {
