@@ -11,7 +11,7 @@ class Pages extends Base
 	{
 		$tpl = new Template();
 		$tpl->page = 'Index';
-		
+
 		return $tpl->render( 'index' );
 	}
 }

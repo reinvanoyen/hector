@@ -1,7 +1,7 @@
 <html>
 
 	<head>
-		<title><?php $this->getBlock( 'title'); ?></title>
+		<title>{{ block "title" }}{{ /block }}</title>
 	</head>
 
 	<body>
@@ -9,12 +9,12 @@
 		<div id="wrapper">
 
 			<header>
-				<h1><?php $this->getBlock( 'title'); ?></h1>
+				<h1>{{ block "title" }}{{ /block }}</h1>
 			</header>
 
 			<div id="main">
 
-				<?php $this->getBlock( 'main'); ?>
+				{{ block "main" }}{{ /block }}
 
 			</div>
 

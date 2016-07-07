@@ -1,1 +1,13 @@
-This is the login page
+{{ extends "index" }}
+
+	{{ block "main" }}
+
+		<form>
+			<input />
+			<input />
+			<button>Login</button>
+		</form>
+
+	{{ /block }}
+
+{{ /extends }}

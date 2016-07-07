@@ -2,4 +2,4 @@
 
 		<a href="users/login/">Login</a>
 
-	<?php } ); ?><?=$this->renderBody( 'base')?>
+	<?php } ); ?>

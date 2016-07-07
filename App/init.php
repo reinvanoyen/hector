@@ -2,13 +2,14 @@
 
 namespace App;
 
+use Aegis\Template;
 use Hector\Core\Application;
 use Hector\Core\Http\Middleware\AfterMiddleware;
 use Hector\Core\Http\Middleware\BeforeMiddleware;
 
 // Config
 
-\Aegis\Template::$debug = FALSE;
+\Aegis\Template::$debug = TRUE;
 \Aegis\Template::$cacheDirectory = 'App/Example/cache/templates/';
 \Aegis\Template::$templateDirectory = 'App/Example/View/';
 
@@ -21,20 +22,12 @@ define( 'App\\ROOT', '/hector/' );
 
 $app = new Application( 'Example' );
 
-$app->get( '', function( $req, $res ) {
-
-	return 'Welcome';
-} );
+$app->get( '', 'Pages.index' );
 
 $app->group( 'users/', function() use ( $app ) {
 
-	$app->get( '', function( $req, $res ) {
-
-		return 'Users index';
-	} );
-
+	$app->get( '', 'Users.index' );
 	$app->get( 'login/', 'Users.login' );
-
-} )->add( [ new AfterMiddleware(), new BeforeMiddleware() ] );
+} );
 
 $app->start();
