@@ -2,7 +2,7 @@
 
 ini_set( 'display_errors', 1 );
 
-require 'vendor/autoload.php';
+require __DIR__. '/vendor/autoload.php';
 
-require_once 'Hector/init.php';
-require_once 'App/init.php';
+require_once __DIR__ . '/Hector/init.php';
+require_once __DIR__ . '/App/init.php';
