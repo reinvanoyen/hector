@@ -2,12 +2,18 @@
 
 namespace Hector\Core\Routing;
 
-use Hector\Core\Bootstrap;
-use \Hector\Helpers\Regex;
+use Closure;
+use Hector\Helpers\Regex;
+use Hector\Core\Http\Middleware\MiddlewareableTrait;
+use Hector\Core\Http\Psr\Response;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Hector\Core\Http\Middleware\MiddlewareInterface;
 
 class Route
 {
+	use MiddlewareableTrait;
+
 	private $pattern;
 	private $action;
 	private $attributes;
@@ -30,13 +36,8 @@ class Route
 		return FALSE;
 	}
 
-	public function execute( ServerRequestInterface $request )
+	private function getCallable()
 	{
-		foreach( $this->attributes as $attrName => $attrValue ) {
-
-			$request = $request->withAttribute( $attrName, $attrValue );
-		}
-
 		if( is_callable( $this->action ) ) {
 
 			$callable = $this->action;
@@ -47,61 +48,43 @@ class Route
 			$parts = explode( '.', $this->action );
 			$controller = 'App\\Example\\Controller\\' . $parts[ 0 ];
 			$method = $parts[ 1 ];
-			$controller = new $controller( $request );
+			$controller = new $controller();
 
 			$callable = [ $controller, $method ];
 		}
 
-		return $response = call_user_func_array( $callable, $request->getAttributes() );
+		return $callable;
+	}
+
+	private function call( ServerRequestInterface $request, ResponseInterface $response )
+	{
+		return call_user_func_array( $this->getCallable(), [ $request, $response ] );
+	}
+
+	public function getCoreFunction()
+	{
+		return function( $request, $response ) {
+
+			$result = $this->call( $request, $response );
+
+			if( ! ( $result instanceof ResponseInterface ) ) {
+
+				return $response->write( $result );
+			}
+
+			return $result;
+		};
+	}
+
+	public function execute( ServerRequestInterface $request, ResponseInterface $response )
+	{
+		$action = $this->action;
+
+		foreach( $this->attributes as $attrName => $attrValue ) {
+
+			$request = $request->withAttribute( $attrName, $attrValue );
+		}
+
+		return $this->runMiddlewareStack( $request, $response, $this->getCoreFunction() );
 	}
 }
-
-/*
- *
- * 		foreach( $routes as $pattern => $action ) {
-
-			if( Regex\namedPregMatch( '@^(' . $pattern . ')$@', $request->path, $matches ) ) {
-
-				$args = $matches;
-				$controller = NULL;
-
-				if( is_callable( $action ) ) {
-
-					$callable = $action;
-				} else {
-
-					$parts = explode( '.', $action );
-					$controller = 'App\\' . Bootstrap::getCurrentApp()->getName() . '\\Controller\\' . $parts[ 0 ];
-					$method = $parts[ 1 ];
-					$controller = new $controller( $request );
-
-					$callable = [ $controller, $method ];
-				}
-
-				try {
-
-					if( $controller ) {
-
-						$controller->beforeExecuteRoute();
-					}
-
-					$response = call_user_func_array( $callable, $args );
-
-					self::executeResponse( $response, $controller );
-
-					throw new Found();
-
-				} catch( NotFound $e ) {
-
-					continue;
-
-				} finally {
-
-					if( $controller ) {
-
-						$controller->afterExecuteRoute();
-					}
-				}
-			}
-		}
- * */

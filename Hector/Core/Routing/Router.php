@@ -8,43 +8,34 @@ use Hector\Helpers\Regex;
 use Hector\Core\Http\Response\AbstractResponse;
 use Psr\Http\Message\ServerRequestInterface;
 
-abstract class Router
+class Router
 {
-	private static $prefix;
-	private static $routes = [];
+	private $prefix;
+	private $routes = [];
 
-	public static function reset()
+	public function group( $prefix, $callable )
 	{
-		self::$routes = [];
-	}
-
-	public static function prefix( $prefix, $callable )
-	{
-		self::$prefix = $prefix;
+		$this->prefix = $prefix;
 		$callable();
-		self::$prefix = NULL;
+		$this->prefix = NULL;
 	}
-	
-	public static function route( ServerRequestInterface $request )
+
+	public function route( ServerRequestInterface $request )
 	{
 		$routes = NULL;
 
-		if( isset( self::$routes[ $request->getMethod() ] ) ) {
+		if( isset( $this->routes[ $request->getMethod() ] ) ) {
 
-			$routes = self::$routes[ $request->getMethod() ];
+			$routes = $this->routes[ $request->getMethod() ];
 		}
-		
-		assert( $routes );
-		
-		foreach( self::$routes as $route ) {
+
+		foreach( $this->routes as $route ) {
 
 			if( ( $matches = $route->match( $request ) ) !== FALSE ) {
 
 				try {
 
-					$response = $route->execute( $request );
-
-					return $response;
+					return $route->execute( $request, new Response( 200 ) );
 
 				} catch( NotFound $e ) {
 
@@ -56,18 +47,22 @@ abstract class Router
 		return new Response( 404 );
 	}
 
-	public static function get( $pattern, $action ) { self::register( 'GET', $pattern, $action ); }
-	public static function post( $pattern, $action ) { self::register( 'POST', $pattern, $action ); }
-	public static function delete( $pattern, $action ) { self::register( 'DELETE', $pattern, $action ); }
-	public static function put( $pattern, $action ) { self::register( 'PUT', $pattern, $action ); }
-
-	private static function register( $method, $pattern, $action )
+	private function register( $method, $pattern, $action )
 	{
-		if( ! isset( self::$routes[ $method ] ) ) {
+		if( ! isset( $this->routes[ $method ] ) ) {
 
-			self::$routes[ $method ] = [];
+			$this->routes[ $method ] = [];
 		}
 
-		self::$routes[ $method ] = new Route( self::$prefix . $pattern, $action );
+		$route = new Route( $this->prefix . $pattern, $action );
+
+		$this->routes[ $method ] = $route;
+
+		return $route;
 	}
+
+	public function get( $pattern, $action ) { return $this->register( 'GET', $pattern, $action ); }
+	public function post( $pattern, $action ) { return $this->register( 'POST', $pattern, $action ); }
+	public function delete( $pattern, $action ) { return $this->register( 'DELETE', $pattern, $action ); }
+	public function put( $pattern, $action ) { return $this->register( 'PUT', $pattern, $action ); }
 }

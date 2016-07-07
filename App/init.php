@@ -2,11 +2,20 @@
 
 namespace App;
 
-use Hector\Core\App;
-use Hector\Core\Bootstrap;
+use Hector\Core\Application;
+use Hector\Core\Http\Middleware\AfterMiddleware;
+use Hector\Core\Http\Middleware\BeforeMiddleware;
 
 define( 'App\\HOST', 'rein.tnt.lan' );
 define( 'App\\ROOT', '/hector/' );
 
-$app = new App( 'Example' );
-$app->run();
+$app = new Application( 'Example' );
+
+$app->get( '(?<page_slug>.+)/(?<page_id>\d+)/', 'Pages.test' );
+
+$app->get( '(?<page_slug>.+)/(?<page_id>\d+)/', 'Pages.view' )
+	->add( new BeforeMiddleware() )
+	->add( new AfterMiddleware() )
+;
+
+$app->start();

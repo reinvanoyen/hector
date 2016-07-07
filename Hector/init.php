@@ -2,7 +2,8 @@
 
 namespace Hector;
 
-header( 'X-Powered-By: Hector' );
+error_reporting( E_ALL );
+ini_set( 'display_errors', 1 );
 
 class PHPException extends \Exception
 {

@@ -9,11 +9,9 @@ class Base extends Controller
 {
 	protected $tpl;
 
-	public function __construct( ServerRequestInterface $request )
+	public function __construct()
 	{
 		$this->tpl = new \Aegis\Template();
 		$this->tpl->pages = [ 'Home', 'About us', 'Contact' ];
-
-		parent::__construct( $request );
 	}
 }

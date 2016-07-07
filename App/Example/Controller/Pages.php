@@ -10,16 +10,13 @@ use Hector\Core\Routing\NotFound;
 
 class Pages extends Base
 {
-	public function test( $slug, $id )
+	public function test( $req, $res )
 	{
-		throw new NotFound;
+		throw new NotFound();
 	}
 
-	public function view( $slug, $id )
+	public function view( $req, $res )
 	{
-		$response = new Response( 200 );
-		$response->write( $slug );
-
-		return $response;
+		return 'Ok nice ' . $req->getAttribute( 'page_slug' );
 	}
 }
