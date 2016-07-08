@@ -2,6 +2,7 @@
 
 namespace Hector\Core\Routing;
 
+use Hector\Helpers\Http;
 use Hector\Helpers\Regex;
 use Hector\Helpers\String;
 use Psr\Http\Message\ResponseInterface;
@@ -23,10 +24,20 @@ class Route
 		$this->action = $action;
 	}
 
+	public function setParent( $parent )
+	{
+		$this->parent = $parent;
+	}
+
+	public function getParent()
+	{
+		return $this->parent;
+	}
+
 	public function match( ServerRequestInterface $request )
 	{
-		$path = substr( $request->getUri()->getPath(), strlen( \App\ROOT ) );
-
+		$path = Http::getPath( $request );
+		
 		if( $this->parent->getPrefix() ) {
 
 			if( String\startsWith( $path, $this->parent->getPrefix() ) ) {
@@ -50,11 +61,14 @@ class Route
 		return FALSE;
 	}
 
-	private function getCallable()
+	private function call( ServerRequestInterface $request, ResponseInterface $response )
 	{
+		$attributes = $this->attributes;
+
 		if( is_callable( $this->action ) ) {
 
 			$callable = $this->action;
+			array_unshift( $attributes, $request, $response );
 
 		} else {
 
@@ -62,17 +76,12 @@ class Route
 			$parts = explode( '.', $this->action );
 			$controller = 'App\\Example\\Controller\\' . $parts[ 0 ];
 			$method = $parts[ 1 ];
-			$controller = new $controller();
+			$controller = new $controller( $request, $response );
 
 			$callable = [ $controller, $method ];
 		}
 
-		return $callable;
-	}
-
-	private function call( ServerRequestInterface $request, ResponseInterface $response )
-	{
-		return call_user_func_array( $this->getCallable(), [ $request, $response ] );
+		return call_user_func_array( $callable, $attributes );
 	}
 
 	public function getCoreFunction()
@@ -92,18 +101,6 @@ class Route
 
 	public function execute( ServerRequestInterface $request, ResponseInterface $response )
 	{
-		$action = $this->action;
-
-		foreach( $this->attributes as $attrName => $attrValue ) {
-
-			$request = $request->withAttribute( $attrName, $attrValue );
-		}
-
 		return $this->runMiddlewareStack( $request, $response, $this->getCoreFunction() );
-	}
-
-	public function setParent( $parent )
-	{
-		$this->parent = $parent;
 	}
 }

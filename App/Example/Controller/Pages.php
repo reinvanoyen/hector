@@ -7,11 +7,10 @@ use Hector\Core\Routing\NotFound;
 
 class Pages extends Base
 {
-	public function index( $req, $res )
+	public function index()
 	{
-		$tpl = new Template();
-		$tpl->page = 'Index';
+		$this->tpl->page = 'Index';
 
-		return $tpl->render( 'index' );
+		return $this->tpl->render( 'index' );
 	}
 }

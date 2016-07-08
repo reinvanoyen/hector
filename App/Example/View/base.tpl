@@ -2,27 +2,31 @@
 
 	<head>
 		<title>{{ block "title" }}{{ /block }}</title>
+		<base href="{{ @base }}" />
+		<link rel="stylesheet" href="assets/css/style.css" />
 	</head>
 
 	<body>
 
-		<div id="wrapper">
+		{{ block "body" }}
 
-			<header>
-				<h1>{{ block "title" }}{{ /block }}</h1>
-			</header>
+			<div id="wrapper">
 
-			<div id="main">
+				<header>
+					<h1>{{ block "title" }}{{ /block }}</h1>
+				</header>
 
-				{{ block "main" }}{{ /block }}
+				<div id="main">
+					{{ block "main" }}{{ /block }}
+				</div>
+
+				<footer>
+					&copy; Copyright
+				</footer>
 
 			</div>
 
-			<footer>
-				&copy; Copyright
-			</footer>
-
-		</div>
+		{{ /block }}
 
 	</body>
 

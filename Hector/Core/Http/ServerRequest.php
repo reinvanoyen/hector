@@ -54,15 +54,16 @@ class ServerRequest extends Request implements ServerRequestInterface
 	{
 		if( is_array( $value[ 'tmp_name' ] ) ) {
 
-			return self::normalizeNestedFileSpec($value);
+			return self::normalizeNestedFileSpec( $value );
 		}
 
+		// @TODO Implement UploadedFile
 		return new UploadedFile(
-			$value['tmp_name'],
-			(int) $value['size'],
-			(int) $value['error'],
-			$value['name'],
-			$value['type']
+			$value[ 'tmp_name' ],
+			(int) $value[ 'size' ],
+			(int) $value[ 'error' ],
+			$value[ 'name' ],
+			$value[ 'type' ]
 		);
 	}
 

@@ -5,11 +5,20 @@ namespace App\Example\Controller;
 use Aegis\Template;
 use Hector\Core\Controller;
 
-class Users extends Controller
+class Users extends Base
 {
-	public function login( $req, $res )
+	public function index()
 	{
-		$tpl = new Template();
-		return $tpl->render( 'users/login' );
+		return $this->tpl->render( 'users/index' );
+	}
+
+	public function login()
+	{
+		return $this->tpl->render( 'users/login' );
+	}
+
+	public function viewProfile( $id, $slug )
+	{
+		return 'View profile of user with ID ' . $id . ' -> ' . $slug;
 	}
 }

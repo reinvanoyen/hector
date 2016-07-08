@@ -2,27 +2,13 @@
 
 	<head>
 		<title><?php $this->getBlock( 'title'); ?></title>
+		<base href="<?php echo htmlspecialchars( $this->base ); ?>" />
+		<link rel="stylesheet" href="assets/css/style.css" />
 	</head>
 
 	<body>
 
-		<div id="wrapper">
-
-			<header>
-				<h1><?php $this->getBlock( 'title'); ?></h1>
-			</header>
-
-			<div id="main">
-
-				<?php $this->getBlock( 'main'); ?>
-
-			</div>
-
-			<footer>
-				&copy; Copyright
-			</footer>
-
-		</div>
+		<?php $this->getBlock( 'body'); ?>
 
 	</body>
 

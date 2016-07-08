@@ -36,10 +36,16 @@ function exceptionHandler( /*\Exception*/ $exception )
 
 function init()
 {
-	set_error_handler( [ '\\Hector\\PHPException', 'handleError' ] );
 	set_exception_handler( 'Hector\\exceptionHandler' );
 
-	require_once __DIR__ . '/autoload.php';
+	require_once __DIR__ . '/Core/Autoloader.php';
+
+	$autoloader = new Autoloader();
+	$autoloader->addNamespace( 'Hector', 'Hector/' );
+	$autoloader->addNamespace( 'App', 'App/' );
+	$autoloader->register();
+
+	require_once __DIR__ . '/Helpers/Http.php';
 	require_once __DIR__ . '/Helpers/Type.php';
 	require_once __DIR__ . '/Helpers/String.php';
 	require_once __DIR__ . '/Helpers/Regex.php';

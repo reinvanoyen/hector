@@ -1,6 +1,6 @@
 {{ extends "base" }}
 
-	{{ block "title" }}Ok dit is VET{{ /block }}
+	{{ block "title" }}Example{{ /block }}
 
 	{{ block "main" }}
 

@@ -4,19 +4,12 @@ namespace App;
 
 use Aegis\Template;
 use Hector\Core\Application;
-use Hector\Core\Http\Middleware\AfterMiddleware;
-use Hector\Core\Http\Middleware\BeforeMiddleware;
 
 // Config
 
-\Aegis\Template::$debug = TRUE;
-\Aegis\Template::$cacheDirectory = 'App/Example/cache/templates/';
-\Aegis\Template::$templateDirectory = 'App/Example/View/';
-
-// Set some CONSTANTS
-
-define( 'App\\HOST', 'rein.tnt.lan' );
-define( 'App\\ROOT', '/hector/' );
+Template::$debug = TRUE;
+Template::$cacheDirectory = 'App/Example/cache/templates/';
+Template::$templateDirectory = 'App/Example/View/';
 
 // Create the application
 
@@ -28,6 +21,7 @@ $app->group( 'users/', function() use ( $app ) {
 
 	$app->get( '', 'Users.index' );
 	$app->get( 'login/', 'Users.login' );
+	$app->get( 'profile/(?<id>\d+)/(?<slug>.+)/', 'Users.viewProfile' );
 } );
 
 $app->start();
