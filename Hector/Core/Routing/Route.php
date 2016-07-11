@@ -37,8 +37,8 @@ class Route
 	public function match( ServerRequestInterface $request )
 	{
 		$path = Http::getPath( $request );
-		
-		if( $this->parent->getPrefix() ) {
+
+		if( $this->parent && $this->parent->getPrefix() ) {
 
 			if( String\startsWith( $path, $this->parent->getPrefix() ) ) {
 

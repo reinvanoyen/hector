@@ -38,6 +38,7 @@ function init()
 {
 	set_exception_handler( 'Hector\\exceptionHandler' );
 
+	require __DIR__ . '/../vendor/autoload.php';
 	require_once __DIR__ . '/Core/Autoloader.php';
 
 	$autoloader = new Autoloader();

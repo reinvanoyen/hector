@@ -52,7 +52,14 @@ class Http
 
 	public static function getPath( Request $request )
 	{
-		$path = substr( $request->getUri()->getPath(), strlen( self::getBasePath( $request ) ) );
-		return ltrim( $path, '/' );
+		$path = ltrim( $request->getUri()->getPath(), '/' );
+		$base = self::getBasePath( $request );
+
+		if( substr( $path, 0, strlen( $base ) ) === $base ) {
+
+			$path = substr( $path, strlen( $base ) );
+		}
+
+		return $path;
 	}
 }
