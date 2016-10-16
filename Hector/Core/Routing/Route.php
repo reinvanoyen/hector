@@ -4,7 +4,7 @@ namespace Hector\Core\Routing;
 
 use Hector\Helpers\Http;
 use Hector\Helpers\Regex;
-use Hector\Helpers\String;
+use Hector\Helpers\String\startsWith;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Hector\Core\Http\Middleware\MiddlewareableTrait;
@@ -40,7 +40,7 @@ class Route
 
 		if( $this->parent && $this->parent->getPrefix() ) {
 
-			if( String\startsWith( $path, $this->parent->getPrefix() ) ) {
+			if( startsWith( $path, $this->parent->getPrefix() ) ) {
 
 				$pathWithoutPrefix = substr( $path, strlen( $this->parent->getPrefix() ) );
 
