@@ -1,5 +1,5 @@
-<?=$this->renderHead( 'base')?><?php $this->setBlock( 'title', function() { ?>Example<?php } ); ?><?php $this->setBlock( 'main', function() { ?>
-
-		<a href="users/login/">Login</a>
-
-	<?php } ); ?><?=$this->renderBody( 'base')?>
+<form method="post">
+	<input name="username" />
+	<input name="password" />
+	<button>Send</button>
+</form>

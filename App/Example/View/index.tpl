@@ -1,11 +1,5 @@
-{{ extends "base" }}
-
-	{{ block "title" }}Example{{ /block }}
-
-	{{ block "main" }}
-
-		<a href="users/login/">Login</a>
-
-	{{ /block }}
-
-{{ /extends }}
+<form method="post">
+	<input name="username" />
+	<input name="password" />
+	<button>Send</button>
+</form>

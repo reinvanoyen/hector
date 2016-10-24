@@ -16,6 +16,7 @@ Template::$templateDirectory = 'App/Example/View/';
 $app = new Application( 'Example' );
 
 $app->get( '', 'Pages.index' );
+$app->post( '', 'Pages.validateLogin' );
 
 $app->group( 'users/', function() use ( $app ) {
 

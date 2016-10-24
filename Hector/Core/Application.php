@@ -2,6 +2,7 @@
 
 namespace Hector\Core;
 
+use Hector\Core\Session;
 use Hector\Core\Routing\Router;
 use Hector\Core\Http\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
@@ -19,6 +20,7 @@ class Application
 
 	public function start()
 	{
+		Session::start( $this->name );
 		$response = $this->router->route( ServerRequest::fromGlobals() );
 		$this->respond( $response );
 	}
