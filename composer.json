@@ -11,12 +11,12 @@
     ],
     "minimum-stability": "dev",
     "require": {
-      "php": "^5.6.0",
+      "php": "^7.0",
         "reinvanoyen/aegis": "dev-master",
         "psr/http-message": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.0"
+        "phpunit/phpunit": "^5.6.0"
     },
     "autoload": {
       "psr-4": { "Hector\\": "lib/Hector" }
