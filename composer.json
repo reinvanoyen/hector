@@ -16,7 +16,7 @@
         "psr/http-message": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.4"
+        "phpunit/phpunit": "^7.0"
     },
     "autoload": {
       "psr-4": { "Hector\\": "lib/Hector" }
