@@ -19,6 +19,12 @@
       "phpunit/phpunit": "5.0.*"
     },
     "autoload": {
-      "psr-4": { "Hector\\": "lib/Hector" }
+      "psr-4": { "Hector\\": "lib/Hector" },
+      "files": [
+        "lib/Hector/Helpers/Http.php",
+        "lib/Hector/Helpers/Regex.php",
+        "lib/Hector/Helpers/String.php",
+        "lib/Hector/Helpers/Type.php"
+      ]
     }
 }

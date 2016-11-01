@@ -1,1 +1,0 @@
-<?=$this->renderBody( 'base')?>

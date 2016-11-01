@@ -34,22 +34,4 @@ function exceptionHandler( /*\Exception*/ $exception )
 	exit;
 }
 
-function init()
-{
-	set_exception_handler( 'Hector\\exceptionHandler' );
-
-	require __DIR__ . '/../vendor/autoload.php';
-	require_once __DIR__ . '/Core/Autoloader.php';
-
-	$autoloader = new Autoloader();
-	$autoloader->addNamespace( 'Hector', 'Hector/' );
-	$autoloader->addNamespace( 'App', 'App/' );
-	$autoloader->register();
-
-	require_once __DIR__ . '/Helpers/Http.php';
-	require_once __DIR__ . '/Helpers/Type.php';
-	require_once __DIR__ . '/Helpers/String.php';
-	require_once __DIR__ . '/Helpers/Regex.php';
-}
-
-init();
+set_exception_handler( 'Hector\\exceptionHandler' );

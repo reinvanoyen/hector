@@ -14,8 +14,8 @@ class Application
 
 	public function __construct( $name )
 	{
-		$this->name = $name;
-		$this->router = new Router();
+        $this->name = $name;
+        $this->router = new Router();
 	}
 
 	public function start()
@@ -73,3 +73,5 @@ class Application
 		return $this->router->delete( $pattern, $callable );
 	}
 }
+
+require_once __DIR__ . '/../init.php';

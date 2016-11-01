@@ -1,1 +1,0 @@
-<?php $this->renderHead( 'base'); ?><?php $this->renderBody( 'base'); ?>
