@@ -16,16 +16,14 @@ trait RouteableTrait
 
 	public function addRoute( $method, $pattern, $action )
 	{
-		if( $this->registeringParent !== NULL ) {
-
-			$route = $this->registeringParent->addRoute( $method, $pattern, $action );
+		if( $this->registeringParent !== null ) {
+			$route = $this->registeringParent->addRoute($method, $pattern, $action);
 		} else {
-
-			$route = $this->routes[ $method ][] = new Route( $pattern, $action );
+			$route = $this->routes[ $method ][] = new Route($pattern, $action);
 		}
 
 		$route->setParent( ( $this->registeringParent ? $this->registeringParent : $this ) );
-		
+
 		return $route;
 	}
 

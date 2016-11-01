@@ -2,7 +2,7 @@
 
 namespace Hector\Form\Input;
 
-class Text extends Input
+class Hidden extends Text
 {
-	
+
 }

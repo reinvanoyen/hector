@@ -14,7 +14,7 @@ abstract class Session
 		self::$data =& $_SESSION;
 
 		if( ! self::has( 'csrf' ) ) {
-			self::set( 'csrf', random_bytes( 64 ) );
+			self::set( 'csrf', substr(md5(microtime()),rand(0,26),5) );
 		}
 	}
 

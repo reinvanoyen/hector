@@ -9,45 +9,49 @@ use Hector\Form\Input\Csrf;
 
 class Form
 {
-	public $request;
-	private $inputs;
+    public $request;
+    private $inputs;
 
-	public function __construct( Request $request )
-	{
-		$this->request = $request;
-		
-		$this->add( new Csrf() );
-	}
+    public function __construct( Request $request )
+    {
+        $this->request = $request;
 
-	public function add( Input $input )
-	{
-		$input->setForm( $this );
-		$this->inputs[] = $input;
-	}
-	
-	private function isSent()
-	{
-		if( $this->request->getMethod() === 'POST' ) {
-			return true;
-		}
-		return false;
-	}
+        $this->add( new Csrf() );
+    }
 
-	public function validate()
-	{
-		if( $this->isSent() ) {
+    public function add( Input $input )
+    {
+        $input->setForm( $this );
+        $this->inputs[] = $input;
+    }
 
-			$isValid = true;
+    public function get( String $inputName )
+    {
+        return $this->inputs[ $inputName ];
+    }
 
-			foreach( $this->inputs as $input )
-			{
-				$input->getValue();
-				$isValid = $input->validate() && $isValid;
-			}
+    private function isSent()
+    {
+        if( $this->request->getMethod() === 'POST' ) {
+            return true;
+        }
+        return false;
+    }
 
-			return $isValid;
-		}
+    public function validate()
+    {
+        if( $this->isSent() ) {
 
-		return false;
-	}
+            $isValid = true;
+
+            foreach( $this->inputs as $input ) {
+
+                $isValid = $input->validate() && $isValid;
+            }
+
+            return $isValid;
+        }
+
+        return false;
+    }
 }

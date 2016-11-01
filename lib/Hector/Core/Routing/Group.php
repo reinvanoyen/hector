@@ -2,27 +2,27 @@
 
 namespace Hector\Core\Routing;
 
-use Hector\Core\Http\Middleware\MiddlewareInterface;
-
 class Group
 {
-	use RouteableTrait;
+    use RouteableTrait;
 
-	public function __construct( $prefix = '' )
-	{
-		$this->setPrefix( $prefix );
-	}
+    private $router;
 
-	public function add( $middleware )
-	{
-		foreach( $this->routes as $method => $routes ) {
+    public function __construct( String $prefix = '' )
+    {
+        $this->setPrefix( $prefix );
+    }
 
-			foreach( $routes as $route ) {
+    public function add( $middleware )
+    {
+        foreach( $this->routes as $method => $routes ) {
 
-				$route->add( $middleware );
-			}
-		}
+            foreach( $routes as $route ) {
 
-		return $this;
-	}
+                $route->add( $middleware );
+            }
+        }
+
+        return $this;
+    }
 }

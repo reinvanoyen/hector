@@ -12,7 +12,7 @@ class Application
 	private $name;
 	private $router;
 
-	public function __construct( $name )
+	public function __construct( String $name )
 	{
         $this->name = $name;
         $this->router = new Router();
@@ -20,9 +20,20 @@ class Application
 
 	public function start()
 	{
-		Session::start( $this->name );
-		$response = $this->router->route( ServerRequest::fromGlobals() );
-		$this->respond( $response );
+        Runtime::set('appname', $this->name);
+        // Create the autoloader
+        $autoloader = new Autoloader();
+        $autoloader->addNamespace( $this->name, $this->name . '/' );
+        $autoloader->register();
+
+        // Start the session
+        Session::start( $this->name );
+
+        // Get the response
+        $response = $this->router->route( ServerRequest::fromGlobals() );
+
+        // Respond
+        $this->respond( $response );
 	}
 
 	private function respond( ResponseInterface $response )
@@ -47,6 +58,11 @@ class Application
 
 		echo $response->getBody()->getContents();
 	}
+
+	public function getName()
+    {
+        return $this->name;
+    }
 
 	public function group( $name, $callable )
 	{

@@ -3,57 +3,56 @@
 namespace Hector\Core\Routing;
 
 use Hector\Core\Http\Response;
-use Hector\Helpers\Regex;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Router
 {
-	use RouteableTrait;
+    use RouteableTrait;
 
-	private $groups = [];
+    private $groups = [];
 
-	public function route( ServerRequestInterface $request )
-	{
-		$method = $request->getMethod();
-		$routes = $this->getRoutesForMethod( $method );
+    public function route( ServerRequestInterface $request )
+    {
+        $method = $request->getMethod();
+        $routes = $this->getRoutesForMethod( $method );
 
-		foreach( $this->groups as $group ) {
+        foreach( $this->groups as $group ) {
 
-			$routes = array_merge( $routes, $group->getRoutesForMethod( $method ) );
-		}
+            $routes = array_merge( $routes, $group->getRoutesForMethod( $method ) );
+        }
 
-		foreach( $routes as $route ) {
+        foreach( $routes as $route ) {
 
-			if( ( $matches = $route->match( $request ) ) !== FALSE ) {
+            if( ( $matches = $route->match( $request ) ) !== FALSE ) {
 
-				try {
+                try {
 
-					return $route->execute( $request, new Response( 200 ) );
+                    return $route->execute( $request, new Response( 200 ) );
 
-				} catch( NotFound $e ) {
+                } catch( NotFound $e ) {
 
-					continue;
-				}
-			}
-		}
+                    continue;
+                }
+            }
+        }
 
-		return new Response( 404 );
-	}
+        return new Response( 404 );
+    }
 
-	public function group( $prefix, $callable )
-	{
-		$group = new Group( $prefix );
+    public function group( String $prefix, $callable )
+    {
+        $group = new Group($prefix);
 
-		$this->groups[] = $group;
+        $this->groups[] = $group;
 
-		$this->registeringParent = $group;
+        $this->registeringParent = $group;
 
-		$callable();
+        $callable();
 
-		$parent = $this->registeringParent;
+        $parent = $this->registeringParent;
 
-		$this->registeringParent = NULL;
+        $this->registeringParent = NULL;
 
-		return $parent;
-	}
+        return $parent;
+    }
 }
