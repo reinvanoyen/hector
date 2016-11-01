@@ -11,20 +11,23 @@ class Application
 {
 	private $name;
 	private $router;
+    private $autoloader;
 
 	public function __construct( String $name )
 	{
         $this->name = $name;
         $this->router = new Router();
+
+        // Create the autoloader
+        $this->autoloader = new Autoloader();
+        $this->autoloader->addNamespace( $this->name, $this->name . '/' );
+        $this->autoloader->register();
 	}
 
 	public function start()
 	{
+        // Set application name
         Runtime::set('appname', $this->name);
-        // Create the autoloader
-        $autoloader = new Autoloader();
-        $autoloader->addNamespace( $this->name, $this->name . '/' );
-        $autoloader->register();
 
         // Start the session
         Session::start( $this->name );

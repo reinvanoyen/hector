@@ -6,8 +6,6 @@ class Group
 {
     use RouteableTrait;
 
-    private $router;
-
     public function __construct( String $prefix = '' )
     {
         $this->setPrefix( $prefix );
