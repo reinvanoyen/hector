@@ -14,6 +14,11 @@ abstract class Input
         $this->name = $name;
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
     public function setForm( Form $form )
     {
         $this->form = $form;

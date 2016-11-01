@@ -22,7 +22,7 @@ class Form
     public function add( Input $input )
     {
         $input->setForm( $this );
-        $this->inputs[] = $input;
+        $this->inputs[ $input->getName() ] = $input;
     }
 
     public function get( String $inputName )
