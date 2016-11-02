@@ -9,7 +9,7 @@ abstract class Input
     private $form;
     private $name;
 
-    public function __construct( String $name )
+    public function __construct(String $name)
     {
         $this->name = $name;
     }
@@ -33,4 +33,6 @@ abstract class Input
     {
         return $this->form->request->getParsedBody()[ $this->name ];
     }
+
+    abstract function render();
 }

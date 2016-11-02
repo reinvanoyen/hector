@@ -8,7 +8,7 @@ class Csrf extends Hidden
 {
     public function __construct()
     {
-        parent::__construct( '__csrf' );
+        parent::__construct( '__csrf', Session::get('csrf') );
     }
 
     public function validate()

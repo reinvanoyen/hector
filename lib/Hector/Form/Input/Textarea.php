@@ -2,10 +2,9 @@
 
 namespace Hector\Form\Input;
 
-class Text extends Input
+class Textarea extends Input
 {
     private $default;
-    protected $type = 'text';
 
     public function __construct(String $name, String $default = '')
     {
@@ -13,13 +12,13 @@ class Text extends Input
         $this->default = $default;
     }
 
-	public function render()
+    public function render()
     {
-        $html = '<input type="'.$this->type.'" name="'.$this->getName().'"';
+        $html = '<textarea name="'.$this->getName().'">';
         if ($this->default) {
-            $html .= ' value="'.$this->default.'"';
+            $html .= $this->default;
         }
-        $html .= ' />';
+        $html .= '</textarea>';
         return $html;
     }
 }
