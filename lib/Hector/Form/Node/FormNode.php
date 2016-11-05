@@ -8,6 +8,7 @@ use Aegis\ParserInterface;
 use Aegis\Node;
 use Aegis\Token;
 use Aegis\Runtime\Node\ExpressionNode;
+use Aegis\Runtime\Node\ConstantNode;
 
 class FormNode extends Node
 {
@@ -19,6 +20,15 @@ class FormNode extends Node
             $parser->traverseUp();
             ExpressionNode::parse($parser);
             $parser->setAttribute();
+
+            if ($parser->accept(Token::T_IDENT, 'autocomplete')) {
+                $parser->advance();
+
+                if (ConstantNode::parse($parser)) {
+                    $parser->setAttribute();
+                }
+            }
+
             $parser->skip(Token::T_CLOSING_TAG);
             $parser->parseOutsideTag();
             $parser->skip(Token::T_OPENING_TAG);
@@ -33,7 +43,19 @@ class FormNode extends Node
 
     public function compile(CompilerInterface $compiler)
     {
-        $compiler->write('<form method="post">');
+        $compiler->write('<form method="post"');
+
+        if ( $this->getAttribute(1) ) {
+            $compiler->write(' autocomplete="');
+            if ($this->getAttribute(1)->getValue() === 'false') {
+                $compiler->write('off');
+            } else {
+                $compiler->write('on');
+            }
+            $compiler->write('"');
+        }
+
+        $compiler->write(' >');
 
         $formAttr = $this->getAttribute(0);
         $subcompiler = new Compiler($formAttr);
