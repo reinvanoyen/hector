@@ -8,6 +8,7 @@ use Hector\Form\Input\Hidden;
 use Hector\Form\Input\Input;
 use Hector\Form\Input\Csrf;
 use Hector\Form\Input\Text;
+use Hector\Form\Input\Password;
 use Hector\Form\Input\Textarea;
 
 class Form
@@ -31,12 +32,17 @@ class Form
         $this->add(new Text($inputName));
     }
 
-    public function addHidden(String $inputName )
+    public function addPassword(String $inputName)
+    {
+        $this->add(new Password($inputName));
+    }
+
+    public function addHidden(String $inputName)
     {
         $this->add(new Hidden($inputName));
     }
 
-    public function addTextarea(String $inputName )
+    public function addTextarea(String $inputName)
     {
         $this->add(new Textarea($inputName));
     }

@@ -19,6 +19,16 @@ class InputNode extends Node
             if (ExpressionNode::parse($parser)) {
                 $parser->setAttribute();
             }
+
+            // @TODO named attributes for cases like this placeholder
+            if ($parser->accept(Token::T_IDENT, 'placeholder')) {
+                $parser->advance();
+
+                if (ExpressionNode::parse($parser)) {
+                    $parser->setAttribute();
+                }
+            }
+
             $parser->skip(Token::T_CLOSING_TAG);
             $parser->traverseDown();
             $parser->parseOutsideTag();
@@ -32,7 +42,15 @@ class InputNode extends Node
         if( $this->getAttribute(0) ) {
             $compiler->write('<?php echo $form->get(');
             $this->getAttribute(0)->compile($compiler);
-            $compiler->write(')->render(); ?>');
+            $compiler->write(')->render(');
+
+            if ( $this->getAttribute(1) ) {
+                $compiler->write('[ \'placeholder\' => ');
+                $this->getAttribute(1)->compile($compiler);
+                $compiler->write(']');
+            }
+
+            $compiler->write('); ?>');
         }
     }
 }

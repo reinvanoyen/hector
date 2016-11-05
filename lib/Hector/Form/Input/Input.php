@@ -34,5 +34,5 @@ abstract class Input
         return $this->form->request->getParsedBody()[ $this->name ];
     }
 
-    abstract function render();
+    abstract function render(Array $opts);
 }

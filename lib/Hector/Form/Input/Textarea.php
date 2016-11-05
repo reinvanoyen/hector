@@ -12,7 +12,7 @@ class Textarea extends Input
         $this->default = $default;
     }
 
-    public function render()
+    public function render(Array $opts = [])
     {
         $html = '<textarea name="'.$this->getName().'">';
         if ($this->default) {
