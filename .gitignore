@@ -1,3 +1,5 @@
 .idea
 /vendor
+/App
 .DS_Store
+index.php

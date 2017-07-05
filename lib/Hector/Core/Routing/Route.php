@@ -2,7 +2,6 @@
 
 namespace Hector\Core\Routing;
 
-use Hector\Core\Runtime;
 use Hector\Helpers\Http;
 use Hector\Helpers\Regex;
 use Hector\Helpers\String as Str;
@@ -74,10 +73,9 @@ class Route
         } else {
 
             $parts = explode( '.', $this->action );
-            $controller = Runtime::get('appname') . '\\Controller\\' . $parts[ 0 ];
-            $method = $parts[ 1 ];
+            $method = array_pop( $parts );
+            $controller = implode( '\\', $parts );
             $controller = new $controller( $request, $response );
-
             $callable = [ $controller, $method ];
         }
 

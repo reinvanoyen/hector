@@ -2,6 +2,7 @@
 
 namespace Hector\Core;
 
+use Hector\Core\DependencyInjection\Container;
 use Hector\Core\Session;
 use Hector\Core\Routing\Router;
 use Hector\Core\Http\ServerRequest;
@@ -9,28 +10,30 @@ use Psr\Http\Message\ResponseInterface;
 
 class Application
 {
-	private $name;
+	private $directory;
 	private $router;
     private $autoloader;
 
-	public function __construct( String $name )
+	public function __construct( String $directory )
 	{
-        $this->name = $name;
+        $this->directory = $directory;
+
+        // Intantiate the router
         $this->router = new Router();
 
+        // Create our container
+        $this->container = new Container();
+
         // Create the autoloader
-        $this->autoloader = new Autoloader();
-        $this->autoloader->addNamespace( $this->name, $this->name . '/' );
+		$this->autoloader = new Autoloader();
+        $this->autoloader->addNamespace( $this->directory, $this->directory . '/' );
         $this->autoloader->register();
 	}
 
 	public function start()
 	{
-        // Set application name
-        Runtime::set('appname', $this->name);
-
         // Start the session
-        Session::start( $this->name );
+        Session::start( $this->directory );
 
         // Get the response
         $response = $this->router->route( ServerRequest::fromGlobals() );
@@ -61,11 +64,6 @@ class Application
 
 		echo $response->getBody()->getContents();
 	}
-
-	public function getName()
-    {
-        return $this->name;
-    }
 
 	public function group( $name, $callable )
 	{
