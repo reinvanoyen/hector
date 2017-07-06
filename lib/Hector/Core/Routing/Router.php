@@ -2,6 +2,7 @@
 
 namespace Hector\Core\Routing;
 
+use Hector\Core\Application;
 use Hector\Core\Http\Response;
 use Psr\Http\Message\ServerRequestInterface;
 

@@ -2,6 +2,8 @@
 
 namespace Hector\Core\Routing;
 
+use Hector\Core\Application;
+
 trait RouteableTrait
 {
 	private $registeringParent = NULL;
@@ -14,12 +16,12 @@ trait RouteableTrait
 		'DELETE' => [],
 	];
 
-	public function addRoute( $method, $pattern, $action )
+	public function addRoute( Application $app, $method, $pattern, $action )
 	{
 		if( $this->registeringParent !== null ) {
-			$route = $this->registeringParent->addRoute($method, $pattern, $action);
+			$route = $this->registeringParent->addRoute($app, $method, $pattern, $action);
 		} else {
-			$route = $this->routes[ $method ][] = new Route($pattern, $action);
+			$route = $this->routes[ $method ][] = new Route($app, $pattern, $action);
 		}
 
 		$route->setParent( ( $this->registeringParent ? $this->registeringParent : $this ) );
@@ -42,8 +44,8 @@ trait RouteableTrait
 		return $this->prefix;
 	}
 
-	public function get( $pattern, $action ) { return $this->addRoute( 'GET', $pattern, $action ); }
-	public function post( $pattern, $action ) { return $this->addRoute( 'POST', $pattern, $action ); }
-	public function delete( $pattern, $action ) { return $this->addRoute( 'DELETE', $pattern, $action ); }
-	public function put( $pattern, $action ) { return $this->addRoute( 'PUT', $pattern, $action ); }
+	public function get( Application $app, $pattern, $action ) { return $this->addRoute( $app, 'GET', $pattern, $action ); }
+	public function post( Application $app, $pattern, $action ) { return $this->addRoute( $app, 'POST', $pattern, $action ); }
+	public function delete( Application $app, $pattern, $action ) { return $this->addRoute( $app, 'DELETE', $pattern, $action ); }
+	public function put( Application $app, $pattern, $action ) { return $this->addRoute( $app, 'PUT', $pattern, $action ); }
 }

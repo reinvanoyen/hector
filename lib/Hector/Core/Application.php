@@ -3,7 +3,6 @@
 namespace Hector\Core;
 
 use Hector\Core\DependencyInjection\Container;
-use Hector\Core\Session;
 use Hector\Core\Routing\Router;
 use Hector\Core\Http\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
@@ -33,7 +32,7 @@ class Application
 	public function start()
 	{
         // Start the session
-        Session::start( $this->directory );
+		\Hector\Core\Session::start( $this->directory );
 
         // Get the response
         $response = $this->router->route( ServerRequest::fromGlobals() );
@@ -72,22 +71,22 @@ class Application
 
 	public function get( $pattern, $callable )
 	{
-		return $this->router->get( $pattern, $callable );
+		return $this->router->get( $this, $pattern, $callable );
 	}
 
 	public function post( $pattern, $callable )
 	{
-		return $this->router->post( $pattern, $callable );
+		return $this->router->post( $this, $pattern, $callable );
 	}
 
 	public function put( $pattern, $callable )
 	{
-		return $this->router->put( $pattern, $callable );
+		return $this->router->put( $this, $pattern, $callable );
 	}
 
 	public function delete( $pattern, $callable )
 	{
-		return $this->router->delete( $pattern, $callable );
+		return $this->router->delete( $this, $pattern, $callable );
 	}
 }
 

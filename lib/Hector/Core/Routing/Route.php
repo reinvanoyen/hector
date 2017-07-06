@@ -2,6 +2,7 @@
 
 namespace Hector\Core\Routing;
 
+use Hector\Core\Application;
 use Hector\Helpers\Http;
 use Hector\Helpers\Regex;
 use Hector\Helpers\String as Str;
@@ -13,13 +14,15 @@ class Route
 {
 	use MiddlewareableTrait;
 
+	private $app;
     private $pattern;
     private $action;
     private $attributes;
     private $parent;
 
-    public function __construct( String $pattern, $action )
+    public function __construct( Application $app, String $pattern, $action )
     {
+    	$this->app = $app;
         $this->pattern = $pattern;
         $this->action = $action;
     }
@@ -75,7 +78,7 @@ class Route
             $parts = explode( '.', $this->action );
             $method = array_pop( $parts );
             $controller = implode( '\\', $parts );
-            $controller = new $controller( $request, $response );
+            $controller = new $controller( $this->app, $request, $response );
             $callable = [ $controller, $method ];
         }
 
