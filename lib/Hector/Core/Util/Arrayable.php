@@ -46,4 +46,9 @@ class Arrayable implements \ArrayAccess, \Iterator, \Countable, \JsonSerializabl
 	{
 		$this->data[ $k ] = $v;
 	}
+
+	public function toArray()
+	{
+		return $this->data;
+	}
 }

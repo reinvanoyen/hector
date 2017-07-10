@@ -20,6 +20,9 @@ $app->container->factory( 'Template', function() {
 	return $tpl;
 } );
 
-$app->get( '(?<id>\d+)/', 'App.MyController.index' );
+$app->get( '', 'App.Pages.index' );
+$app->get( '(?<id>\d+)/', 'App.Pages.view' );
+$app->get( 'create/', 'App.Pages.create' );
+$app->get( 'delete/(?<id>\d+)/', 'App.Pages.delete' );
 
 $app->start();
