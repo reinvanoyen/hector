@@ -12,9 +12,21 @@ class Model extends Arrayable
 	const TABLE = '';
 	const CONNECTION = '';
 
-	private static function getConnection() : Connection
+	protected static $aliases = [];
+
+	public function __get($property)
 	{
-		return ConnectionManager::get(static::CONNECTION);
+		if( isset( static::$aliases[ $property ] ) )
+		{
+
+		}
+
+		/*
+			if( method_exists($this, $property) ) {
+				return $this->{$property}($this->{$property});
+			}
+		*/
+		return parent::__get($property);
 	}
 
 	public static function all($query = '', $values = [])
@@ -52,5 +64,10 @@ class Model extends Arrayable
 	public function delete()
 	{
 		self::getConnection()->query('DELETE FROM `'.static::TABLE.'` WHERE id = ?', [ $this->{ static::PRIMARY_KEY } ]);
+	}
+
+	private static function getConnection() : Connection
+	{
+		return ConnectionManager::get(static::CONNECTION);
 	}
 }
