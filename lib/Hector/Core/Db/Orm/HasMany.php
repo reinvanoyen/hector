@@ -15,8 +15,6 @@ class HasMany extends Relationship
 
 	public function load($sourceModel)
 	{
-		$query = 'WHERE `' . $this->foreignKey . '` = ?';
-		$bindings = [ $sourceModel->{ $sourceModel::PRIMARY_KEY } ];
-		return call_user_func( [ $this->model, 'all' ], $query, $bindings );
+		return call_user_func( [ $this->model, 'all' ], 'WHERE `' . $this->foreignKey . '` = ?', [ $sourceModel->{ $sourceModel::PRIMARY_KEY } ] );
 	}
 }
