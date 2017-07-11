@@ -11,6 +11,7 @@ class Query
 
 	public static $methodMap = [
 		'where' => 'Hector\\Core\\Db\\QueryBuilder\\Where',
+		'limit' => 'Hector\\Core\\Db\\QueryBuilder\\Limit',
 	];
 
 	public function addQueryPart( QueryPart $queryPart )
@@ -32,8 +33,13 @@ class Query
 
 	public function addBinding($value)
 	{
+		if( is_array($value) ) {
+			foreach( $value as $v ) {
+				$this->addBinding($v);
+			}
+			return;
+		}
 		$this->bindings[] = $value;
-		return '?';
 	}
 
 	public function getBindings()
@@ -41,11 +47,19 @@ class Query
 		return $this->bindings;
 	}
 
-	public static function select( $columns, $table )
+	public static function select($columns, $table)
 	{
 		$query = new static();
-		$select = new Select( $columns, $table );
-		$query->addQueryPart( $select );
+		$select = new Select($columns, $table);
+		$query->addQueryPart($select);
 		return $select;
+	}
+
+	public static function delete($table)
+	{
+		$query = new static();
+		$delete = new Delete($table);
+		$query->addQueryPart($delete);
+		return $delete;
 	}
 }

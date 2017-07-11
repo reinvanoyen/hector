@@ -7,7 +7,7 @@ class Select extends QueryPart
 	private $columns;
 	private $table;
 
-	const CONNECTS_WITH = [ 'where', ];
+	const CONNECTS_WITH = [ 'where', 'limit', ];
 
 	public function __construct($columns = [], $table)
 	{

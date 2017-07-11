@@ -4,26 +4,20 @@ namespace Hector\Core\Db\QueryBuilder;
 
 class Where extends QueryPart
 {
-	private $conditions = [];
+	private $queryString;
+	private $columns;
 
-	public function __construct($column, $operator, $value)
+	const CONNECTS_WITH = [ 'limit', ];
+
+	public function __construct($query, $columns = [])
 	{
-		$this->conditions[] = [ $column, $operator, $value, ];
+		$this->queryString = $query;
+		$this->columns = $columns;
 	}
 
 	public function getQueryPart() : String
 	{
-		return 'WHERE ' . implode( ' AND ', array_map( function( $condition ) {
-
-			if( count($condition) === 3 ) {
-
-				$condition[2] = $this->getQuery()->addBinding($condition[2]);
-
-				return implode( ' ', $condition );
-			}
-
-			return $condition[0];
-
-		}, $this->conditions ) );
+		$this->getQuery()->addBinding($this->columns);
+		return 'WHERE ' . $this->queryString;
 	}
 }

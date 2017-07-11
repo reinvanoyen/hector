@@ -31,7 +31,10 @@ $app->get( 'delete/(?<id>\d+)/', 'App.Pages.delete' );
 $app->start();
 */
 
-$query = Query::select( ['*'], 'page' )->where( 'title = ?', [ 'nice', ] );
+$query = Query::delete('page')
+	->where( 'title = ?', [ 'nice', ] )
+	->limit( 5 )
+;
 
 echo $query->getQuery()->getQuery();
 echo '<br />';
