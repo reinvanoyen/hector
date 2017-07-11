@@ -11,8 +11,8 @@ class HasOne extends Relationship
 		$this->model = $model;
 	}
 
-	public function load($primary_key_value)
+	public function load($sourceModel)
 	{
-		return $this->model->load($primary_key_value);
+		return call_user_func( [ $this->model, 'load' ], $sourceModel->{ $sourceModel::PRIMARY_KEY } );
 	}
 }

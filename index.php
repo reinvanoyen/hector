@@ -4,6 +4,9 @@ ini_set( 'display_errors', 1 );
 
 require __DIR__ . '/vendor/autoload.php';
 
+use \Hector\Core\Db\QueryBuilder\Query;
+
+/*
 \Aegis\Template::$templateDirectory = 'App/View/';
 
 $app = new Hector\Core\Application( 'App' );
@@ -26,3 +29,10 @@ $app->get( 'create/', 'App.Pages.create' );
 $app->get( 'delete/(?<id>\d+)/', 'App.Pages.delete' );
 
 $app->start();
+*/
+
+$query = Query::select( ['*'], 'page' )->where( [ 'title', 'ok', ] );
+
+echo $query->getQuery()->getQuery();
+echo '<br />';
+var_dump( $query->getQuery()->getBindings() );

@@ -66,4 +66,14 @@ class ModelStack implements \Countable, \SeekableIterator
 	{
 		return $this->index > -1 && $this->index < $this->count();
 	}
+
+	// ORM specific methods
+
+	public function delete()
+	{
+		foreach( $this as $model )
+		{
+			$model->delete();
+		}
+	}
 }

@@ -12,26 +12,28 @@ class Model extends Arrayable
 	const TABLE = '';
 	const CONNECTION = '';
 
-	protected static $aliases = [];
+	protected $relationCache = [];
 
 	public function __get($property)
 	{
-		if( isset( static::$aliases[ $property ] ) )
-		{
+		if( isset( $this->relationCache[ $property ] ) ) {
 
+			return $this->relationCache[ $property ];
+
+		} else if( method_exists($this, $property) ) {
+
+			$relation = $this->{ $property }();
+			$this->relationCache[ $property ] = $relation->load( $this );
+
+			return $this->relationCache[ $property ];
 		}
 
-		/*
-			if( method_exists($this, $property) ) {
-				return $this->{$property}($this->{$property});
-			}
-		*/
 		return parent::__get($property);
 	}
 
 	public static function all($query = '', $values = [])
 	{
-		$stmt = self::getConnection()->query( 'SELECT * FROM `' .  static::TABLE . '` ' . $query, $values );
+		$stmt = self::getConnection()->query(' SELECT * FROM `' .  static::TABLE . '` ' . $query, $values );
 		return new ModelStack( get_called_class(), $stmt->fetchAll( \PDO::FETCH_ASSOC ) );
 	}
 
@@ -69,5 +71,16 @@ class Model extends Arrayable
 	private static function getConnection() : Connection
 	{
 		return ConnectionManager::get(static::CONNECTION);
+	}
+
+	// relations
+	protected function hasOne($model)
+	{
+		return new HasOne($model);
+	}
+
+	protected function hasMany($model)
+	{
+		return new HasMany($model, static::TABLE);
 	}
 }

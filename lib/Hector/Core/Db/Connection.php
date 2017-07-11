@@ -9,6 +9,7 @@ class Connection
 	public function __construct( /*string*/ $host, /*string*/ $username, /*string*/ $password, /*string*/ $dbname )
 	{
 		$this->pdoInstance = new \PDO( 'mysql:host=' . $host . ';dbname=' . $dbname . ';charset=utf8mb4', $username, $password );
+		$this->pdoInstance->setAttribute( \PDO::ATTR_EMULATE_PREPARES, false );
 	}
 
 	private function createStatement( $query, $bindings = [] )
