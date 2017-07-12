@@ -6,6 +6,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 use \Hector\Core\Db\QueryBuilder\Query;
 
+$app = new Hector\Core\Application( 'App' );
+
 /*
 \Aegis\Template::$templateDirectory = 'App/View/';
 
@@ -38,10 +40,28 @@ $query = Query::delete('page')
 	->orderBy( 'title' )
 	->limit( 5, 2 )
 ;
-*/
 
 $query = Query::dropTable('page');
 
 echo $query->getQuery()->getQuery();
 echo '<br />';
 var_dump( $query->getQuery()->getBindings() );
+*/
+
+$manager = new \Hector\Migration\Manager();
+$manager->addRevision( new \App\Migration\UpdateRev() );
+$manager->addRevision( new \App\Migration\UpdateRev() );
+$manager->addRevision( new \App\Migration\UpdateRev() );
+$manager->addRevision( new \App\Migration\UpdateRev() );
+
+$manager->retreiveVersion( function() {
+	return (int) file_get_contents( 'App/version.txt' );
+} );
+
+$manager->storeVersion( function( $version ) {
+	file_put_contents( 'App/version.txt', $version );
+} );
+
+$manager->update();
+
+echo 'current version: ' . $manager->getCurrentVersion();

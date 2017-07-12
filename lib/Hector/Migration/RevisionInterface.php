@@ -1,6 +1,6 @@
 <?php
 
-namespace Hector\Core\Db\Migration;
+namespace Hector\Migration;
 
 interface RevisionInterface
 {
