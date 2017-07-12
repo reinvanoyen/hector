@@ -48,19 +48,11 @@ echo '<br />';
 var_dump( $query->getQuery()->getBindings() );
 */
 
-$manager = new \Hector\Migration\Manager();
+$manager = new \Hector\Migration\Manager( new \Hector\Migration\FileVersionStore( 'App/version.txt' ) );
 $manager->addRevision( new \App\Migration\UpdateRev() );
 $manager->addRevision( new \App\Migration\UpdateRev() );
 $manager->addRevision( new \App\Migration\UpdateRev() );
 $manager->addRevision( new \App\Migration\UpdateRev() );
-
-$manager->retreiveVersion( function() {
-	return (int) file_get_contents( 'App/version.txt' );
-} );
-
-$manager->storeVersion( function( $version ) {
-	file_put_contents( 'App/version.txt', $version );
-} );
 
 $manager->update();
 

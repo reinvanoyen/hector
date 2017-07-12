@@ -4,8 +4,7 @@ namespace Hector\Migration;
 
 class Manager
 {
-	private $retreive;
-	private $store;
+	private $versionStore;
 
 	private $isRetreived;
 
@@ -13,27 +12,18 @@ class Manager
 	private $maxVersion = -1;
 	private $currentVersion = -1;
 
-	public function retreiveVersion( $retreive )
+	public function __construct( VersionStoreInterface $versionStore )
 	{
-		$this->retreive = $retreive;
+		$this->versionStore = $versionStore;
 	}
 
-	public function storeVersion( $store )
+	public function assertRetreived()
 	{
-		$this->store = $store;
-	}
-
-	public function assertRetreiveAndStore()
-	{
-		if( $this->retreive && $this->store ) {
-			if( ! $this->isRetreived ) {
-				$this->currentVersion = ($this->retreive)();
-				$this->isRetreived = true;
-			}
-			return;
+		if( ! $this->isRetreived ) {
+			$this->currentVersion = $this->versionStore->retreive();
+			$this->isRetreived = true;
 		}
-
-		throw new \Exception( 'Retreive and store should be set first' );
+		return;
 	}
 
 	public function addRevision( RevisionInterface $revision )
@@ -54,7 +44,7 @@ class Manager
 
 	public function rollTo( int $version )
 	{
-		$this->assertRetreiveAndStore();
+		$this->assertRetreived();
 
 		$version = max( min( $version, $this->maxVersion ), 0 );
 
@@ -80,7 +70,7 @@ class Manager
 			return;
 		}
 
-		($this->store)($this->currentVersion);
+		$this->versionStore->store($this->currentVersion);
 	}
 
 	public function getCurrentVersion() : int
