@@ -15,6 +15,6 @@ class Limit extends QueryPart
 
 	public function getQueryPart() : String
 	{
-		return 'LIMIT ' . $this->rowCount . ' OFFSET ' . $this->offset;
+		return 'LIMIT ' . $this->rowCount . ( $this->offset !== 0 ? ' OFFSET ' . $this->offset : '' );
 	}
 }

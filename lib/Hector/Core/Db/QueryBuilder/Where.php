@@ -7,7 +7,7 @@ class Where extends QueryPart
 	private $queryString;
 	private $columns;
 
-	const CONNECTS_WITH = [ 'limit', ];
+	const CONNECTS_WITH = [ 'orderBy', 'limit', ];
 
 	public function __construct($query, $columns = [])
 	{

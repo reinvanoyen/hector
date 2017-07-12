@@ -12,6 +12,9 @@ class Query
 	public static $methodMap = [
 		'where' => 'Hector\\Core\\Db\\QueryBuilder\\Where',
 		'limit' => 'Hector\\Core\\Db\\QueryBuilder\\Limit',
+		'orderBy' => 'Hector\\Core\\Db\\QueryBuilder\\OrderBy',
+		'values' => 'Hector\\Core\\Db\\QueryBuilder\\Values',
+		'set' => 'Hector\\Core\\Db\\QueryBuilder\\Set',
 	];
 
 	public function addQueryPart( QueryPart $queryPart )
@@ -61,5 +64,29 @@ class Query
 		$delete = new Delete($table);
 		$query->addQueryPart($delete);
 		return $delete;
+	}
+
+	public static function insert($table)
+	{
+		$query = new static();
+		$insert = new Insert($table);
+		$query->addQueryPart($insert);
+		return $insert;
+	}
+
+	public static function update($table)
+	{
+		$query = new static();
+		$update = new Update($table);
+		$query->addQueryPart($update);
+		return $update;
+	}
+
+	public static function dropTable($table)
+	{
+		$query = new static();
+		$drop = new DropTable($table);
+		$query->addQueryPart($drop);
+		return $drop;
 	}
 }

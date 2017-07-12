@@ -31,10 +31,16 @@ $app->get( 'delete/(?<id>\d+)/', 'App.Pages.delete' );
 $app->start();
 */
 
+/*
 $query = Query::delete('page')
 	->where( 'title = ?', [ 'nice', ] )
-	->limit( 5 )
+	//->orderBy( 'title', \Hector\Core\Db\QueryBuilder\OrderBy::SORT_ASC )
+	->orderBy( 'title' )
+	->limit( 5, 2 )
 ;
+*/
+
+$query = Query::dropTable('page');
 
 echo $query->getQuery()->getQuery();
 echo '<br />';
