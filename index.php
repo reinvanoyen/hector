@@ -4,11 +4,6 @@ ini_set( 'display_errors', 1 );
 
 require __DIR__ . '/vendor/autoload.php';
 
-use \Hector\Core\Db\QueryBuilder\Query;
-
-$app = new Hector\Core\Application( 'App' );
-
-/*
 \Aegis\Template::$templateDirectory = 'App/View/';
 
 $app = new Hector\Core\Application( 'App' );
@@ -31,7 +26,6 @@ $app->get( 'create/', 'App.Pages.create' );
 $app->get( 'delete/(?<id>\d+)/', 'App.Pages.delete' );
 
 $app->start();
-*/
 
 /*
 $query = Query::delete('page')
@@ -48,6 +42,7 @@ echo '<br />';
 var_dump( $query->getQuery()->getBindings() );
 */
 
+/*
 $manager = new \Hector\Migration\Manager( new \Hector\Migration\FileVersionStore( 'App/version.txt' ) );
 $manager->addRevision( new \App\Migration\UpdateRev() );
 $manager->addRevision( new \App\Migration\UpdateRev() );
@@ -57,3 +52,4 @@ $manager->addRevision( new \App\Migration\UpdateRev() );
 $manager->update();
 
 echo 'current version: ' . $manager->getCurrentVersion();
+*/
