@@ -13,7 +13,7 @@ class Limit extends QueryPart
 		$this->offset = $offset;
 	}
 
-	public function getQueryPart() : String
+	public function build() : String
 	{
 		return 'LIMIT ' . $this->rowCount . ( $this->offset !== 0 ? ' OFFSET ' . $this->offset : '' );
 	}

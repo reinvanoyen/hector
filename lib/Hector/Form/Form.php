@@ -49,11 +49,11 @@ class Form
 
     private function add(Input $input)
     {
-        $input->setForm( $this );
+        $input->setForm($this);
         $this->inputs[$input->getName()] = $input;
     }
 
-    public function get( String $inputName )
+    public function get(String $inputName)
     {
         return $this->inputs[ $inputName ];
     }
@@ -66,7 +66,6 @@ class Form
     public function validate()
     {
         if ($this->isSent()) {
-
             $isValid = true;
 
             foreach ($this->inputs as $input) {

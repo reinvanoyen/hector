@@ -7,59 +7,52 @@ use Psr\Http\Message\RequestInterface as Request;
 
 class Http
 {
-	use SingletonTrait;
+    use SingletonTrait;
 
-	private $basePath;
+    private $basePath;
 
-	public static function getBasePath( Request $request )
-	{
-		$instance = self::getInstance();
+    public static function getBasePath(Request $request)
+    {
+        $instance = self::getInstance();
 
-		if( $instance->basePath ) {
+        if ($instance->basePath) {
+            return $instance->basePath;
+        }
 
-			return $instance->basePath;
-		}
+        $serverParams = $request->getServerParams();
 
-		$serverParams = $request->getServerParams();
+        $filename = basename($serverParams[ 'SCRIPT_FILENAME' ]);
 
-		$filename = basename( $serverParams[ 'SCRIPT_FILENAME' ] );
+        if (basename($serverParams[ 'SCRIPT_NAME' ]) === $filename) {
+            $baseUrl = $serverParams[ 'SCRIPT_NAME' ];
+        } elseif (basename($serverParams[ 'PHP_SELF' ]) === $filename) {
+            $baseUrl = $serverParams[ 'PHP_SELF' ];
+        } elseif (basename($serverParams[ 'ORIG_SCRIPT_NAME' ]) === $filename) {
+            $baseUrl = $serverParams[ 'ORIG_SCRIPT_NAME' ];
+        }
 
-		if( basename( $serverParams[ 'SCRIPT_NAME' ] ) === $filename ) {
+        $baseDir = substr($baseUrl, 0, -strlen($filename));
+        $basePath = ltrim($baseDir, '/');
 
-			$baseUrl = $serverParams[ 'SCRIPT_NAME' ];
+        $instance->setBasePath($basePath);
 
-		} elseif( basename( $serverParams[ 'PHP_SELF' ] ) === $filename) {
+        return $basePath;
+    }
 
-			$baseUrl = $serverParams[ 'PHP_SELF' ];
+    private function setBasePath($basePath)
+    {
+        $this->basePath = $basePath;
+    }
 
-		} elseif( basename( $serverParams[ 'ORIG_SCRIPT_NAME' ] ) === $filename ) {
+    public static function getPath(Request $request)
+    {
+        $path = ltrim($request->getUri()->getPath(), '/');
+        $base = self::getBasePath($request);
 
-			$baseUrl = $serverParams[ 'ORIG_SCRIPT_NAME' ];
-		}
+        if (substr($path, 0, strlen($base)) === $base) {
+            $path = substr($path, strlen($base));
+        }
 
-		$baseDir = substr( $baseUrl, 0, -strlen( $filename ) );
-		$basePath = ltrim( $baseDir, '/' );
-
-		$instance->setBasePath( $basePath );
-
-		return $basePath;
-	}
-
-	private function setBasePath( $basePath )
-	{
-		$this->basePath = $basePath;
-	}
-
-	public static function getPath( Request $request )
-	{
-		$path = ltrim( $request->getUri()->getPath(), '/' );
-		$base = self::getBasePath( $request );
-
-		if( substr( $path, 0, strlen( $base ) ) === $base ) {
-
-			$path = substr( $path, strlen( $base ) );
-		}
-
-		return $path;
-	}
+        return $path;
+    }
 }

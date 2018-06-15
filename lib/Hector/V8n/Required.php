@@ -6,6 +6,6 @@ class Required extends Rule
 {
     public function validate()
     {
-        return (boolean) ( $this->value );
+        return (boolean) ($this->value);
     }
 }

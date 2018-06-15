@@ -15,7 +15,7 @@ class Select extends QueryPart
 		$this->table = $table;
 	}
 
-	public function getQueryPart() : String
+	public function build() : String
 	{
 		return 'SELECT ' . implode( ', ', $this->columns ) . ' FROM `' . $this->table . '`';
 	}

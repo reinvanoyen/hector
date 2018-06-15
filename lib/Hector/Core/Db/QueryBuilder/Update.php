@@ -13,7 +13,7 @@ class Update extends QueryPart
 		$this->table = $table;
 	}
 
-	public function getQueryPart() : String
+	public function build() : String
 	{
 		return 'UPDATE `' . $this->table . '`';
 	}

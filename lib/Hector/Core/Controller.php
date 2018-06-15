@@ -7,14 +7,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 abstract class Controller
 {
-	protected $app;
-	protected $request;
-	protected $response;
+    protected $app;
+    protected $request;
+    protected $response;
 
-	public function __construct( Application $app, Request $request, Response $response )
-	{
-		$this->app = $app;
-		$this->request = $request;
-		$this->response = $response;
-	}
+    public function __construct(Application $app, Request $request, Response $response)
+    {
+        $this->app = $app;
+        $this->request = $request;
+        $this->response = $response;
+    }
 }

@@ -13,7 +13,7 @@ class Set extends QueryPart
 		$this->values = $values;
 	}
 
-	public function getQueryPart() : String
+	public function build() : String
 	{
 		$this->getQuery()->addBinding($this->values);
 		return 'SET ' . implode( ' = ?, ', array_keys( $this->values ) ) . ' = ?';

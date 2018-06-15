@@ -6,195 +6,179 @@ use Psr\Http\Message\StreamInterface;
 
 class Stream implements StreamInterface
 {
-	public $stream;
-	private $isSeekable;
-	private $isReadable;
-	private $isWritable;
-	private $size;
-	private $uri;
-	private $customMetadata;
+    public $stream;
+    private $isSeekable;
+    private $isReadable;
+    private $isWritable;
+    private $size;
+    private $uri;
+    private $customMetadata;
 
-	private static $readModes = [
-		'r', 'w+', 'r+', 'x+', 'c+',
-		'rb', 'w+b', 'r+b', 'x+b',
-		'c+b', 'rt', 'w+t', 'r+t',
-		'x+t', 'c+t', 'a+',
-	];
+    private static $readModes = [
+        'r', 'w+', 'r+', 'x+', 'c+',
+        'rb', 'w+b', 'r+b', 'x+b',
+        'c+b', 'rt', 'w+t', 'r+t',
+        'x+t', 'c+t', 'a+',
+    ];
 
-	private static $writeModes = [
-		'w', 'w+', 'rw', 'r+', 'x+',
-		'c+', 'wb', 'w+b', 'r+b',
-		'x+b', 'c+b', 'w+t', 'r+t',
-		'x+t', 'c+t', 'a', 'a+',
-	];
+    private static $writeModes = [
+        'w', 'w+', 'rw', 'r+', 'x+',
+        'c+', 'wb', 'w+b', 'r+b',
+        'x+b', 'c+b', 'w+t', 'r+t',
+        'x+t', 'c+t', 'a', 'a+',
+    ];
 
-	public function __construct( $stream )
-	{
-		$this->attach( $stream );
-	}
+    public function __construct($stream)
+    {
+        $this->attach($stream);
+    }
 
-	public function attach( $stream )
-	{
-		if( ! is_resource( $stream ) ) {
+    public function attach($stream)
+    {
+        if (! is_resource($stream)) {
+            throw new \Exception('Stream must be a resource');
+        }
 
-			throw new \Exception( 'Stream must be a resource' );
-		}
+        $this->stream = $stream;
 
-		$this->stream = $stream;
+        $meta = stream_get_meta_data($this->stream);
+        $this->isSeekable = $meta[ 'seekable' ];
 
-		$meta = stream_get_meta_data( $this->stream );
-		$this->isSeekable = $meta[ 'seekable' ];
+        $this->isReadable = in_array($meta[ 'mode' ], self::$readModes);
+        $this->isWritable = in_array($meta[ 'mode' ], self::$writeModes);
 
-		$this->isReadable = in_array( $meta[ 'mode' ], self::$readModes );
-		$this->isWritable = in_array( $meta[ 'mode' ], self::$writeModes );
+        $this->uri = $this->getMetadata('uri');
+    }
 
-		$this->uri = $this->getMetadata( 'uri' );
-	}
+    public function detach()
+    {
+        $this->stream = $this->size = $this->uri = null;
+        $this->isReadable = $this->isWritable = $this->isSeekable = false;
+    }
 
-	public function detach()
-	{
-		$this->stream = $this->size = $this->uri = NULL;
-		$this->isReadable = $this->isWritable = $this->isSeekable = FALSE;
-	}
+    public function close()
+    {
+        fclose($this->stream);
+        $this->detach();
+    }
 
-	public function close()
-	{
-		fclose( $this->stream );
-		$this->detach();
-	}
+    public function isSeekable()
+    {
+        return $this->isSeekable();
+    }
 
-	public function isSeekable()
-	{
-		return $this->isSeekable();
-	}
+    public function isWritable()
+    {
+        return $this->isWritable;
+    }
 
-	public function isWritable()
-	{
-		return $this->isWritable;
-	}
+    public function isReadable()
+    {
+        return $this->isReadable;
+    }
 
-	public function isReadable()
-	{
-		return $this->isReadable;
-	}
+    public function tell()
+    {
+        $result = ftell($this->stream);
 
-	public function tell()
-	{
-		$result = ftell( $this->stream );
+        if ($result === false) {
+            throw new \Exception('Unable to determine stream position');
+        }
 
-		if( $result === FALSE ) {
+        return $result;
+    }
 
-			throw new \Exception( 'Unable to determine stream position' );
-		}
+    public function getSize()
+    {
+        if ($this->size !== null) {
+            return $this->size;
+        }
 
-		return $result;
-	}
+        if (! isset($this->stream)) {
+            return null;
+        }
 
-	public function getSize()
-	{
-		if( $this->size !== NULL ) {
+        if ($this->uri) {
+            clearstatcache(true, $this->uri);
+        }
 
-			return $this->size;
-		}
+        $stats = fstat($this->stream);
 
-		if( ! isset( $this->stream ) ) {
+        if (isset($stats[ 'size' ])) {
+            $this->size = $stats[ 'size' ];
+            return $this->size;
+        }
 
-			return NULL;
-		}
+        return null;
+    }
 
-		if( $this->uri ) {
+    public function read($length)
+    {
+        if (! $this->isReadable) {
+            throw new \Expection('Cannot read from non-readable stream');
+        }
 
-			clearstatcache( TRUE, $this->uri );
-		}
+        return fread($this->stream, $length);
+    }
 
-		$stats = fstat( $this->stream );
+    public function write($string)
+    {
+        if (! $this->isWritable || (($result = fwrite($this->stream, $string)) === false)) {
+            throw new \Exception('Unable to write to stream');
+        }
 
-		if( isset( $stats[ 'size' ] ) ) {
+        $this->size = null;
 
-			$this->size = $stats[ 'size' ];
-			return $this->size;
-		}
+        return $result;
+    }
 
-		return NULL;
-	}
+    public function seek($offset, $whence = SEEK_SET)
+    {
+        if (! $this->isSeekable) {
+            throw new \Exception('Stream is not seekable');
+        } elseif (fseek($this->stream, $offset, $whence) === -1) {
+            throw new \Exception('Unable to seek to stream position ' . $offset . ' with whence ' . var_export($whence, true));
+        }
+    }
 
-	public function read( $length )
-	{
-		if( ! $this->isReadable ) {
+    public function rewind()
+    {
+        $this->seek(0);
+    }
 
-			throw new \Expection( 'Cannot read from non-readable stream' );
-		}
+    public function eof()
+    {
+        return ! $this->stream || feof($this->stream);
+    }
 
-		return fread( $this->stream, $length );
-	}
+    public function getContents()
+    {
+        $this->rewind();
 
-	public function write( $string )
-	{
-		if( ! $this->isWritable || ( ( $result = fwrite( $this->stream, $string ) ) === FALSE ) ) {
+        if (! $this->isReadable() || ($contents = stream_get_contents($this->stream)) === false) {
+            throw new \Exception('Could not get contents of stream');
+        }
 
-			throw new \Exception( 'Unable to write to stream' );
-		}
+        return $contents;
+    }
 
-		$this->size = NULL;
+    public function getMetadata($key = null)
+    {
+        if (! isset($this->stream)) {
+            return $key ? null : [];
+        } elseif (! $key) {
+            return $this->customMetadata + stream_get_meta_data($this->stream);
+        } elseif (isset($this->customMetadata[ $key ])) {
+            return $this->customMetadata[ $key ];
+        }
 
-		return $result;
-	}
+        $meta = stream_get_meta_data($this->stream);
 
-	public function seek( $offset, $whence = SEEK_SET )
-	{
-		if( ! $this->isSeekable ) {
+        return isset($meta[ $key ]) ? $meta[ $key ] : null;
+    }
 
-			throw new \Exception( 'Stream is not seekable' );
-
-		} elseif( fseek( $this->stream, $offset, $whence ) === -1 ) {
-
-			throw new \Exception( 'Unable to seek to stream position ' . $offset . ' with whence ' . var_export( $whence, TRUE ) );
-		}
-	}
-
-	public function rewind()
-	{
-		$this->seek( 0 );
-	}
-
-	public function eof()
-	{
-		return ! $this->stream || feof( $this->stream );
-	}
-
-	public function getContents()
-	{
-		$this->rewind();
-
-		if( ! $this->isReadable() || ( $contents = stream_get_contents( $this->stream ) ) === FALSE ) {
-
-			throw new \Exception( 'Could not get contents of stream' );
-		}
-
-		return $contents;
-	}
-
-	public function getMetadata( $key = NULL )
-	{
-		if( ! isset( $this->stream ) ) {
-
-			return $key ? NULL : [];
-		} elseif( ! $key ) {
-
-			return $this->customMetadata + stream_get_meta_data( $this->stream );
-
-		} elseif( isset( $this->customMetadata[ $key ] ) ) {
-
-			return $this->customMetadata[ $key ];
-		}
-
-		$meta = stream_get_meta_data( $this->stream );
-
-		return isset( $meta[ $key ] ) ? $meta[ $key ] : NULL;
-	}
-
-	public function __toString()
-	{
-		return $this->getContents();
-	}
+    public function __toString()
+    {
+        return $this->getContents();
+    }
 }

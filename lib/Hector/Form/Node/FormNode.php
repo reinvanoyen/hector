@@ -45,7 +45,7 @@ class FormNode extends Node
     {
         $compiler->write('<form method="post"');
 
-        if ( $this->getAttribute(1) ) {
+        if ($this->getAttribute(1)) {
             $compiler->write(' autocomplete="');
             if ($this->getAttribute(1)->getValue() === 'false') {
                 $compiler->write('off');
@@ -65,7 +65,7 @@ class FormNode extends Node
         $compiler->write('; ?>');
 
         $compiler->write('<?php echo $form->get(');
-        $compiler->write( '\'__csrf\'' );
+        $compiler->write('\'__csrf\'');
         $compiler->write(')->render(); ?>');
 
         foreach ($this->getChildren() as $c) {

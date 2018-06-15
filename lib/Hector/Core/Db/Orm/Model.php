@@ -44,7 +44,17 @@ class Model extends Arrayable
 			->where( '`' . static::PRIMARY_KEY . '` = ?', $primary_key_value )
 		;
 
-		$stmt = self::getConnection()->query( $query->getQuery()->getQuery(), $query->getQuery()->getBindings() );
+		$stmt = self::getConnection()->query( $query->getQuery()->build(), $query->getQuery()->getBindings() );
+		return new static( $stmt->fetch( \PDO::FETCH_ASSOC ) );
+	}
+
+	public static function loadBy($field, $value)
+	{
+		$query = Query::select( [ '*' ], static::TABLE )
+			->where( '`' . $field . '` = ?', $value )
+		;
+
+		$stmt = self::getConnection()->query( $query->getQuery()->build(), $query->getQuery()->getBindings() );
 		return new static( $stmt->fetch( \PDO::FETCH_ASSOC ) );
 	}
 
@@ -64,7 +74,7 @@ class Model extends Arrayable
 			;
 		}
 
-		self::getConnection()->query($query->getQuery()->getQuery(), $query->getQuery()->getBindings());
+		self::getConnection()->query($query->getQuery()->build(), $query->getQuery()->getBindings());
 	}
 
 	public function delete()
@@ -73,7 +83,7 @@ class Model extends Arrayable
 			->where( static::PRIMARY_KEY . ' = ?', $this->{ static::PRIMARY_KEY } )
 		;
 
-		self::getConnection()->query( $query->getQuery()->getQuery(), $query->getQuery()->getBindings() );
+		self::getConnection()->query( $query->getQuery()->build(), $query->getQuery()->getBindings() );
 	}
 
 	private static function getConnection() : Connection

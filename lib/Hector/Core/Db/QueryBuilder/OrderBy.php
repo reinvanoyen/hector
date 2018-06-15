@@ -29,7 +29,7 @@ class OrderBy extends QueryPart
 		}
 	}
 
-	public function getQueryPart() : String
+	public function build() : String
 	{
 		$output = [];
 

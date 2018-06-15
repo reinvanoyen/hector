@@ -15,7 +15,7 @@ class Where extends QueryPart
 		$this->columns = $columns;
 	}
 
-	public function getQueryPart() : String
+	public function build() : String
 	{
 		$this->getQuery()->addBinding($this->columns);
 		return 'WHERE ' . $this->queryString;

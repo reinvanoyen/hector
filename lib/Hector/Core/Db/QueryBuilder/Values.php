@@ -11,7 +11,7 @@ class Values extends QueryPart
 		$this->values = $values;
 	}
 
-	public function getQueryPart() : String
+	public function build() : String
 	{
 		$this->getQuery()->addBinding($this->values);
 

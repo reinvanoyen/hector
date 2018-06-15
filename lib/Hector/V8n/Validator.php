@@ -8,6 +8,5 @@ class Validator
 
     public function addRule()
     {
-
     }
 }

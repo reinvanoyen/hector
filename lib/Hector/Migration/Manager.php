@@ -9,8 +9,8 @@ class Manager
 	private $isRetreived;
 
 	private $revisions = [];
-	private $maxVersion = -1;
-	private $currentVersion = -1;
+	private $maxVersion = 0;
+	private $currentVersion = 0;
 
 	public function __construct( VersionStoreInterface $versionStore )
 	{
@@ -23,10 +23,9 @@ class Manager
 			$this->currentVersion = $this->versionStore->retreive();
 			$this->isRetreived = true;
 		}
-		return;
 	}
 
-	public function addRevision( RevisionInterface $revision )
+	public function addRevision(RevisionInterface $revision)
 	{
 		$this->revisions[] = $revision;
 		$this->maxVersion++;
@@ -34,12 +33,17 @@ class Manager
 
 	public function update()
 	{
-		$this->rollTo( $this->maxVersion );
+		$this->rollTo($this->maxVersion);
 	}
 
 	public function downdate()
 	{
-		$this->rollTo( $this->currentVersion - 1 );
+		$this->rollTo($this->currentVersion - 1);
+	}
+
+	public function reset()
+	{
+		$this->rollTo(0);
 	}
 
 	public function rollTo( int $version )
@@ -88,11 +92,13 @@ class Manager
 		return $this->isUpToDateWith( $this->maxVersion );
 	}
 
-	private function getRevisionByVersion( int $version ) : RevisionInterface
+	private function getRevisionByVersion( int $version ) : ?RevisionInterface
 	{
-		if( isset( $this->revisions[ $version ] ) ) {
-			return $this->revisions[ $version ];
+		if( isset( $this->revisions[ $version - 1 ] ) ) {
+			return $this->revisions[ $version - 1 ];
 		}
+
+		return null;
 	}
 
 	private function getCurrentRevision() : RevisionInterface

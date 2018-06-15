@@ -13,7 +13,7 @@ class Delete extends QueryPart
 		$this->table = $table;
 	}
 
-	public function getQueryPart() : String
+	public function build() : String
 	{
 		return 'DELETE FROM `' . $this->table . '`';
 	}

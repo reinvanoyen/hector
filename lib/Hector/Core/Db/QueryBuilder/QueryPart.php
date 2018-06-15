@@ -8,7 +8,7 @@ abstract class QueryPart
 
 	private $query;
 
-	public abstract function getQueryPart() : String;
+	public abstract function build() : String;
 
 	public function setQuery( Query $query )
 	{

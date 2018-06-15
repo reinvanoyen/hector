@@ -13,7 +13,7 @@ class Insert extends QueryPart
 		$this->table = $table;
 	}
 
-	public function getQueryPart() : String
+	public function build() : String
 	{
 		return 'INSERT INTO `' . $this->table . '`';
 	}

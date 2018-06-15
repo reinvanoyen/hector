@@ -19,7 +19,7 @@ abstract class Input
         return $this->name;
     }
 
-    public function setForm( Form $form )
+    public function setForm(Form $form)
     {
         $this->form = $form;
     }
@@ -34,5 +34,5 @@ abstract class Input
         return $this->form->request->getParsedBody()[ $this->name ];
     }
 
-    abstract function render(Array $opts);
+    abstract public function render(array $opts);
 }

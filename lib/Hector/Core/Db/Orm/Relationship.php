@@ -4,5 +4,5 @@ namespace Hector\Core\Db\Orm;
 
 abstract class Relationship
 {
-	public abstract function load($sourceModel);
+    abstract public function load($sourceModel);
 }

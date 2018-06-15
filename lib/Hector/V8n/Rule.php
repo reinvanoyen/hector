@@ -6,11 +6,11 @@ abstract class Rule
 {
     protected $value;
 
-    public function __construct( Validator $validator, $value )
+    public function __construct(Validator $validator, $value)
     {
         $this->validator = $validator;
         $this->value = $value;
     }
 
-    abstract function validate();
+    abstract public function validate();
 }

@@ -39,12 +39,12 @@ class InputNode extends Node
 
     public function compile(CompilerInterface $compiler)
     {
-        if( $this->getAttribute(0) ) {
+        if ($this->getAttribute(0)) {
             $compiler->write('<?php echo $form->get(');
             $this->getAttribute(0)->compile($compiler);
             $compiler->write(')->render(');
 
-            if ( $this->getAttribute(1) ) {
+            if ($this->getAttribute(1)) {
                 $compiler->write('[ \'placeholder\' => ');
                 $this->getAttribute(1)->compile($compiler);
                 $compiler->write(']');
