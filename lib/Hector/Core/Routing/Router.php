@@ -6,13 +6,19 @@ use Hector\Core\Application;
 use Hector\Core\Http\Response;
 use Psr\Http\Message\ServerRequestInterface;
 
-class Router
+class Router implements RouterInterface
 {
     use RouteableTrait;
 
     private $groups = [];
+    private $app;
 
-    public function route(ServerRequestInterface $request)
+    public function __construct(Application $app)
+    {
+    	$this->app = $app;
+    }
+
+	public function route(ServerRequestInterface $request)
     {
         $method = $request->getMethod();
         $routes = $this->getRoutesForMethod($method);
@@ -36,7 +42,7 @@ class Router
 
     public function group(String $prefix, $callable)
     {
-        $group = new Group($prefix);
+        $group = new Group($this->app, $prefix);
 
         $this->groups[] = $group;
 

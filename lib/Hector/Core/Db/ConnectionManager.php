@@ -2,21 +2,21 @@
 
 namespace Hector\Core\Db;
 
-use Hector\PHPException;
-
 class ConnectionManager
 {
-    private static $storage = [];
+	private static $connections = [];
 
-    public static function create(/*string*/ $host, /*string*/ $username, /*string*/ $password, /*string*/ $dbname, /*string*/ $name = '')
-    {
-        $connection = new Connection($host, $username, $password, $dbname);
-        self::$storage[ $name ] = $connection;
-        return $connection;
-    }
+	public static function store($name, Connection $connection)
+	{
+		self::$connections[$name] = $connection;
+	}
 
-    public static function get(/*string*/ $name = '')
-    {
-        return self::$storage[ $name ];
-    }
+	public static function get($name)
+	{
+		if(!isset(self::$connections[$name])) {
+			return null;
+		}
+
+		return self::$connections[$name];
+	}
 }

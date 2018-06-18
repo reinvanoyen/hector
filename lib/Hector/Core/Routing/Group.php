@@ -2,22 +2,26 @@
 
 namespace Hector\Core\Routing;
 
+use Hector\Core\Application;
+use Hector\Core\Http\Middleware\MiddlewareInterface;
+
 class Group
 {
     use RouteableTrait;
 
-    public function __construct( String $prefix = '' )
+    public function __construct(Application $app, String $prefix)
     {
-        $this->setPrefix( $prefix );
+    	$this->app = $app;
+        $this->setPrefix($prefix);
     }
 
-    public function add( $middleware )
+    public function add(MiddlewareInterface $middleware)
     {
         foreach( $this->routes as $method => $routes ) {
 
             foreach( $routes as $route ) {
 
-                $route->add( $middleware );
+                $route->add($middleware);
             }
         }
 

@@ -3,30 +3,34 @@
 namespace Hector\Core;
 
 use Hector\Core\DependencyInjection\Container;
-use Hector\Core\Routing\Router;
+use Hector\Core\Provider\RoutingServiceProvider;
+use Hector\Core\Provider\ServiceProviderInterface;
 use Hector\Core\Http\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 
-class Application
+class Application extends Container
 {
     private $namespace;
-    private $router;
     private $autoloader;
+    private $providers = [];
 
     public function __construct(String $namespace)
     {
         $this->namespace = $namespace;
 
-        // Intantiate the router
-        $this->router = new Router();
-
-        // Create our container
-        $this->container = new Container();
+        // Add routing
+	    $this->register(new RoutingServiceProvider());
 
         // Create the autoloader
         $this->autoloader = new Autoloader();
         $this->autoloader->addNamespace($this->namespace, $this->namespace . '/');
         $this->autoloader->register();
+    }
+
+    public function register(ServiceProviderInterface $provider)
+    {
+        $this->providers[] = $provider;
+	    $provider->register($this);
     }
 
     public function start()
@@ -35,7 +39,7 @@ class Application
         \Hector\Core\Session::start($this->namespace);
 
         // Get the response
-        $response = $this->router->route(ServerRequest::fromGlobals());
+        $response = $this->get('router')->route(ServerRequest::fromGlobals());
 
         // Respond
         $this->respond($response);
@@ -67,31 +71,6 @@ class Application
     public function getNamespace()
     {
         return $this->namespace;
-    }
-
-    public function group($name, $callable)
-    {
-        return $this->router->group($name, $callable);
-    }
-
-    public function get($pattern, $callable)
-    {
-        return $this->router->get($this, $pattern, $callable);
-    }
-
-    public function post($pattern, $callable)
-    {
-        return $this->router->post($this, $pattern, $callable);
-    }
-
-    public function put($pattern, $callable)
-    {
-        return $this->router->put($this, $pattern, $callable);
-    }
-
-    public function delete($pattern, $callable)
-    {
-        return $this->router->delete($this, $pattern, $callable);
     }
 }
 
