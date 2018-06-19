@@ -7,13 +7,13 @@ class Text extends Input
     private $default;
     protected $type = 'text';
 
-    public function __construct(String $name, String $default = '')
+    public function __construct(string $name, string $default = '')
     {
         parent::__construct($name);
         $this->default = $default;
     }
 
-	public function render(Array $opts = [])
+	public function render(array $opts = [])
     {
         $placeholder = null;
         extract($opts, EXTR_IF_EXISTS);

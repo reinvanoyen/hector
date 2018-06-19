@@ -3,35 +3,52 @@
 namespace Hector\Core;
 
 use Hector\Core\DependencyInjection\Container;
-use Hector\Core\Provider\RoutingServiceProvider;
+use Hector\Core\Http\ServerRequestServiceProvider;
+use Hector\Core\Routing\RoutingServiceProvider;
 use Hector\Core\Provider\ServiceProvider;
-use Hector\Core\Http\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 
-class Application extends Container
+final class Application extends Container
 {
+	/**
+	 * Stores if the application is booted
+	 *
+	 * @var bool
+	 */
 	private $isBooted = false;
 
-    private $namespace;
-    private $autoloader;
-
+	/**
+	 * Stores immediately registered service providers
+	 *
+	 * @var array
+	 */
     private $registeredProviders = [];
+
+	/**
+	 * Stores lazy service providers
+	 *
+	 * @var array
+	 */
 	private $lazyProviders = [];
 
-    public function __construct(String $namespace)
+	/**
+	 * Application constructor.
+	 *
+	 */
+    public function __construct()
     {
-        $this->namespace = $namespace;
-
         // Register Hector service providers
 	    $this->register(new RoutingServiceProvider());
-
-        // Create the autoloader (...?)
-        $this->autoloader = new Autoloader();
-        $this->autoloader->addNamespace($this->namespace, $this->namespace . '/');
-        $this->autoloader->register();
+	    $this->register(new ServerRequestServiceProvider());
     }
 
-    public function register(ServiceProvider $provider)
+	/**
+	 * Register a service provider
+	 *
+	 * @param ServiceProvider $provider
+	 * @return void
+	 */
+    public function register(ServiceProvider $provider) : void
     {
         if($provider->isLazy()) {
         	foreach($provider->provides() as $providing) {
@@ -39,11 +56,16 @@ class Application extends Container
 	        }
         } else {
 	        $this->registeredProviders[] = $provider;
-	        $this->bootstrapServiceProvider($provider);
+	        $this->initServiceProvider($provider);
         }
     }
 
-    private function bootstrapServiceProvider(ServiceProvider $provider)
+	/**
+	 * Initialize a service provider
+	 *
+	 * @param ServiceProvider $provider
+	 */
+    private function initServiceProvider(ServiceProvider $provider) : void
     {
 	    $provider->register($this);
 
@@ -55,48 +77,67 @@ class Application extends Container
 	    }
     }
 
+	/**
+	 * Get a value by key from the container making sure lazy providers are initialized first
+	 *
+	 * @param $key
+	 * @return mixed
+	 */
     public function get($key)
     {
     	if(isset($this->lazyProviders[$key])) {
-		    $this->bootstrapServiceProvider($this->lazyProviders[$key]);
+		    $this->initServiceProvider($this->lazyProviders[$key]);
 		    unset($this->lazyProviders[$key]);
 	    }
 	    return parent::get($key);
     }
 
-	public function start()
+	/**
+	 * Boots all non-lazy registered service providers
+	 *
+	 * @return void
+	 */
+	private function boot() : void
+	{
+		// First check if the application is already booted
+		if($this->isBooted) {
+			return;
+		}
+
+		// Boot all registered providers
+		foreach($this->registeredProviders as $provider) {
+			if(method_exists($provider, 'boot')) {
+				$provider->boot($this);
+			}
+		}
+
+		$this->isBooted = true;
+	}
+
+	/**
+	 * Starts the application
+	 *
+	 * @return void
+	 */
+	public function start() : void
     {
     	// Boot all service providers
     	$this->boot();
 
-        // Start the session
-        \Hector\Core\Session::start($this->namespace);
-
         // Get the response
-        $response = $this->get('router')->route(ServerRequest::fromGlobals());
+        $response = $this->get('router')->route($this->get('request'));
 
         // Respond
         $this->respond($response);
     }
 
-    private function boot()
-    {
-    	// First check if the application is already booted
-    	if($this->isBooted) {
-    		return;
-	    }
-
-	    // Boot all registered providers
-    	foreach($this->registeredProviders as $provider) {
-    		if(method_exists($provider, 'boot')) {
-		        $provider->boot($this);
-		    }
-	    }
-
-	    $this->isBooted = true;
-    }
-
-    private function respond(ResponseInterface $response)
+	/**
+	 * Produces a practical response from a response
+	 *
+	 * @param ResponseInterface $response
+	 * @return void
+	 */
+    private function respond(ResponseInterface $response) : void
     {
         if (! headers_sent()) {
 
@@ -117,11 +158,6 @@ class Application extends Container
         }
 
         echo $response->getBody()->getContents();
-    }
-
-    public function getNamespace() : String
-    {
-        return $this->namespace;
     }
 }
 

@@ -16,14 +16,17 @@ class Arrayable implements \ArrayAccess, \Iterator, \Countable, \JsonSerializabl
     {
         return isset($this->data[$k]);
     }
+
     public function offsetGet($k)
     {
         return $this->data[$k];
     }
+
     public function offsetSet($k, $v)
     {
         $this->data[$k] = $v;
     }
+
     public function offsetUnset($k)
     {
         unset($this->data[$k]);
@@ -34,18 +37,22 @@ class Arrayable implements \ArrayAccess, \Iterator, \Countable, \JsonSerializabl
     {
         reset($this->data);
     }
+
     public function current()
     {
         return current($this->data);
     }
+
     public function key()
     {
         return key($this->data);
     }
+
     public function next()
     {
         next($this->data);
     }
+
     public function valid()
     {
         return key($this->data) !== null;

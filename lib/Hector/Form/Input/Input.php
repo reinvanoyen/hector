@@ -9,7 +9,7 @@ abstract class Input
     private $form;
     private $name;
 
-    public function __construct(String $name)
+    public function __construct(string $name)
     {
         $this->name = $name;
     }
@@ -31,7 +31,7 @@ abstract class Input
 
     public function getValue()
     {
-        return $this->form->request->getParsedBody()[ $this->name ];
+        return $this->form->request->getParsedBody()[$this->name];
     }
 
     abstract public function render(array $opts);

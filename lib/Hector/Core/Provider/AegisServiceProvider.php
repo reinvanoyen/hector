@@ -10,7 +10,6 @@ class AegisServiceProvider extends ServiceProvider
 
 	public function register(Application $app)
 	{
-		echo 'register tpl';
 		$app->set('tpl', function() use ($app) {
 
 			$tpl = new \Aegis\Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));

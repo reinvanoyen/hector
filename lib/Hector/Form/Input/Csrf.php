@@ -4,6 +4,8 @@ namespace Hector\Form\Input;
 
 use Hector\Core\Session;
 
+// @TODO fix this class with a working Dependency Injected session...
+
 class Csrf extends Hidden
 {
     public function __construct()

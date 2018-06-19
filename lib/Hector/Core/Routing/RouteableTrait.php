@@ -17,12 +17,12 @@ trait RouteableTrait
     public function addRoute($method, $pattern, $action)
     {
         if ($this->registeringParent !== null) {
-            $route = $this->registeringParent->addRoute($this->app, $method, $pattern, $action);
+            $route = $this->registeringParent->addRoute($method, $pattern, $action);
         } else {
-            $route = $this->routes[ $method ][] = new Route($this->app, $pattern, $action);
+            $this->routes[$method][] = $route = new Route($this->app, $pattern, $action);
         }
 
-        $route->setParent(($this->registeringParent ? $this->registeringParent : $this));
+        $route->setParent(($this->registeringParent ?: $this));
 
         return $route;
     }
@@ -46,14 +46,17 @@ trait RouteableTrait
     {
         return $this->addRoute('GET', $pattern, $action);
     }
+
     public function post($pattern, $action)
     {
         return $this->addRoute('POST', $pattern, $action);
     }
+
     public function delete($pattern, $action)
     {
         return $this->addRoute('DELETE', $pattern, $action);
     }
+
     public function put($pattern, $action)
     {
         return $this->addRoute('PUT', $pattern, $action);

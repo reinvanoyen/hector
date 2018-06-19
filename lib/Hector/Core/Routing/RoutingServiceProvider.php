@@ -1,9 +1,9 @@
 <?php
 
-namespace Hector\Core\Provider;
+namespace Hector\Core\Routing;
 
 use Hector\Core\Application;
-use Hector\Core\Routing\Router;
+use Hector\Core\Provider\ServiceProvider;
 
 class RoutingServiceProvider extends ServiceProvider
 {

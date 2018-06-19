@@ -17,7 +17,6 @@ class ConfigServiceProvider extends ServiceProvider
 
 	public function register(Application $app)
 	{
-		echo 'register config';
 		$app->set('config', function() {
 			return $this->config;
 		});
