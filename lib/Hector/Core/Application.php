@@ -4,37 +4,71 @@ namespace Hector\Core;
 
 use Hector\Core\DependencyInjection\Container;
 use Hector\Core\Provider\RoutingServiceProvider;
-use Hector\Core\Provider\ServiceProviderInterface;
+use Hector\Core\Provider\ServiceProvider;
 use Hector\Core\Http\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 
 class Application extends Container
 {
+	private $isBooted = false;
+
     private $namespace;
     private $autoloader;
-    private $providers = [];
+
+    private $registeredProviders = [];
+	private $lazyProviders = [];
 
     public function __construct(String $namespace)
     {
         $this->namespace = $namespace;
 
-        // Add routing
+        // Register Hector service providers
 	    $this->register(new RoutingServiceProvider());
 
-        // Create the autoloader
+        // Create the autoloader (...?)
         $this->autoloader = new Autoloader();
         $this->autoloader->addNamespace($this->namespace, $this->namespace . '/');
         $this->autoloader->register();
     }
 
-    public function register(ServiceProviderInterface $provider)
+    public function register(ServiceProvider $provider)
     {
-        $this->providers[] = $provider;
-	    $provider->register($this);
+        if($provider->isLazy()) {
+        	foreach($provider->provides() as $providing) {
+		        $this->lazyProviders[$providing] = $provider;
+	        }
+        } else {
+	        $this->registeredProviders[] = $provider;
+	        $this->bootstrapServiceProvider($provider);
+        }
     }
 
-    public function start()
+    private function bootstrapServiceProvider(ServiceProvider $provider)
     {
+	    $provider->register($this);
+
+	    // If the application is already booted, boot the provider right away
+	    if($this->isBooted) {
+	    	if(method_exists($provider, 'boot')) {
+			    $provider->boot($this);
+		    }
+	    }
+    }
+
+    public function get($key)
+    {
+    	if(isset($this->lazyProviders[$key])) {
+		    $this->bootstrapServiceProvider($this->lazyProviders[$key]);
+		    unset($this->lazyProviders[$key]);
+	    }
+	    return parent::get($key);
+    }
+
+	public function start()
+    {
+    	// Boot all service providers
+    	$this->boot();
+
         // Start the session
         \Hector\Core\Session::start($this->namespace);
 
@@ -43,6 +77,23 @@ class Application extends Container
 
         // Respond
         $this->respond($response);
+    }
+
+    private function boot()
+    {
+    	// First check if the application is already booted
+    	if($this->isBooted) {
+    		return;
+	    }
+
+	    // Boot all registered providers
+    	foreach($this->registeredProviders as $provider) {
+    		if(method_exists($provider, 'boot')) {
+		        $provider->boot($this);
+		    }
+	    }
+
+	    $this->isBooted = true;
     }
 
     private function respond(ResponseInterface $response)
@@ -68,7 +119,7 @@ class Application extends Container
         echo $response->getBody()->getContents();
     }
 
-    public function getNamespace()
+    public function getNamespace() : String
     {
         return $this->namespace;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hector\Core\Db\QueryBuilder;
+namespace Hector\Db\QueryBuilder;
 
 class CreateTable extends QueryPart
 {

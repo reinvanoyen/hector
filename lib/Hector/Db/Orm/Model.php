@@ -1,9 +1,10 @@
 <?php
 
-namespace Hector\Core\Db\Orm;
+namespace Hector\Db\Orm;
 
-use Hector\Core\Db\Connection;
-use Hector\Core\Db\ConnectionManager;
+use Hector\Db\Connection;
+use Hector\Db\ConnectionManager;
+use Hector\Db\Connector\ConnectorInterface;
 use Hector\Core\Db\QueryBuilder\Query;
 use Hector\Core\Util\Arrayable;
 
@@ -14,6 +15,8 @@ class Model extends Arrayable
 	const CONNECTION = '';
 
 	protected $relationCache = [];
+
+	protected static $connectionManager;
 
 	public function __get($property)
 	{
@@ -35,7 +38,7 @@ class Model extends Arrayable
 	public static function all($query = '', $values = [])
 	{
 		$stmt = self::getConnection()->query(' SELECT * FROM `' .  static::TABLE . '` ' . $query, $values );
-		return new ModelStack( get_called_class(), $stmt->fetchAll( \PDO::FETCH_ASSOC ) );
+		return new ModelStack(get_called_class(), $stmt->fetchAll(\PDO::FETCH_ASSOC));
 	}
 
 	public static function load($primary_key_value)
@@ -86,9 +89,9 @@ class Model extends Arrayable
 		self::getConnection()->query( $query->getQuery()->build(), $query->getQuery()->getBindings() );
 	}
 
-	private static function getConnection() : Connection
+	private static function getConnection() : ConnectorInterface
 	{
-		return ConnectionManager::get(static::CONNECTION);
+		return static::$connectionManager->get(static::CONNECTION);
 	}
 
 	// relations
@@ -100,5 +103,10 @@ class Model extends Arrayable
 	protected function hasMany($model)
 	{
 		return new HasMany($model, static::TABLE);
+	}
+
+	public static function setConnectionManager(ConnectionManager $manager)
+	{
+		static::$connectionManager = $manager;
 	}
 }

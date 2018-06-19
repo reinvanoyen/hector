@@ -6,49 +6,49 @@ class Container implements ContainerInterface
 {
     private $registry = [];
     private $instances = [];
-    private $factoryIds = [];
+    private $factoryKeys = [];
 
-    public function set($id, $callable)
+    public function set($key, $callable)
     {
-        $this->registry[$id] = $callable;
+        $this->registry[$key] = $callable;
     }
 
-    public function get($id)
+    public function get($key)
     {
-        if (!$this->has($id)) {
-            throw new \Exception('No dependency found with identifier: '.$id);
+        if (!$this->has($key)) {
+            throw new \Exception('No dependency found with identifier: '.$key);
         }
 
-        if (isset($this->factoryIds[$id]) && $this->factoryIds) {
-            return $this->create($id, false);
+        if (isset($this->factoryKeys[$key]) && $this->factoryKeys) {
+            return $this->create($key, false);
         }
 
-        if (isset($this->instances[$id])) {
-            return $this->instances[$id];
+        if (isset($this->instances[$key])) {
+            return $this->instances[$key];
         }
 
-        return $this->create($id, true);
+        return $this->create($key, true);
     }
 
-    public function has($id)
+    public function has($key)
     {
-        return isset($this->registry[$id]);
+        return isset($this->registry[$key]);
     }
 
-    public function factory($id, $callable)
+    public function factory($key, $callable)
     {
-        $this->set($id, $callable);
-        $this->factoryIds[$id] = true;
+        $this->set($key, $callable);
+        $this->factoryKeys[$key] = true;
     }
 
-    private function create($id, $keepInstance = true)
+    private function create($key, $keepInstance = true)
     {
-        if (!$this->has($id)) {
-            throw new \Exception('Could not create dependency with identifier: '.$id);
+        if (!$this->has($key)) {
+            throw new \Exception('Could not create dependency with identifier: '.$key);
         }
-        $instance = call_user_func($this->registry[$id]);
+        $instance = call_user_func($this->registry[$key]);
         if ($keepInstance) {
-            $this->instances[$id] = $instance;
+            $this->instances[$key] = $instance;
         }
 
         return $instance;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hector\Core\Db\Orm;
+namespace Hector\Db\Orm;
 
 class HasMany extends Relationship
 {

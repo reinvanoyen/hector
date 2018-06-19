@@ -2,13 +2,16 @@
 
 namespace Hector\Core\Provider;
 
-class AegisServiceProvider implements \Hector\Core\Provider\ServiceProviderInterface
-{
-	public function register(\Hector\Core\Application $app)
-	{
-		$app->set('tpl', function() use( $app ) {
+use Hector\Core\Application;
 
-			\Aegis\Template::$templateDirectory = $app->getNamespace() . '/View/';
+class AegisServiceProvider extends ServiceProvider
+{
+	protected $isLazy = true;
+
+	public function register(Application $app)
+	{
+		echo 'register tpl';
+		$app->set('tpl', function() use ($app) {
 
 			$tpl = new \Aegis\Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
 			$tpl->setLexer(new \Aegis\Lexer());
@@ -17,5 +20,15 @@ class AegisServiceProvider implements \Hector\Core\Provider\ServiceProviderInter
 
 			return $tpl;
 		});
+	}
+
+	public function boot(Application $app)
+	{
+		\Aegis\Template::$templateDirectory = $app->get('config')['tpl']['dir'];
+	}
+
+	public function provides(): array
+	{
+		return ['tpl'];
 	}
 }

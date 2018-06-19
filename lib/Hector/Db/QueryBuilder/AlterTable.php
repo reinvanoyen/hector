@@ -1,8 +1,8 @@
 <?php
 
-namespace Hector\Core\Db\QueryBuilder;
+namespace Hector\Db\QueryBuilder;
 
-class DropTable extends QueryPart
+class AlterTable extends QueryPart
 {
 	private $table;
 
@@ -13,6 +13,6 @@ class DropTable extends QueryPart
 
 	public function build() : String
 	{
-		return 'DROP TABLE `' . $this->table . '`';
+		return 'ALTER TABLE `' . $this->table . '`';
 	}
 }

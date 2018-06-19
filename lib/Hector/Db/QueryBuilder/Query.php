@@ -1,6 +1,6 @@
 <?php
 
-namespace Hector\Core\Db\QueryBuilder;
+namespace Hector\Db\QueryBuilder;
 
 class Query
 {
@@ -10,11 +10,11 @@ class Query
     private $queryParts = [];
 
     public static $methodMap = [
-        'where' => 'Hector\\Core\\Db\\QueryBuilder\\Where',
-        'limit' => 'Hector\\Core\\Db\\QueryBuilder\\Limit',
-        'orderBy' => 'Hector\\Core\\Db\\QueryBuilder\\OrderBy',
-        'values' => 'Hector\\Core\\Db\\QueryBuilder\\Values',
-        'set' => 'Hector\\Core\\Db\\QueryBuilder\\Set',
+        'where' => 'Hector\\Db\\QueryBuilder\\Where',
+        'limit' => 'Hector\\Db\\QueryBuilder\\Limit',
+        'orderBy' => 'Hector\\Db\\QueryBuilder\\OrderBy',
+        'values' => 'Hector\\Db\\QueryBuilder\\Values',
+        'set' => 'Hector\\Db\\QueryBuilder\\Set',
     ];
 
     public function addQueryPart(QueryPart $queryPart)
