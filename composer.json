@@ -21,7 +21,7 @@
     "autoload": {
       "psr-4": {
         "Hector\\": "lib/Hector",
-        "App\\": "App"
+        "App\\": "app"
       },
       "files": [
         "lib/Hector/Helpers/Http.php",

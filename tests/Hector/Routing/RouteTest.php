@@ -1,8 +1,6 @@
 <?php
 
-require_once 'Hector/init.php';
-
-class RouterTest extends PHPUnit_Framework_TestCase
+class RouteTest extends PHPUnit_Framework_TestCase
 {
     public function testRoutes()
     {
@@ -12,8 +10,8 @@ class RouterTest extends PHPUnit_Framework_TestCase
         $uri = $request->getUri()->withPath($path);
         $request = $request->withUri($uri);
 
-        $route = new \Hector\Core\Routing\Route('(?<slug>.+)/(?<id>\d+)/', function ($request, $response, $slug, $id) {
-            return 'response';
+        $route = new \Hector\Core\Routing\Route(new \Hector\Core\Application(), '(?<slug>.+)/(?<id>\d+)/', function ($request, $response, $slug, $id) {
+            return $slug . '-' . $id;
         });
 
         $this->assertEquals($request->getUri()->getPath(), $path);
@@ -25,7 +23,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
 
         $response = $route->execute($request, new \Hector\Core\Http\Response(200));
 
-        $this->assertEquals($response->getBody()->getContents(), 'response');
+        $this->assertEquals($response->getBody()->getContents(), 'my-custom-slug-5');
         $this->assertEquals($response->getStatusCode(), 200);
     }
 }
