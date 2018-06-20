@@ -23,7 +23,7 @@ class AegisServiceProvider extends ServiceProvider
 
 	public function boot(Application $app)
 	{
-		\Aegis\Template::$templateDirectory = $app->get('config')['tpl']['dir'];
+		\Aegis\Template::$templateDirectory = $app->get('config')->get('TPL_DIR');
 	}
 
 	public function provides(): array

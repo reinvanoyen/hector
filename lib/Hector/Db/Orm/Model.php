@@ -5,7 +5,7 @@ namespace Hector\Db\Orm;
 use Hector\Db\Connection;
 use Hector\Db\ConnectionManager;
 use Hector\Db\Connector\ConnectorInterface;
-use Hector\Core\Db\QueryBuilder\Query;
+use Hector\Db\QueryBuilder\Query;
 use Hector\Core\Util\Arrayable;
 
 class Model extends Arrayable

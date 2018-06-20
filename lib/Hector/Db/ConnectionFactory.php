@@ -2,23 +2,29 @@
 
 namespace Hector\Db;
 
+use Hector\Config\ConfigRepositoryInterface;
 use Hector\Db\Connector\MysqlConnector;
 
 class ConnectionFactory
 {
 	private $config;
 
-	public function __construct(array $config)
+	public function __construct(ConfigRepositoryInterface $config)
 	{
 		$this->config = $config;
 	}
 
-	public function createConnection($name) : Connector\ConnectorInterface
+	public function createConnection() : Connector\ConnectorInterface
 	{
-		$config = $this->config['db'][$name];
+		$driver = $this->config->get('DB_DRIVER', 'mysql');
+		$host = $this->config->get('DB_HOST', 'localhost');
+		$port = $this->config->get('DB_PORT', '3306');
+		$username = $this->config->get('DB_USERNAME');
+		$password = $this->config->get('DB_PASSWORD');
+		$database = $this->config->get('DB_DATABASE');
 
-		if($config['dsn'] === 'mysql') {
-			return new MysqlConnector($config['host'], $config['username'], $config['password'], $config['dbname']);
+		if($driver === 'mysql') {
+			return new MysqlConnector($host, $port, $username, $password, $database);
 		}
 	}
 }
