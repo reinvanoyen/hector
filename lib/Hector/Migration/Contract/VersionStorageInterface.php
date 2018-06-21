@@ -1,6 +1,6 @@
 <?php
 
-namespace Hector\Migration;
+namespace Hector\Migration\Contract;
 
 interface VersionStorageInterface
 {

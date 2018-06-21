@@ -13,7 +13,7 @@ class MigratorTest extends PHPUnit_Framework_TestCase
 		$this->fileVersionStorage = new \Hector\Migration\FileVersionStorage(__DIR__ . '/version.txt');
 		$this->migrator = new \Hector\Migration\Migrator($this->fileVersionStorage);
 
-		$this->revisionMock = $this->getMock(\Hector\Migration\RevisionInterface::class);
+		$this->revisionMock = $this->getMock(\Hector\Migration\Contract\RevisionInterface::class);
 
 		$this->migrator->addRevision($this->revisionMock);
 		$this->migrator->addRevision($this->revisionMock);

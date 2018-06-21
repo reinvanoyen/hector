@@ -2,6 +2,9 @@
 
 namespace Hector\Migration;
 
+use Hector\Migration\Contract\RevisionInterface;
+use Hector\Migration\Contract\VersionStorageInterface;
+
 class Migrator
 {
 	/**

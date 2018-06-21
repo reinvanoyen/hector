@@ -2,7 +2,9 @@
 
 namespace Hector\Migration;
 
-class FileVersionStorage implements VersionStorageInterface
+use Hector\Migration\Contract\VersionStorageInterface as Contract;
+
+class FileVersionStorage implements Contract
 {
 	/**
 	 * Filename of the file that stores the version number
