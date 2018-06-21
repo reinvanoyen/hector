@@ -1,10 +1,10 @@
 <?php
 
-require __DIR__ . '/App/init.php';
+require __DIR__ . '/app/init.php';
 
-$manager = new \Hector\Migration\Manager(new \Hector\Migration\FileVersionStore('App/version.txt'));
+$manager = new \Hector\Migration\Migrator(new \Hector\Migration\FileVersionStorage('app/version.txt'));
 $manager->addRevision(new \App\Migration\CreatePageTable());
 $manager->addRevision(new \App\Migration\CreateProjectTable());
-$manager->reset();
+$manager->migrate();
 
 echo 'ok';
