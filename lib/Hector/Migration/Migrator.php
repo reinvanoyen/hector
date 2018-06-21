@@ -2,107 +2,183 @@
 
 namespace Hector\Migration;
 
-class Manager
+class Migrator
 {
-	private $versionStore;
+	/**
+	 * Handles storing the version
+	 *
+	 * @var VersionStorageInterface
+	 */
+	private $versionStorage;
 
-	private $isRetreived;
-
+	/**
+	 * Array holding all revisions
+	 *
+	 * @var array RevisionInterface[]
+	 */
 	private $revisions = [];
+
+	/**
+	 * The maximum version number
+	 *
+	 * @var int
+	 */
 	private $maxVersion = 0;
-	private $currentVersion = 0;
 
-	public function __construct( VersionStoreInterface $versionStore )
+	/**
+	 * Migrator constructor.
+	 *
+	 * @param VersionStorageInterface $versionStore
+	 */
+	public function __construct(VersionStorageInterface $versionStorage)
 	{
-		$this->versionStore = $versionStore;
+		$this->versionStorage = $versionStorage;
 	}
 
-	public function assertRetreived()
-	{
-		if( ! $this->isRetreived ) {
-			$this->currentVersion = $this->versionStore->retreive();
-			$this->isRetreived = true;
-		}
-	}
-
-	public function addRevision(RevisionInterface $revision)
+	/**
+	 * Adds a revision to the migrator
+	 *
+	 * @param RevisionInterface $revision
+	 */
+	public function addRevision(RevisionInterface $revision): void
 	{
 		$this->revisions[] = $revision;
 		$this->maxVersion++;
 	}
 
-	public function update()
+	/**
+	 * Migrate all revisions
+	 *
+	 */
+	public function migrate()
 	{
 		$this->rollTo($this->maxVersion);
 	}
 
-	public function downdate()
+	/**
+	 * Updates to the next revision
+	 *
+	 */
+	public function update()
 	{
-		$this->rollTo($this->currentVersion - 1);
+		$nextVersionNumber = $this->getClampedVersion($this->versionStorage->get()+1);
+		$nextRevision = $this->getRevisionByVersion($nextVersionNumber);
+
+		if (! $nextRevision || $this->isUpToDateWith($nextVersionNumber)) {
+			return;
+		}
+
+		$nextRevision->up();
+		$this->versionStorage->store($nextVersionNumber);
 	}
 
+	/**
+	 * Rolls back one version
+	 *
+	 */
+	public function downdate()
+	{
+		$revision = $this->getCurrentRevision();
+
+		if (! $revision) {
+			return;
+		}
+
+		$revision->down();
+		$version = $this->getClampedVersion($this->versionStorage->get()-1);
+		$this->versionStorage->store($version);
+	}
+
+	/**
+	 * Undoes all revisions
+	 *
+	 */
 	public function reset()
 	{
 		$this->rollTo(0);
 	}
 
-	public function rollTo( int $version )
+	/**
+	 * Rolls to a specific version
+	 *
+	 * @param int $version
+	 */
+	public function rollTo(int $version)
 	{
-		$this->assertRetreived();
+		// Clamp the version number
+		$version = max(min($version, $this->maxVersion), 0);
 
-		$version = max( min( $version, $this->maxVersion ), 0 );
-
-		if( $this->isUpToDateWith( $version ) ) {
+		// Check whether we are already up-to-date with the requested version
+		if ($this->isUpToDateWith($version)) {
 			return;
 		}
 
-		if( $this->currentVersion > $version ) {
+		$currentVersion = $this->versionStorage->get();
 
-			$this->getCurrentRevision()->down();
-			$this->currentVersion = $this->currentVersion - 1;
-
-		} else if( $this->currentVersion < $version ) {
-
-			$nextVersion = $this->currentVersion + 1;
-			$this->getRevisionByVersion( $nextVersion )->up();
-
-			$this->currentVersion = $nextVersion;
+		// Check whether we need to downdate
+		if ($currentVersion > $version) {
+			$this->downdate();
 		}
 
-		if( ! $this->isUpToDateWith( $version ) ) {
-			$this->rollTo( $version );
-			return;
+		// Check whether we need to update
+		if ($currentVersion < $version) {
+			$this->update();
 		}
 
-		$this->versionStore->store($this->currentVersion);
+		$this->rollTo($version);
+		return;
 	}
 
-	public function getCurrentVersion() : int
+	/**
+	 * Check if we're up-to-date with the current version
+	 *
+	 * @param int $version
+	 * @return bool
+	 */
+	private function isUpToDateWith(int $version): bool
 	{
-		return $this->currentVersion;
+		return ($this->versionStorage->get() === $version);
 	}
 
-	private function isUpToDateWith( int $version ) : bool
-	{
-		return ( $this->currentVersion === $version );
-	}
-
+	/**
+	 * Check if we're up to date with the latest revision
+	 *
+	 * @return bool
+	 */
 	private function isUpToDate() : bool
 	{
-		return $this->isUpToDateWith( $this->maxVersion );
+		return $this->isUpToDateWith($this->maxVersion);
 	}
 
-	private function getRevisionByVersion( int $version ) : ?RevisionInterface
+	private function getClampedVersion(int $version): int
 	{
-		if( isset( $this->revisions[ $version - 1 ] ) ) {
-			return $this->revisions[ $version - 1 ];
+		return max(min($version, $this->maxVersion), 0);
+	}
+
+	/**
+	 * Get a revision by a specific version number
+	 *
+	 * @param int $version
+	 * @return RevisionInterface|null
+	 */
+	private function getRevisionByVersion(int $version): ?RevisionInterface
+	{
+		$version = $this->getClampedVersion($version);
+
+		if (isset($this->revisions[$version-1])) {
+			return $this->revisions[$version-1];
 		}
 
 		return null;
 	}
 
-	private function getCurrentRevision() : RevisionInterface
+	/**
+	 * Gets the current revision
+	 *
+	 * @return RevisionInterface|null
+	 */
+	private function getCurrentRevision(): ?RevisionInterface
 	{
-		return $this->getRevisionByVersion( $this->currentVersion );
+		return $this->getRevisionByVersion($this->versionStorage->get());
 	}
 }
