@@ -6,28 +6,27 @@ use Hector\Core\Application;
 
 class AegisServiceProvider extends ServiceProvider
 {
-	protected $isLazy = true;
+    protected $isLazy = true;
 
-	public function register(Application $app)
-	{
-		$app->set('tpl', function() use ($app) {
+    public function register(Application $app)
+    {
+        $app->set('tpl', function () use ($app) {
+            $tpl = new \Aegis\Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
+            $tpl->setLexer(new \Aegis\Lexer());
+            $tpl->setParser(new \Aegis\Parser());
+            $tpl->setCompiler(new \Aegis\Compiler());
 
-			$tpl = new \Aegis\Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
-			$tpl->setLexer(new \Aegis\Lexer());
-			$tpl->setParser(new \Aegis\Parser());
-			$tpl->setCompiler(new \Aegis\Compiler());
+            return $tpl;
+        });
+    }
 
-			return $tpl;
-		});
-	}
+    public function boot(Application $app)
+    {
+        \Aegis\Template::$templateDirectory = $app->get('config')->get('TPL_DIR');
+    }
 
-	public function boot(Application $app)
-	{
-		\Aegis\Template::$templateDirectory = $app->get('config')->get('TPL_DIR');
-	}
-
-	public function provides(): array
-	{
-		return ['tpl'];
-	}
+    public function provides(): array
+    {
+        return ['tpl'];
+    }
 }

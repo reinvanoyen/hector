@@ -7,10 +7,10 @@ use Hector\Core\Provider\ServiceProvider;
 
 class ServerRequestServiceProvider extends ServiceProvider
 {
-	public function register(Application $app)
-	{
-		$app->set('request', function() {
-			return ServerRequest::fromGlobals();
-		});
-	}
+    public function register(Application $app)
+    {
+        $app->set('request', function () {
+            return ServerRequest::fromGlobals();
+        });
+    }
 }

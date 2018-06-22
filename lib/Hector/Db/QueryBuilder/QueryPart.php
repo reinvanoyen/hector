@@ -4,29 +4,28 @@ namespace Hector\Db\QueryBuilder;
 
 abstract class QueryPart
 {
-	const CONNECTS_WITH = [];
+    const CONNECTS_WITH = [];
 
-	private $query;
+    private $query;
 
-	public abstract function build() : String;
+    abstract public function build() : String;
 
-	public function setQuery( Query $query )
-	{
-		$this->query = $query;
-	}
+    public function setQuery(Query $query)
+    {
+        $this->query = $query;
+    }
 
-	public function getQuery() : Query
-	{
-		return $this->query;
-	}
+    public function getQuery() : Query
+    {
+        return $this->query;
+    }
 
-	public function __call( $method, $arguments )
-	{
-		if( isset( Query::$methodMap[ $method ] ) && in_array( $method, static::CONNECTS_WITH ) ) {
-
-			$queryPart = new Query::$methodMap[ $method ]( ...$arguments );
-			$this->query->addQueryPart($queryPart);
-			return $queryPart;
-		}
-	}
+    public function __call($method, $arguments)
+    {
+        if (isset(Query::$methodMap[ $method ]) && in_array($method, static::CONNECTS_WITH)) {
+            $queryPart = new Query::$methodMap[ $method ](...$arguments);
+            $this->query->addQueryPart($queryPart);
+            return $queryPart;
+        }
+    }
 }

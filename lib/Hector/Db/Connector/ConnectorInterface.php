@@ -4,5 +4,5 @@ namespace Hector\Db\Connector;
 
 interface ConnectorInterface
 {
-	public function connect() : \PDO;
+    public function connect() : \PDO;
 }

@@ -13,7 +13,7 @@ class Text extends Input
         $this->default = $default;
     }
 
-	public function render(array $opts = [])
+    public function render(array $opts = [])
     {
         $placeholder = null;
         extract($opts, EXTR_IF_EXISTS);

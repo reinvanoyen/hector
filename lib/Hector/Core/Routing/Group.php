@@ -11,16 +11,14 @@ class Group
 
     public function __construct(Application $app, String $prefix)
     {
-    	$this->app = $app;
+        $this->app = $app;
         $this->setPrefix($prefix);
     }
 
     public function add(MiddlewareInterface $middleware)
     {
-        foreach( $this->routes as $method => $routes ) {
-
-            foreach( $routes as $route ) {
-
+        foreach ($this->routes as $method => $routes) {
+            foreach ($routes as $route) {
                 $route->add($middleware);
             }
         }

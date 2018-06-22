@@ -7,10 +7,10 @@ use Hector\Core\Provider\ServiceProvider;
 
 class RoutingServiceProvider extends ServiceProvider
 {
-	public function register(Application $app)
-	{
-		$app->set('router', function() use ($app) {
-			return new Router($app);
-		});
-	}
+    public function register(Application $app)
+    {
+        $app->set('router', function () use ($app) {
+            return new Router($app);
+        });
+    }
 }

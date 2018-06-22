@@ -15,10 +15,10 @@ class Router implements RouterInterface
 
     public function __construct(Application $app)
     {
-    	$this->app = $app;
+        $this->app = $app;
     }
 
-	public function route(ServerRequestInterface $request)
+    public function route(ServerRequestInterface $request)
     {
         $method = $request->getMethod();
         $routes = $this->getRoutesForMethod($method);
