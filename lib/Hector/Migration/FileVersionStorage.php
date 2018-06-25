@@ -2,10 +2,18 @@
 
 namespace Hector\Migration;
 
+use Hector\Fs\Contract\FilesystemInterface;
 use Hector\Migration\Contract\VersionStorageInterface as Contract;
 
 class FileVersionStorage implements Contract
 {
+    /**
+     * Handles working with files
+     *
+     * @var FilesystemInterface
+     */
+    private $filesystem;
+
     /**
      * Filename of the file that stores the version number
      *
@@ -17,8 +25,9 @@ class FileVersionStorage implements Contract
      * FileVersionStorage constructor.
      * @param $filename
      */
-    public function __construct(string $filename)
+    public function __construct(FilesystemInterface $filesystem, string $filename)
     {
+        $this->filesystem = $filesystem;
         $this->filename = $filename;
     }
 
@@ -29,7 +38,7 @@ class FileVersionStorage implements Contract
      */
     public function store(int $version)
     {
-        file_put_contents($this->filename, $version);
+        $this->filesystem->put($this->filename, $version);
     }
 
     /**
@@ -39,6 +48,6 @@ class FileVersionStorage implements Contract
      */
     public function get(): int
     {
-        return (int) file_get_contents($this->filename);
+        return (int) $this->filesystem->get($this->filename);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-class MigratorTest extends PHPUnit_Framework_TestCase
+class FileVersionStorageTest extends PHPUnit_Framework_TestCase
 {
     private $migrator;
     private $fileVersionStorage;
@@ -10,7 +10,7 @@ class MigratorTest extends PHPUnit_Framework_TestCase
     {
         file_put_contents(__DIR__.'/version.txt', 0);
 
-        $this->fileVersionStorage = new \Hector\Migration\FileVersionStorage(__DIR__ . '/version.txt');
+        $this->fileVersionStorage = new \Hector\Migration\FileVersionStorage(new \Hector\Fs\LocalFilesystem(), __DIR__ . '/version.txt');
         $this->migrator = new \Hector\Migration\Migrator($this->fileVersionStorage);
 
         $this->revisionMock = $this->getMock(\Hector\Migration\Contract\RevisionInterface::class);

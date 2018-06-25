@@ -2,6 +2,7 @@
 
 namespace Hector\Migration;
 
+use Hector\Migration\Contract\MigrationLoggerInterface;
 use Hector\Migration\Contract\RevisionInterface;
 use Hector\Migration\Contract\VersionStorageInterface;
 
@@ -13,6 +14,13 @@ class Migrator
      * @var VersionStorageInterface
      */
     private $versionStorage;
+
+    /**
+     * Handles logging the revision descriptions
+     *
+     * @var MigrationLoggerInterface
+     */
+    private $migrationLogger;
 
     /**
      * Array holding all revisions
@@ -33,9 +41,13 @@ class Migrator
      *
      * @param VersionStorageInterface $versionStore
      */
-    public function __construct(VersionStorageInterface $versionStorage)
+    public function __construct(VersionStorageInterface $versionStorage, MigrationLoggerInterface $migrationLogger = null)
     {
         $this->versionStorage = $versionStorage;
+
+        if ($migrationLogger) {
+            $this->migrationLogger = $migrationLogger;
+        }
     }
 
     /**
@@ -72,6 +84,11 @@ class Migrator
         }
 
         $nextRevision->up();
+
+        if ($this->migrationLogger) {
+            $this->migrationLogger->logUpdate($nextRevision);
+        }
+
         $this->versionStorage->store($nextVersionNumber);
     }
 
@@ -88,6 +105,11 @@ class Migrator
         }
 
         $revision->down();
+
+        if ($this->migrationLogger) {
+            $this->migrationLogger->logDowndate($revision);
+        }
+
         $version = $this->getClampedVersion($this->versionStorage->get()-1);
         $this->versionStorage->store($version);
     }
