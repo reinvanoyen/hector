@@ -2,8 +2,6 @@
 
 namespace Hector\Config;
 
-use Hector\Config\ConfigLoaderInterface;
-
 class DotEnvLoader implements ConfigLoaderInterface
 {
     /**

@@ -9,6 +9,7 @@ interface FilesystemInterface
     public function isReadable(string $path): bool;
 
     public function size(string $path): int;
+    public function mimetype(string $path): string;
 
     public function get(string $path);
     public function put(string $path, $contents);

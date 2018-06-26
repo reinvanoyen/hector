@@ -49,6 +49,17 @@ class LocalFilesystem implements Contract\FilesystemInterface
     }
 
     /**
+     * Gets the mimetype of the file at path
+     *
+     * @param string $path
+     * @return string
+     */
+    public function mimetype(string $path): string
+    {
+        return finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
+    }
+
+    /**
      * Gets the contents of the file at path
      *
      * @param string $path
