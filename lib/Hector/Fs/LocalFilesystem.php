@@ -60,6 +60,17 @@ class LocalFilesystem implements Contract\FilesystemInterface
     }
 
     /**
+     * Get the last modification time of the file at path
+     *
+     * @param string $path
+     * @return string
+     */
+    public function modificationTime(string $path): int
+    {
+        return filemtime($path);
+    }
+
+    /**
      * Gets the contents of the file at path
      *
      * @param string $path
@@ -132,5 +143,16 @@ class LocalFilesystem implements Contract\FilesystemInterface
     public function move(string $path, string $newPath)
     {
         rename($path, $newPath);
+    }
+
+    /**
+     * Get all files in the dir
+     *
+     * @param string $path
+     * @return array
+     */
+    public function files(string $path): array
+    {
+        return glob($path);
     }
 }
