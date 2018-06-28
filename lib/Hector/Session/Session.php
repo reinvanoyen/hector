@@ -20,8 +20,19 @@ class Session
      */
     private $name;
 
+    /**
+     * The session id
+     *
+     * @var int
+     */
     private $id;
 
+    /**
+     * Session constructor.
+     *
+     * @param SessionHandlerInterface $handler
+     * @param string $name
+     */
     public function __construct(SessionHandlerInterface $handler, string $name)
     {
         $this->name = $name;

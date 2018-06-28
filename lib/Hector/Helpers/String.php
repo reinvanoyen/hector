@@ -26,24 +26,21 @@ namespace Hector\Helpers\String;
     }
 }
 
-/*string*/ function random(/*integer*/ $length)
+function random($length = 16)
 {
-    static $alphabet = null;
+    $string = '';
 
-    if ($alphabet === null) {
-        $alphabet = array_merge(range('a', 'z'), range('A', 'Z'), range('0', '9'));
+    while (($len = strlen($string)) < $length) {
+
+        $size = $length - $len;
+        $bytes = random_bytes($size);
+        $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
     }
 
-    $str = '';
-
-    for ($i = 0 ; $i < $length ; $i += 1) {
-        $str .= $alphabet[ rand(0, count($alphabet) - 1) ];
-    }
-
-    return $str;
+    return $string;
 }
 
-/*string*/ function slugify(/*string*/ $string)
+function slugify(/*string*/ $string)
 {
     return trim(preg_replace('/[^\w.]+/', '-', strtolower($string)), '-');
 }

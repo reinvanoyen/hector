@@ -1,6 +1,6 @@
 <?php
 
-namespace Hector\Form;
+namespace Hector\Fs;
 
 use Hector\Core\Application;
 use Hector\Core\Provider\ServiceProvider;
