@@ -42,18 +42,11 @@ class Router implements RouterInterface
 
     public function group(String $prefix, $callable)
     {
-        $group = new Group($this->app, $prefix);
-
-        $this->groups[] = $group;
-
+        $this->groups[] =  $group = new Group($this->app, $prefix);
         $this->registeringParent = $group;
-
         $callable();
-
         $parent = $this->registeringParent;
-
         $this->registeringParent = null;
-
         return $parent;
     }
 }

@@ -28,18 +28,41 @@ class Session
     private $id;
 
     /**
+     * Data of the session
+     *
+     * @var array
+     */
+    private $data = [];
+
+    /**
+     * Stores if the session data has been loaded
+     *
+     * @var bool
+     */
+    private $loaded = false;
+
+    /**
+     * Stores if the session has already been saved
+     *
+     * @var bool
+     */
+    private $saved = true;
+
+    /**
      * Session constructor.
      *
      * @param SessionHandlerInterface $handler
      * @param string $name
      */
-    public function __construct(SessionHandlerInterface $handler, string $name)
+    public function __construct(string $name, SessionHandlerInterface $handler)
     {
         $this->name = $name;
         $this->handler = $handler;
     }
 
     /**
+     * Gets the session handler
+     *
      * @return SessionHandlerInterface
      */
     public function getHandler(): SessionHandlerInterface
@@ -48,14 +71,17 @@ class Session
     }
 
     /**
-     * @param SessionHandlerInterface $handler
+     * Loads the data
      */
-    public function setHandler(SessionHandlerInterface $handler)
+    private function loadData()
     {
-        $this->handler = $handler;
+        $this->data = unserialize($this->handler->read($this->getId()));
+        $this->loaded = true;
     }
 
     /**
+     * Gets the name of the session
+     *
      * @return string
      */
     public function getName(): string
@@ -64,14 +90,8 @@ class Session
     }
 
     /**
-     * @param string $name
-     */
-    public function setName(string $name)
-    {
-        $this->name = $name;
-    }
-
-    /**
+     * Gets the session id
+     *
      * @return mixed
      */
     public function getId()
@@ -80,10 +100,52 @@ class Session
     }
 
     /**
+     * Sets the session id
+     *
      * @param mixed $id
      */
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * Stores data for a given key
+     *
+     * @param $key
+     * @param $data
+     */
+    public function set($key, $data)
+    {
+        if (! $this->loaded) {
+            $this->loadData();
+        }
+        $this->data[$key] = $data;
+        $this->saved = false;
+    }
+
+    /**
+     * Gets data for a given key
+     *
+     * @param $key
+     * @return mixed|null
+     */
+    public function get($key)
+    {
+        if (! $this->loaded) {
+            $this->loadData();
+        }
+        return $this->data[$key] ?? null;
+    }
+
+    /**
+     * Saves the data in the session (using our handler)
+     */
+    public function save()
+    {
+        if (! $this->saved) {
+            $this->handler->write($this->getId(), serialize($this->data));
+            $this->saved = true;
+        }
     }
 }

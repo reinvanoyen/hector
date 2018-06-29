@@ -153,6 +153,6 @@ class LocalFilesystem implements Contract\FilesystemInterface
      */
     public function files(string $path): array
     {
-        return glob($path);
+        return glob($path.'/*');
     }
 }
