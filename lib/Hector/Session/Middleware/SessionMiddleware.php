@@ -20,7 +20,7 @@ class SessionMiddleware implements MiddlewareInterface
     public function handle(ServerRequestInterface $request, ResponseInterface $response, Closure $next)
     {
         // Garbage collection lottery
-        if (rand(0, 3) === 2) {
+        if (rand(0, 3) === 1) {
             $this->session->getHandler()->gc(1000);
         }
 

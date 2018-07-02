@@ -2,7 +2,7 @@
 
 namespace Hector\Core\Routing;
 
-use Hector\Core\Application;
+use Hector\Core\DependencyInjection\Container;
 use Hector\Helpers\Http;
 use Hector\Helpers\Regex;
 use Hector\Helpers\String as Str;
@@ -14,58 +14,74 @@ class Route
 {
     use MiddlewareableTrait;
 
+    /**
+     * The application instance
+     *
+     * @var Container
+     */
     private $app;
-    private $pattern;
-    private $action;
-    private $attributes;
-    private $parent;
 
-    public function __construct(Application $app, String $pattern, $action)
+    /**
+     * @var string
+     */
+    private $pattern;
+
+    private $action;
+
+    /**
+     * @var array
+     */
+    private $attributes = [];
+
+    /**
+     * Route constructor.
+     *
+     * @param Container $app
+     * @param String $pattern
+     * @param $action
+     */
+    public function __construct(Container $app, string $pattern, $action)
     {
         $this->app = $app;
         $this->pattern = $pattern;
         $this->action = $action;
     }
 
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-    }
-
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
+    /**
+     * Check if the given request matches for this route
+     *
+     * @param ServerRequestInterface $request
+     * @return bool
+     */
     public function match(ServerRequestInterface $request)
     {
         $path = Http::getPath($request);
 
-        if ($this->parent && $this->parent->getPrefix()) {
-            if (Str\startsWith($path, $this->parent->getPrefix())) {
-                $pathWithoutPrefix = substr($path, strlen($this->parent->getPrefix()));
-
-                if (Regex\namedPregMatch('@^(' . $this->pattern . ')$@', $pathWithoutPrefix, $matches)) {
-                    return ($this->attributes = $matches);
-                }
-            }
-        } else {
-            if (Regex\namedPregMatch('@^(' . $this->pattern . ')$@', $path, $matches)) {
-                return ($this->attributes = $matches);
-            }
+        if (! Regex\namedPregMatch('@^(' . $this->pattern . ')$@', $path, $matches)) {
+            return false;
         }
 
-        return false;
+        return ($this->attributes = $matches);
     }
 
+    /**
+     * Call the route
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return mixed
+     */
     private function call(ServerRequestInterface $request, ResponseInterface $response)
     {
         $attributes = $this->attributes;
 
         if (is_callable($this->action)) {
+
             $callable = $this->action;
             array_unshift($attributes, $request, $response);
-        } else {
+
+        } else if( is_string($this->action) ) {
+
             $parts = explode('.', $this->action);
             $method = array_pop($parts);
             $controller = implode('\\', $parts);
@@ -76,7 +92,12 @@ class Route
         return call_user_func_array($callable, $attributes);
     }
 
-    public function getCoreFunction()
+    /**
+     * Gets the core function
+     *
+     * @return \Closure
+     */
+    private function getCoreFunction()
     {
         return function ($request, $response) {
             $result = $this->call($request, $response);
@@ -89,6 +110,13 @@ class Route
         };
     }
 
+    /**
+     * Execute the route with the full middleware stack
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return mixed
+     */
     public function execute(ServerRequestInterface $request, ResponseInterface $response)
     {
         return $this->runMiddlewareStack($request, $response, $this->getCoreFunction());

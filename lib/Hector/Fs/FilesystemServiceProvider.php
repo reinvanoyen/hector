@@ -4,7 +4,6 @@ namespace Hector\Fs;
 
 use Hector\Core\Application;
 use Hector\Core\Provider\ServiceProvider;
-use Hector\Fs\LocalFilesystem;
 
 class FilesystemServiceProvider extends ServiceProvider
 {

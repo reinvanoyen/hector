@@ -89,6 +89,11 @@ class LocalFilesystem implements Contract\FilesystemInterface
      */
     public function put(string $path, $contents)
     {
+        $dir = dirname($path);
+        if (!file_exists($dir)) {
+            mkdir($dir, 0555, true);
+        }
+
         file_put_contents($path, $contents);
     }
 

@@ -2,63 +2,161 @@
 
 namespace Hector\Core\Routing;
 
+use Hector\Core\Http\Middleware\MiddlewareInterface;
+
 trait RouteableTrait
 {
-    private $registeringParent = null;
-    private $prefix = null;
+    /**
+     * All middleswares
+     *
+     * @var array
+     */
+    private $middlewares = [];
 
+    /**
+     * This holds all routes for each method
+     *
+     * @var array
+     */
     private $routes = [
         'GET' => [],
         'POST' => [],
         'PUT' => [],
+        'PATCH' => [],
         'DELETE' => [],
+        'OPTIONS' => [],
     ];
 
-    public function addRoute($method, $pattern, $action)
+    /**
+     * Adds a route
+     *
+     * @param string $method
+     * @param $pattern
+     * @param $action
+     * @return Route
+     */
+    private function addRoute(string $method, $pattern, $action)
     {
-        if ($this->registeringParent !== null) {
-            $route = $this->registeringParent->addRoute($method, $pattern, $action);
-        } else {
-            $this->routes[$method][] = $route = new Route($this->app, $pattern, $action);
-        }
+        $this->routes[$method][] = $route = new Route($this->app, $pattern, $action);
 
-        $route->setParent(($this->registeringParent ?: $this));
+        // Loop through the already added middlewares and add the middleware to the route
+        foreach ($this->middlewares as $middleware) {
+            $route->add($middleware);
+        }
 
         return $route;
     }
 
-    public function getRoutesForMethod($method)
+    /**
+     * Adds middleware
+     *
+     * @param MiddlewareInterface $middleware
+     * @return $this
+     */
+    public function add(MiddlewareInterface $middleware)
     {
-        return $this->routes[ $method ];
+        $this->middlewares[] = $middleware;
+
+        // Loop through the already added routes and add the middleware
+        foreach ($this->routes as $routes) {
+            foreach ($routes as $route) {
+                $route->add($middleware);
+            }
+        }
+
+        return $this;
     }
 
-    public function setPrefix($prefix)
+    /**
+     * Gets routes for the given method
+     *
+     * @param $method
+     * @return mixed
+     */
+    public function getRoutesForMethod(string $method)
     {
-        $this->prefix = $prefix;
+        return $this->routes[$method];
     }
 
-    public function getPrefix()
-    {
-        return $this->prefix;
-    }
-
+    /**
+     * Registers route on GET method
+     *
+     * @param $pattern
+     * @param $action
+     * @return Route
+     */
     public function get($pattern, $action)
     {
         return $this->addRoute('GET', $pattern, $action);
     }
 
+    /**
+     * Registers route on POST method
+     *
+     * @param $pattern
+     * @param $action
+     * @return Route
+     */
     public function post($pattern, $action)
     {
         return $this->addRoute('POST', $pattern, $action);
     }
 
+    /**
+     * Registers route on PUT method
+     *
+     * @param $pattern
+     * @param $action
+     * @return Route
+     */
+    public function put($pattern, $action)
+    {
+        return $this->addRoute('PUT', $pattern, $action);
+    }
+
+    /**
+     * Registers route on PATCH method
+     *
+     * @param $pattern
+     * @param $action
+     * @return Route
+     */
+    public function patch($pattern, $action)
+    {
+        return $this->addRoute('PATCH', $pattern, $action);
+    }
+
+    /**
+     * Registers route on DELETE method
+     *
+     * @param $pattern
+     * @param $action
+     * @return Route
+     */
     public function delete($pattern, $action)
     {
         return $this->addRoute('DELETE', $pattern, $action);
     }
 
-    public function put($pattern, $action)
+    /**
+     * Registers route on OPTIONS method
+     *
+     * @param $pattern
+     * @param $action
+     * @return Route
+     */
+    public function options($pattern, $action)
     {
-        return $this->addRoute('PUT', $pattern, $action);
+        return $this->addRoute('OPTIONS', $pattern, $action);
+    }
+
+    public function all($pattern, $action)
+    {
+        $route = $this->get($pattern, $action);
+        $this->routes['POST'][] = $route;
+        $this->routes['PUT'][] = $route;
+        $this->routes['PATCH'][] = $route;
+        $this->routes['DELETE'][] = $route;
+        $this->routes['OPTIONS'][] = $route;
     }
 }

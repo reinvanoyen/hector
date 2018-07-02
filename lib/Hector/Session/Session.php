@@ -139,6 +139,20 @@ class Session
     }
 
     /**
+     * Checks if the session has data for the key
+     *
+     * @param $key
+     */
+    public function has($key)
+    {
+        if (! $this->loaded) {
+            $this->loadData();
+        }
+
+        return isset($this->data[$key]);
+    }
+
+    /**
      * Saves the data in the session (using our handler)
      */
     public function save()

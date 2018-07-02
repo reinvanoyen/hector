@@ -2,7 +2,7 @@
 
 namespace Hector\Core\Routing;
 
-use Hector\Core\Application;
+use Hector\Core\DependencyInjection\Container;
 use Hector\Core\Http\Response;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -10,24 +10,36 @@ class Router implements RouterInterface
 {
     use RouteableTrait;
 
-    private $groups = [];
+    /**
+     * The application instance
+     *
+     * @var Container
+     */
     private $app;
 
-    public function __construct(Application $app)
+    /**
+     * Router constructor.
+     *
+     * @param Container $app
+     */
+    public function __construct(Container $app)
     {
         $this->app = $app;
     }
 
+    /**
+     * Route the request
+     *
+     * @param ServerRequestInterface $request
+     * @return Response
+     */
     public function route(ServerRequestInterface $request)
     {
         $method = $request->getMethod();
         $routes = $this->getRoutesForMethod($method);
 
-        foreach ($this->groups as $group) {
-            $routes = array_merge($routes, $group->getRoutesForMethod($method));
-        }
-
         foreach ($routes as $route) {
+            // Check if the route matches
             if (($matches = $route->match($request)) !== false) {
                 try {
                     return $route->execute($request, new Response(200));
@@ -37,16 +49,7 @@ class Router implements RouterInterface
             }
         }
 
+        // No matching route was found
         return new Response(404);
-    }
-
-    public function group(String $prefix, $callable)
-    {
-        $this->groups[] =  $group = new Group($this->app, $prefix);
-        $this->registeringParent = $group;
-        $callable();
-        $parent = $this->registeringParent;
-        $this->registeringParent = null;
-        return $parent;
     }
 }
