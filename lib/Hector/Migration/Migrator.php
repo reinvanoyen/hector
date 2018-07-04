@@ -62,6 +62,17 @@ class Migrator
     }
 
     /**
+     * Sets the revisions
+     *
+     * @param array $revisions
+     */
+    public function setRevisions(array $revisions): void
+    {
+        $this->revisions = $revisions;
+        $this->maxVersion = count($this->revisions);
+    }
+
+    /**
      * Migrate all revisions
      *
      */

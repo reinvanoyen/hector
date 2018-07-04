@@ -2,11 +2,15 @@
 
 namespace Hector\Console\Command;
 
-use Hector\Console\Exception\InvalidArgumentException;
-use Hector\Console\Input\Input;
-
 class Signature
 {
+    /**
+     * The name of the command
+     *
+     * @var string
+     */
+    private $name;
+
     /**
      * An array holding the arguments
      *
@@ -29,6 +33,37 @@ class Signature
     private $subCommands = [];
 
     /**
+     * Gets the name of the command
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Sets the name of the command
+     *
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Checks if the command has a name
+     *
+     * @return bool
+     */
+    public function hasName(): bool
+    {
+        return (bool) $this->name;
+    }
+
+    /**
      * Add an argument
      *
      * @param Argument $argument
@@ -36,6 +71,17 @@ class Signature
     public function addArgument(Argument $argument)
     {
         $this->arguments[] = $argument;
+        return $this;
+    }
+
+    /**
+     * Gets all arguments
+     *
+     * @return array
+     */
+    public function getArguments(): array
+    {
+        return $this->arguments;
     }
 
     /**
@@ -45,7 +91,34 @@ class Signature
      */
     public function addSubCommand(Command $command)
     {
-        $this->subCommands[] = $command;
+        $this->subCommands[$command->getName()] = $command;
+        return $this;
+    }
+
+    /**
+     * Get subcommand by name
+     *
+     * @param string $name
+     * @return Command
+     */
+    public function getSubCommand(string $name): Command
+    {
+        return $this->subCommands[$name];
+    }
+
+    /**
+     * Gets all subcommands
+     *
+     * @return array
+     */
+    public function getSubCommands(): array
+    {
+        return $this->subCommands;
+    }
+
+    public function hasSubCommand(string $name): bool
+    {
+        return isset($this->subCommands[$name]);
     }
 
     /**
@@ -56,20 +129,16 @@ class Signature
     public function addOption(Option $option)
     {
         $this->options[] = $option;
+        return $this;
     }
 
     /**
-     * Check if the given input holds up against this signature
+     * Gets all options
      *
-     * @param Input $input
+     * @return array
      */
-    public function validate(Input $input)
+    public function getOptions(): array
     {
-        // Validate arguments first
-        foreach ($this->arguments as $argument) {
-            if (! $input->hasArgument($argument->getName())) {
-                throw new InvalidArgumentException('Missing argument '.$argument->getName());
-            }
-        }
+        return $this->options;
     }
 }

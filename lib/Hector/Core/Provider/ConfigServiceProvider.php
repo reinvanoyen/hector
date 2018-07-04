@@ -2,7 +2,7 @@
 
 namespace Hector\Core\Provider;
 
-use Hector\Core\Application;
+use Hector\Core\DependencyInjection\Container;
 
 class ConfigServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ class ConfigServiceProvider extends ServiceProvider
         $this->config = $config;
     }
 
-    public function register(Application $app)
+    public function register(Container $app)
     {
         $app->set('config', function () {
             return $this->config;

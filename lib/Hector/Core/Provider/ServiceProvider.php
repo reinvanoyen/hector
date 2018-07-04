@@ -2,7 +2,7 @@
 
 namespace Hector\Core\Provider;
 
-use Hector\Core\Application;
+use Hector\Core\DependencyInjection\Container;
 
 abstract class ServiceProvider
 {
@@ -13,7 +13,7 @@ abstract class ServiceProvider
         return $this->isLazy;
     }
 
-    abstract public function register(Application $app);
+    abstract public function register(Container $app);
 
     public function provides() : array
     {

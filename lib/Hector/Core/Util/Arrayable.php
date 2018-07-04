@@ -71,18 +71,17 @@ class Arrayable implements \ArrayAccess, \Iterator, \Countable, \JsonSerializabl
     }
 
     // Magic methods
-
-    /*boolean*/ public function __isset(/*string*/ $k)
+    public function __isset($k)
     {
         return isset($this->data[ $k ]);
     }
-    
-    /*mixed*/ public function __get(/*string*/ $k)
+
+    public function __get($k)
     {
-        return (isset($this->data[ $k ]) ? $this->data[ $k ] : null);
+        return $this->data[$k] ?? null;
     }
 
-    /*mixed*/ public function __set(/*string*/ $k, /*mixed*/ $v)
+    public function __set($k, $v)
     {
         $this->data[ $k ] = $v;
     }

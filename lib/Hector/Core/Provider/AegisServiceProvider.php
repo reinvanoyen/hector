@@ -2,13 +2,13 @@
 
 namespace Hector\Core\Provider;
 
-use Hector\Core\Application;
+use Hector\Core\DependencyInjection\Container;
 
 class AegisServiceProvider extends ServiceProvider
 {
     protected $isLazy = true;
 
-    public function register(Application $app)
+    public function register(Container $app)
     {
         $app->set('tpl', function () use ($app) {
             $tpl = new \Aegis\Template(new \Aegis\Runtime\DefaultRuntime(new \Aegis\Runtime\DefaultNodeCollection()));
@@ -20,7 +20,7 @@ class AegisServiceProvider extends ServiceProvider
         });
     }
 
-    public function boot(Application $app)
+    public function boot(Container $app)
     {
         \Aegis\Template::$templateDirectory = $app->get('config')->get('TPL_DIR');
     }
