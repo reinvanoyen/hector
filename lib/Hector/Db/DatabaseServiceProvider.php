@@ -2,13 +2,13 @@
 
 namespace Hector\Db;
 
-use Hector\Core\Application;
+use Hector\Core\Container\Container;
 use Hector\Core\Provider\ServiceProvider;
 use Hector\Db\Orm\Model;
 
 class DatabaseServiceProvider extends ServiceProvider
 {
-    public function register(Application $app)
+    public function register(Container $app)
     {
         $app->set('db.factory', function () use ($app) {
             return new ConnectionFactory($app->get('config'));
@@ -19,7 +19,7 @@ class DatabaseServiceProvider extends ServiceProvider
         });
     }
 
-    public function boot(Application $app)
+    public function boot(Container $app)
     {
         Model::setConnectionManager($app->get('db'));
     }

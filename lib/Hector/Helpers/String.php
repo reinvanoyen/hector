@@ -2,22 +2,22 @@
 
 namespace Hector\Helpers\String;
 
-/*boolean*/ function startsWith(/*string*/ $string, /*string*/ $part)
+function startsWith($string, $part)
 {
     return substr($string, 0, strlen($part)) === $part;
 }
 
-/*boolean*/ function endsWith(/*string*/ $string, /*string*/ $part)
+function endsWith($string, /*string*/ $part)
 {
     return substr($string, -1 * strlen($part)) === $part;
 }
 
-/*string*/ function removeExtension(/*string*/ $filename)
+function removeExtension($filename)
 {
     return preg_replace('/\\.[a-z0-9]+$/i', '', $filename);
 }
 
-/*string*/ function clipOnWord(/*string*/ $string, /*integer*/ $length, /*string*/ $terminator = '...')
+function clipOnWord($string, $length, $terminator = '...')
 {
     if (strlen($string) > $length) {
         return rtrim(preg_replace('/^(.{0,' . $length . '})\b.*$/s', '\\1', $string)) . $terminator;
@@ -40,7 +40,7 @@ function random($length = 16)
     return $string;
 }
 
-function slugify(/*string*/ $string)
+function slugify($string)
 {
     return trim(preg_replace('/[^\w.]+/', '-', strtolower($string)), '-');
 }

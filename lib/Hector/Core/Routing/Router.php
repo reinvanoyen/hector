@@ -2,8 +2,9 @@
 
 namespace Hector\Core\Routing;
 
-use Hector\Core\DependencyInjection\Container;
+use Hector\Core\Container\Container;
 use Hector\Core\Http\Response;
+use Hector\Core\Routing\Contract\RouterInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Router implements RouterInterface

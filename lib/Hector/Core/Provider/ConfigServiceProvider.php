@@ -2,7 +2,7 @@
 
 namespace Hector\Core\Provider;
 
-use Hector\Core\DependencyInjection\Container;
+use Hector\Core\Container\Container;
 
 class ConfigServiceProvider extends ServiceProvider
 {

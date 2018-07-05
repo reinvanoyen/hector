@@ -2,8 +2,9 @@
 
 namespace Hector\Core;
 
-use Hector\Core\DependencyInjection\Container;
+use Hector\Core\Container\Container;
 use Hector\Core\Http\ServerRequestServiceProvider;
+use Hector\Core\Routing\Contract\RouterInterface;
 use Hector\Core\Routing\RoutingServiceProvider;
 use Hector\Core\Provider\ServiceProvider;
 use Psr\Http\Message\ResponseInterface;
@@ -70,10 +71,8 @@ final class Application extends Container
         $provider->register($this);
 
         // If the application is already booted, boot the provider right away
-        if ($this->isBooted) {
-            if (method_exists($provider, 'boot')) {
-                $provider->boot($this);
-            }
+        if ($this->isBooted && method_exists($provider, 'boot')) {
+            $provider->boot($this);
         }
     }
 
@@ -83,7 +82,7 @@ final class Application extends Container
      * @param $key
      * @return mixed
      */
-    public function get($key)
+    public function get(string $key)
     {
         if (isset($this->lazyProviders[$key])) {
             $this->initServiceProvider($this->lazyProviders[$key]);
@@ -125,7 +124,7 @@ final class Application extends Container
         $this->boot();
 
         // Get the response
-        $response = $this->get('router')->route($this->get('request'));
+        $response = $this->get(RouterInterface::class)->route($this->get('request'));
 
         // Respond
         $this->respond($response);

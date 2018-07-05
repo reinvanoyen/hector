@@ -2,7 +2,7 @@
 
 namespace Hector\Core\Http;
 
-use Hector\Core\DependencyInjection\Container;
+use Hector\Core\Container\Container;
 use Hector\Core\Provider\ServiceProvider;
 
 class ServerRequestServiceProvider extends ServiceProvider

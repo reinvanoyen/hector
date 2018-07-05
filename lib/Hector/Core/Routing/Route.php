@@ -2,7 +2,7 @@
 
 namespace Hector\Core\Routing;
 
-use Hector\Core\DependencyInjection\Container;
+use Hector\Core\Container\Container;
 use Hector\Helpers\Http;
 use Hector\Helpers\Regex;
 use Hector\Helpers\String as Str;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hector\Core\Routing;
+namespace Hector\Core\Routing\Contract;
 
 use \Psr\Http\Message\ServerRequestInterface;
 

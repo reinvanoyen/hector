@@ -2,15 +2,14 @@
 
 namespace Hector\Fs;
 
-use Hector\Core\DependencyInjection\Container;
+use Hector\Core\Container\Container;
 use Hector\Core\Provider\ServiceProvider;
+use Hector\Fs\Contract\FilesystemInterface;
 
 class FilesystemServiceProvider extends ServiceProvider
 {
     public function register(Container $app)
     {
-        $app->factory('fs', function () use ($app) {
-            return new LocalFilesystem();
-        });
+        $app->set(FilesystemInterface::class, LocalFilesystem::class);
     }
 }
