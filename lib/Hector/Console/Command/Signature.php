@@ -12,6 +12,13 @@ class Signature
     private $name;
 
     /**
+     * The description of the command
+     *
+     * @var string
+     */
+    private $description = '';
+
+    /**
      * An array holding the arguments
      *
      * @var array
@@ -50,6 +57,23 @@ class Signature
     public function setName(string $name)
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
         return $this;
     }
 

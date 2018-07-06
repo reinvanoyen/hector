@@ -47,11 +47,6 @@ class Kernel extends Command
 
     public function createSignature(Signature $signature): Signature
     {
-        return $signature->setName('root');
-    }
-
-    public function execute(InputInterface $input, OutputInterface $output)
-    {
-        $output->writeLine('Kernel');
+        return $signature->setName('hector');
     }
 }

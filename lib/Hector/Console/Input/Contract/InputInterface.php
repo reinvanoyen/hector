@@ -9,6 +9,8 @@ interface InputInterface
     public function setSignature(Signature $signature);
     public function getSignature(): Signature;
 
+    public function validate();
+
     public function getArguments();
     public function getArgument(string $name);
 
@@ -22,6 +24,4 @@ interface InputInterface
     public function hasSubCommand(): bool;
     public function getSubCommand();
     public function setSubCommand(string $name);
-
-    public function reset();
 }

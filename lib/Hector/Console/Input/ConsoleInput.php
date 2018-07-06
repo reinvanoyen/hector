@@ -9,17 +9,20 @@ class ConsoleInput extends Input
 {
     private $rawArguments = [];
 
+    private $missingArguments = [];
+
     public function setSignature(Signature $signature)
     {
         parent::setSignature($signature);
+        $this->reset();
         $this->parse();
     }
 
-    public function reset()
+    private function reset()
     {
         $this->subCommand = [];
         $this->arguments = [];
-        $this->options = [];
+        $this->missingArguments = [];
     }
 
     private function parse()
@@ -68,8 +71,15 @@ class ConsoleInput extends Input
             if (isset($this->rawArguments[$position])) {
                 $this->setArgument($argument->getName(), $this->rawArguments[$position]);
             } else {
-                throw new InvalidArgumentException('Missing argument '.$argument->getName());
+                $this->missingArguments[] = $argument->getName();
             }
+        }
+    }
+
+    public function validate()
+    {
+        if (count($this->missingArguments)) {
+            throw new InvalidArgumentException('Missing argument(s) '.implode(', ', $this->missingArguments));
         }
     }
 }

@@ -22,6 +22,14 @@ abstract class Command
     private $created = false;
 
     /**
+     * Creates the signature of the command
+     *
+     * @param Signature $signature
+     * @return Signature
+     */
+    abstract public function createSignature(Signature $signature): Signature;
+
+    /**
      * Gets the name of the command
      *
      * @return string
@@ -36,6 +44,19 @@ abstract class Command
         }
 
         return $this->signature->getName();
+    }
+
+    /**
+     * Gets the description of the command
+     *
+     * @return string
+     * @throws \Exception
+     */
+    final public function getDescription(): string
+    {
+        $this->make();
+
+        return $this->signature->getDescription();
     }
 
     /**
@@ -60,7 +81,9 @@ abstract class Command
             return;
         }
 
-        $this->signature = $this->createSignature(new Signature());
+        $signature = new Signature();
+        $signature->addOption(new Option('help', 'h'));
+        $this->signature = $this->createSignature($signature);
 
         if (! $this->signature->hasName()) {
             throw new \Exception('Command should have a name');
@@ -71,7 +94,7 @@ abstract class Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        throw new \Exception( 'Command needs to override execute method' );
+        $this->outputHelpMessage($output);
     }
 
     /**
@@ -84,16 +107,51 @@ abstract class Command
     {
         $input->setSignature($this->getSignature());
 
+        $showHelpMessage = (bool) $input->getOption('help');
+
+        if ($showHelpMessage && ! $input->hasSubCommand()) {
+            $this->outputHelpMessage($output);
+            return;
+        }
+
         if ($input->hasSubCommand()) {
 
             $command = $this->signature->getSubCommand($input->getSubCommand());
-            $input->reset();
             $command->run($input, $output);
             return;
         }
 
+        $input->validate();
+
         $this->execute($input, $output);
     }
 
-    abstract public function createSignature(Signature $signature): Signature;
+    /**
+     * Output an auto-generated help message
+     *
+     * @param OutputInterface $output
+     */
+    public function outputHelpMessage(OutputInterface $output)
+    {
+        $name = $this->getName();
+        $nameLength = strlen($name);
+
+        $output->writeLine(str_repeat('=', $nameLength));
+        $output->writeLine(strtoupper($this->getName()));
+        $output->writeLine(str_repeat('=', $nameLength));
+
+        // Output the available commands
+        $output->writeLine('Available commands:');
+
+        foreach ($this->signature->getSubCommands() as $command) {
+            $output->writeLine(str_pad($command->getName(), 20).$command->getDescription());
+        }
+
+        // Output the available arguments
+        $output->writeLine('Available arguments:');
+
+        foreach ($this->signature->getArguments() as $argument) {
+            $output->writeLine(str_pad($argument->getName(), 20).$argument->getDescription());
+        }
+    }
 }
