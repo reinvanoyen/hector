@@ -37,11 +37,23 @@ final class Application extends Container
     /**
      * Register a service provider
      *
-     * @param ServiceProvider $provider
+     * @param ServiceProvider|string|array $provider
      * @return void
      */
-    public function register(ServiceProvider $provider) : void
+    public function register($provider): void
     {
+        if (is_array($provider)) {
+            foreach ($provider as $service) {
+                $this->register($service);
+            }
+            return;
+        }
+
+        if (is_string($provider)) {
+            $this->set($provider, $provider);
+            $provider = $this->get($provider);
+        }
+
         if ($provider->isLazy()) {
             foreach ($provider->provides() as $providing) {
                 $this->lazyProviders[$providing] = $provider;
@@ -57,7 +69,7 @@ final class Application extends Container
      *
      * @param ServiceProvider $provider
      */
-    private function initServiceProvider(ServiceProvider $provider) : void
+    private function initServiceProvider(ServiceProvider $provider): void
     {
         $provider->register($this);
 
@@ -79,6 +91,7 @@ final class Application extends Container
             $this->initServiceProvider($this->lazyProviders[$key]);
             unset($this->lazyProviders[$key]);
         }
+
         return parent::get($key);
     }
 
@@ -87,7 +100,7 @@ final class Application extends Container
      *
      * @return void
      */
-    private function boot() : void
+    private function boot(): void
     {
         // First check if the application is already booted
         if ($this->isBooted) {
@@ -109,7 +122,7 @@ final class Application extends Container
      *
      * @return void
      */
-    public function start() : void
+    public function start(): void
     {
         // Boot all service providers
         $this->boot();
