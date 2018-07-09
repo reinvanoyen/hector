@@ -82,7 +82,7 @@ abstract class Command
         }
 
         $signature = new Signature();
-        $signature->addOption(new Option('help', 'h'));
+        $signature->addOption(Option::create('help', 'h')->setDescription('Display this help message'));
         $this->signature = $this->createSignature($signature);
 
         if (! $this->signature->hasName()) {
@@ -133,25 +133,77 @@ abstract class Command
      */
     public function outputHelpMessage(OutputInterface $output)
     {
-        $name = $this->getName();
-        $nameLength = strlen($name);
-
-        $output->writeLine(str_repeat('=', $nameLength));
-        $output->writeLine(strtoupper($this->getName()));
-        $output->writeLine(str_repeat('=', $nameLength));
-
-        // Output the available commands
-        $output->writeLine('Available commands:');
-
-        foreach ($this->signature->getSubCommands() as $command) {
-            $output->writeLine(str_pad($command->getName(), 20).$command->getDescription());
+        if ($this->getDescription()) {
+            $output->writeLine($this->getName().':', OutputInterface::TYPE_WARNING);
+            $output->writeLine(' '.$this->getDescription());
         }
 
-        // Output the available arguments
-        $output->writeLine('Available arguments:');
+        $output->newline();
 
-        foreach ($this->signature->getArguments() as $argument) {
-            $output->writeLine(str_pad($argument->getName(), 20).$argument->getDescription());
+        $commands = $this->signature->getSubCommands();
+        $arguments = $this->signature->getArguments();
+        $options = $this->signature->getOptions();
+
+        $output->writeLine('Usage:', OutputInterface::TYPE_WARNING);
+
+        $output->write(' '.$this->getName());
+        if (count($commands)) {
+            $output->write(' [command]');
+        }
+
+        if (count($arguments)) {
+            foreach ($arguments as $argument) {
+                $output->write(' <'.$argument->getName().'>');
+            }
+        }
+
+        if (count($options)) {
+            $output->write(' [options]');
+        }
+
+        $output->newline();
+        $output->newline();
+
+        // Output available commands
+        if (count($commands)) {
+
+            $output->writeLine('Available commands:', OutputInterface::TYPE_WARNING);
+
+            foreach ($commands as $command) {
+                $output->write(' '.str_pad($command->getName(), 20), OutputInterface::TYPE_INFO);
+                $output->write($command->getDescription());
+                $output->newline();
+            }
+
+            $output->newline();
+        }
+
+        // Output available arguments
+        if (count($arguments)) {
+
+            $output->writeLine('Arguments:', OutputInterface::TYPE_WARNING);
+
+            foreach ($arguments as $argument) {
+                $output->write(' '.str_pad($argument->getName(), 20), OutputInterface::TYPE_INFO);
+                $output->write($argument->getDescription());
+                $output->newline();
+            }
+
+            $output->newline();
+        }
+
+        // Output available options
+        if (count($options)) {
+
+            $output->writeLine('Options:', OutputInterface::TYPE_WARNING);
+
+            foreach ($options as $option) {
+                $output->write(' '.str_pad('-'.$option->getAlias().', --'.$option->getName(), 20), OutputInterface::TYPE_INFO);
+                $output->write($option->getDescription());
+                $output->newline();
+            }
+
+            $output->newline();
         }
     }
 }
