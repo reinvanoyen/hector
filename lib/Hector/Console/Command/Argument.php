@@ -14,33 +14,52 @@ class Argument
      */
     private $description = '';
 
+    /**
+     * Argument constructor.
+     * @param string $name
+     */
     private function __construct(string $name)
     {
         $this->name = $name;
     }
 
+    /**
+     * Public method to instantiate the argument
+     *
+     * @param string $name
+     * @return static
+     */
     public static function create(string $name)
     {
         return new static( $name );
     }
 
+    /**
+     * Gets the name of the argument
+     *
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @return mixed
+     * Gets the description of the argument
+     *
+     * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
     /**
-     * @param mixed $description
+     * Sets the description of the argument
+     *
+     * @param string $description
      */
-    public function setDescription($description)
+    public function setDescription(string $description)
     {
         $this->description = $description;
         return $this;

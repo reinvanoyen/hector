@@ -18,4 +18,14 @@ class FileOutput implements OutputInterface
     {
         $this->filesystem->append('haha.txt', $message."\n");
     }
+
+    public function write(string $message, int $type = self::TYPE_PLAIN)
+    {
+        $this->filesystem->append('haha.txt', $message);
+    }
+
+    public function newline()
+    {
+        $this->filesystem->append('haha.txt', "\n");
+    }
 }

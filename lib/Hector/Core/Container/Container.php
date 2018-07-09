@@ -28,14 +28,26 @@ class Container implements ContainerInterface
     private $instances = [];
 
     /**
-     * Stores a callable in the container for the given key
+     * Stores a implementation in the container for the given key
      *
-     * @param String $key
-     * @param callable $factory
+     * @param string $key
+     * @param mixed $implementation
      */
     public function set(string $contract, $implementation)
     {
         $this->contracts[$contract] = $implementation;
+    }
+
+    /**
+     * Stores a implementation in the container for the given key and also store it as a singleton
+     *
+     * @param string $contract
+     * @param mixed $implementation
+     */
+    public function singleton(string $contract, $implementation)
+    {
+        $this->set($contract, $implementation);
+        $this->singletons[] = $contract;
     }
 
     /**
@@ -76,12 +88,6 @@ class Container implements ContainerInterface
     public function has(string $contract): bool
     {
         return isset($this->contracts[$contract]);
-    }
-
-    public function singleton(string $contract, $implementation)
-    {
-        $this->set($contract, $implementation);
-        $this->singletons[] = $contract;
     }
 
     /**

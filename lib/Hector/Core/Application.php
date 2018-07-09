@@ -3,6 +3,8 @@
 namespace Hector\Core;
 
 use Hector\Core\Container\Container;
+use Hector\Core\Http\Contract\KernelInterface;
+use Hector\Core\Http\ServerRequest;
 use Hector\Core\Http\ServerRequestServiceProvider;
 use Hector\Core\Routing\Contract\RouterInterface;
 use Hector\Core\Routing\RoutingServiceProvider;
@@ -31,17 +33,6 @@ final class Application extends Container
      * @var array
      */
     private $lazyProviders = [];
-
-    /**
-     * Application constructor.
-     *
-     */
-    public function __construct()
-    {
-        // Register Hector service providers
-        $this->register(new RoutingServiceProvider());
-        $this->register(new ServerRequestServiceProvider());
-    }
 
     /**
      * Register a service provider
@@ -122,42 +113,5 @@ final class Application extends Container
     {
         // Boot all service providers
         $this->boot();
-
-        // Get the response
-        $response = $this->get(RouterInterface::class)->route($this->get('request'));
-
-        // Respond
-        $this->respond($response);
-    }
-
-    /**
-     * Produces a practical response from a response
-     *
-     * @param ResponseInterface $response
-     * @return void
-     */
-    private function respond(ResponseInterface $response) : void
-    {
-        if (! headers_sent()) {
-
-            // Status
-            header(sprintf(
-                'HTTP/%s %s %s',
-                $response->getProtocolVersion(),
-                $response->getStatusCode(),
-                $response->getReasonPhrase()
-            ));
-
-            // Headers
-            foreach ($response->getHeaders() as $name => $values) {
-                foreach ($values as $value) {
-                    header(sprintf('%s: %s', $name, $value), false);
-                }
-            }
-        }
-
-        echo $response->getBody()->getContents();
     }
 }
-
-require_once __DIR__ . '/../init.php';
