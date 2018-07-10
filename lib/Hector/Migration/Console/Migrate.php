@@ -8,7 +8,7 @@ use Hector\Console\Output\Contract\OutputInterface;
 
 class Migrate extends MigrateCommand
 {
-    public function createSignature(Signature $signature): Signature
+    protected function createSignature(Signature $signature): Signature
     {
         return $signature
             ->setName('migrate')

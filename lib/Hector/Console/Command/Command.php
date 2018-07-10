@@ -27,7 +27,7 @@ abstract class Command
      * @param Signature $signature
      * @return Signature
      */
-    abstract public function createSignature(Signature $signature): Signature;
+    abstract protected function createSignature(Signature $signature): Signature;
 
     /**
      * Gets the name of the command
@@ -115,7 +115,6 @@ abstract class Command
         }
 
         if ($input->hasSubCommand()) {
-
             $command = $this->signature->getSubCommand($input->getSubCommand());
             $command->run($input, $output);
             return;

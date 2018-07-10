@@ -15,7 +15,7 @@ class Command extends MigrateCommand
         parent::__construct($migrator);
     }
 
-    public function createSignature(Signature $signature): Signature
+    protected function createSignature(Signature $signature): Signature
     {
         return $signature
             ->setName($this->name)

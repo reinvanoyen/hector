@@ -20,7 +20,7 @@ class Kernel extends Command implements KernelInterface
         $this->getSignature()->addSubCommand($command);
     }
 
-    public function createSignature(Signature $signature): Signature
+    protected function createSignature(Signature $signature): Signature
     {
         return $signature->setName('hector');
     }
