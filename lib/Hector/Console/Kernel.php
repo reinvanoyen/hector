@@ -7,19 +7,65 @@ use Hector\Console\Command\Signature;
 use Hector\Console\Contract\KernelInterface;
 use Hector\Console\Input\Contract\InputInterface;
 use Hector\Console\Output\Contract\OutputInterface;
+use Hector\Core\Container\Container;
 
 class Kernel extends Command implements KernelInterface
 {
+    /**
+     * @var Container
+     */
+    private $app;
+
+    /**
+     * An array holding registered commands
+     *
+     * @var array
+     */
+    private $registeredCommands = [];
+
+    /**
+     * Kernel constructor.
+     * @param Container $app
+     */
+    public function __construct(Container $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
+     * Handle the incoming input
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     public function handle(InputInterface $input, OutputInterface $output)
     {
+        foreach ($this->registeredCommands as $command) {
+            if (is_string($command)) {
+                $this->getSignature()->addSubCommand($this->app->get($command));
+                continue;
+            }
+
+            $this->getSignature()->addSubCommand($command);
+        }
+
         $this->run($input, $output);
     }
 
-    public function addCommand(Command $command)
+    /**
+     * Register a command
+     *
+     * @param $command
+     */
+    public function registerCommand($command)
     {
-        $this->getSignature()->addSubCommand($command);
+        $this->registeredCommands[] = $command;
     }
 
+    /**
+     * @param Signature $signature
+     * @return Signature
+     */
     protected function createSignature(Signature $signature): Signature
     {
         return $signature->setName('hector');

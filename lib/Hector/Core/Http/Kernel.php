@@ -9,13 +9,25 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Kernel implements KernelInterface
 {
+    /**
+     * @var Container
+     */
     private $app;
 
+    /**
+     * Kernel constructor.
+     * @param Container $app
+     */
     public function __construct(Container $app)
     {
         $this->app = $app;
     }
 
+    /**
+     * Handle the incoming request
+     *
+     * @param ServerRequestInterface $request
+     */
     public function handle(ServerRequestInterface $request)
     {
         $router = $this->app->get(RouterInterface::class);

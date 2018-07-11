@@ -2,7 +2,9 @@
 
 namespace Hector\Fs;
 
-class LocalFilesystem implements Contract\FilesystemInterface
+use Hector\Fs\Contract\FilesystemInterface;
+
+class LocalFilesystem implements FilesystemInterface
 {
     /**
      * Check if the file at path exists

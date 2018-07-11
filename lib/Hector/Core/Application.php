@@ -8,6 +8,13 @@ use Hector\Core\Provider\ServiceProvider;
 final class Application extends Container
 {
     /**
+     * The path to the application
+     *
+     * @var string
+     */
+    private $path;
+
+    /**
      * Stores if the application is booted
      *
      * @var bool
@@ -27,6 +34,15 @@ final class Application extends Container
      * @var array
      */
     private $lazyProviders = [];
+
+    /**
+     * Application constructor.
+     * @param string $path
+     */
+    public function __construct(string $path)
+    {
+        $this->path = $path;
+    }
 
     /**
      * Register a service provider
@@ -121,13 +137,21 @@ final class Application extends Container
     }
 
     /**
-     * Starts the application
+     * Bootstrap the application
      *
      * @return void
      */
-    public function start(): void
+    public function bootstrap(): void
     {
-        // Boot all service providers
+        // We set this application as the container for the facade
+        \Hector\Facade\Facade::setContainer($this);
+
+        // We boot all service providers
         $this->boot();
+
+        if (file_exists($this->path.'/config/providers.php')) {
+            $app = $this;
+            require_once $this->path.'/config/providers.php';
+        }
     }
 }
