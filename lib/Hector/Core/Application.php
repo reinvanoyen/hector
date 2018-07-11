@@ -3,13 +3,7 @@
 namespace Hector\Core;
 
 use Hector\Core\Container\Container;
-use Hector\Core\Http\Contract\KernelInterface;
-use Hector\Core\Http\ServerRequest;
-use Hector\Core\Http\ServerRequestServiceProvider;
-use Hector\Core\Routing\Contract\RouterInterface;
-use Hector\Core\Routing\RoutingServiceProvider;
 use Hector\Core\Provider\ServiceProvider;
-use Psr\Http\Message\ResponseInterface;
 
 final class Application extends Container
 {
@@ -74,8 +68,19 @@ final class Application extends Container
         $provider->register($this);
 
         // If the application is already booted, boot the provider right away
-        if ($this->isBooted && method_exists($provider, 'boot')) {
-            $provider->boot($this);
+        if ($this->isBooted) {
+            $this->bootServiceProvider($provider);
+        }
+    }
+
+    private function bootServiceProvider(ServiceProvider $provider)
+    {
+        if (! $provider->isBooted()) {
+            if (method_exists($provider, 'boot')) {
+                $provider->boot($this);
+            }
+
+            $provider->setBooted();
         }
     }
 
@@ -109,9 +114,7 @@ final class Application extends Container
 
         // Boot all registered providers
         foreach ($this->registeredProviders as $provider) {
-            if (method_exists($provider, 'boot')) {
-                $provider->boot($this);
-            }
+            $this->bootServiceProvider($provider);
         }
 
         $this->isBooted = true;

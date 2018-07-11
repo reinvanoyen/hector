@@ -14,11 +14,11 @@ abstract class Facade
     private static $container;
 
     /**
-     * The resolved instance of the current facade
+     * The resolved instances
      *
      * @var $instance
      */
-    protected static $instance;
+    protected static $instances = [];
 
     /**
      *
@@ -32,16 +32,23 @@ abstract class Facade
 
     abstract protected static function getContract(): string;
 
-    public static function __callStatic($method, $arguments)
+    final private static function getInstance()
     {
         if (! self::$container) {
             throw new \Exception('No container set for facades');
         }
 
-        if (! static::$instance) {
-            static::$instance = self::$container->get(static::getContract());
+        $contract = static::getContract();
+
+        if (! isset(static::$instances[$contract])) {
+            static::$instances[$contract] = self::$container->get($contract);
         }
 
-        return static::$instance->$method(...$arguments);
+        return static::$instances[$contract];
+    }
+
+    public static function __callStatic($method, $arguments)
+    {
+        return static::getInstance()->$method(...$arguments);
     }
 }

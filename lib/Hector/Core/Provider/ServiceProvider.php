@@ -8,9 +8,21 @@ abstract class ServiceProvider
 {
     protected $isLazy = false;
 
-    final public function isLazy() : bool
+    private $booted = false;
+
+    final public function isLazy(): bool
     {
         return $this->isLazy;
+    }
+
+    final public function isBooted(): bool
+    {
+        return $this->booted;
+    }
+
+    final public function setBooted()
+    {
+        $this->booted = true;
     }
 
     abstract public function register(Container $app);

@@ -51,6 +51,18 @@ class Container implements ContainerInterface
     }
 
     /**
+     * Directly store an instance for a contract
+     *
+     * @param string $contract
+     * @param $instance
+     */
+    public function instance(string $contract, $instance)
+    {
+        $this->set($contract, get_class($instance));
+        $this->instances[$contract] = $instance;
+    }
+
+    /**
      * Retreives a value from the container by a given contract
      *
      * @param $key
@@ -62,15 +74,15 @@ class Container implements ContainerInterface
             throw new \Exception('No dependency found for contract: '.$contract);
         }
 
-        if (! in_array($contract, $this->singletons)) {
-            return $this->create($contract);
-        }
-
         // Looks like we're getting a singleton instance,
         // So we should check if it was instantiated before
         // If so we retrieve it
         if (isset($this->instances[$contract])) {
             return $this->instances[$contract];
+        }
+
+        if (! in_array($contract, $this->singletons)) {
+            return $this->create($contract);
         }
 
         // It wasn't instantiated before, so we create and save it now
