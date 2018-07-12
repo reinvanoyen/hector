@@ -2,10 +2,32 @@
 
 namespace Hector\Config;
 
+use Hector\Config\Contract\ConfigLoaderInterface;
+use Hector\Config\Contract\ConfigRepositoryInterface;
+
 class ConfigRepository implements ConfigRepositoryInterface
 {
+    /**
+     * Handles loading the config
+     *
+     * @var ConfigLoaderInterface
+     */
     private $configLoader;
 
+    /**
+     * @var array
+     */
+    private $variables = [];
+
+    /**
+     * @var bool
+     */
+    private $loaded = false;
+
+    /**
+     * ConfigRepository constructor.
+     * @param ConfigLoaderInterface $configLoader
+     */
     public function __construct(ConfigLoaderInterface $configLoader)
     {
         $this->configLoader = $configLoader;
@@ -13,8 +35,10 @@ class ConfigRepository implements ConfigRepositoryInterface
 
     public function get(string $name, $default = null)
     {
-        if (isset($this->configLoader->getVariables()[$name])) {
-            return $this->configLoader->getVariables()[$name];
+        $this->assureLoaded();
+
+        if (isset($this->variables[$name])) {
+            return $this->variables[$name];
         }
 
         if ($default) {
@@ -26,16 +50,27 @@ class ConfigRepository implements ConfigRepositoryInterface
 
     public function has(string $name): bool
     {
-        return (isset($this->configLoader->getVariables()[$name]));
+        $this->assureLoaded();
+        return (isset($this->variables[$name]));
     }
 
     public function set(string $name, $value)
     {
-        $this->configLoader->set($name, $value);
+        $this->assureLoaded();
+        $this->variables[$name] = $value;
     }
 
     public function all(): array
     {
-        return $this->configLoader->getVariables();
+        $this->assureLoaded();
+        return $this->variables;
+    }
+
+    private function assureLoaded()
+    {
+        if (! $this->loaded) {
+            $this->variables = $this->configLoader->load();
+            $this->loaded = true;
+        }
     }
 }

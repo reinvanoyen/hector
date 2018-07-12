@@ -1,6 +1,6 @@
 <?php
 
-namespace Hector\Config;
+namespace Hector\Config\Contract;
 
 interface ConfigRepositoryInterface
 {

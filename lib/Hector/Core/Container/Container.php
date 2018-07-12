@@ -70,10 +70,6 @@ class Container implements ContainerInterface
      */
     public function get(string $contract)
     {
-        if (! $this->has($contract)) {
-            throw new \Exception('No dependency found for contract: '.$contract);
-        }
-
         // Looks like we're getting a singleton instance,
         // So we should check if it was instantiated before
         // If so we retrieve it
@@ -89,6 +85,11 @@ class Container implements ContainerInterface
         $this->instances[$contract] = $instance = $this->create($contract);
 
         return $instance;
+    }
+
+    public function getWith(string $contract, array $arguments)
+    {
+        return $this->create($contract, $arguments);
     }
 
     /**
@@ -109,7 +110,7 @@ class Container implements ContainerInterface
      * @return mixed
      * @throws \Exception
      */
-    private function create(string $contract)
+    private function create(string $contract, array $arguments = [])
     {
         // First check if we can find an implementation for the requested contract
         if (! $this->has($contract)) {
@@ -138,6 +139,14 @@ class Container implements ContainerInterface
         $injections = [];
 
         foreach ($parameters as $parameter) {
+
+            // Check if the parameter was given
+            if (isset($arguments[$parameter->getName()])) {
+                $injections[] = $arguments[$parameter->getName()];
+                continue;
+            }
+
+            // It's a dependency, so inject it
             $class = $parameter->getClass()->name;
             $injections[] = $this->get($class);
         }

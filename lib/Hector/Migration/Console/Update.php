@@ -19,5 +19,6 @@ class Update extends MigrateCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->getMigrator()->update();
+        $output->writeLine('Update complete', OutputInterface::TYPE_INFO);
     }
 }

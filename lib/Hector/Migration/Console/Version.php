@@ -6,19 +6,18 @@ use Hector\Console\Command\Signature;
 use Hector\Console\Input\Contract\InputInterface;
 use Hector\Console\Output\Contract\OutputInterface;
 
-class Reset extends MigrateCommand
+class Version extends MigrateCommand
 {
     protected function createSignature(Signature $signature): Signature
     {
         return $signature
-            ->setName('reset')
-            ->setDescription('Undo all revisions')
+            ->setName('version')
+            ->setDescription('Prints the current version')
         ;
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getMigrator()->reset();
-        $output->writeLine('Reset complete', OutputInterface::TYPE_INFO);
+        $output->writeLine($this->getMigrator()->getVersion());
     }
 }

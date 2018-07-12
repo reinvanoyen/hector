@@ -19,5 +19,6 @@ class Migrate extends MigrateCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->getMigrator()->migrate();
+        $output->writeLine('Migration complete', OutputInterface::TYPE_INFO);
     }
 }

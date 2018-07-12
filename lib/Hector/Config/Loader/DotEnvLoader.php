@@ -1,9 +1,19 @@
 <?php
 
-namespace Hector\Config;
+namespace Hector\Config\Loader;
+
+use Hector\Config\Contract\ConfigLoaderInterface;
+use Hector\Fs\Contract\FilesystemInterface;
 
 class DotEnvLoader implements ConfigLoaderInterface
 {
+    /**
+     * Handles working with files
+     *
+     * @var FilesystemInterface $filesystem
+     */
+    private $filesystem;
+
     /**
      * Array of filenames of .env files
      *
@@ -25,15 +35,20 @@ class DotEnvLoader implements ConfigLoaderInterface
      */
     private $loaded = false;
 
-    public function __construct(string ...$filenames)
+    /**
+     * DotEnvLoader constructor.
+     * @param \string[] ...$filenames
+     */
+    public function __construct(FilesystemInterface $filesystem, string ...$filenames)
     {
+        $this->filesystem = $filesystem;
         $this->filenames = $filenames;
     }
 
-    public function load()
+    public function load(): array
     {
         if ($this->loaded) {
-            return;
+            return $this->vars;
         }
 
         foreach ($this->filenames as $filename) {
@@ -47,9 +62,10 @@ class DotEnvLoader implements ConfigLoaderInterface
         }
 
         $this->loaded = true;
+        return $this->vars;
     }
 
-    private function parse(string $contents) : array
+    private function parse(string $contents): array
     {
         $parsedVars = [];
         $contents = str_replace(["\n\r", "\r"], "\n", $contents);
@@ -79,24 +95,5 @@ class DotEnvLoader implements ConfigLoaderInterface
             $this->vars[$name] = $value;
             putenv($name.'='.$value);
         }
-    }
-
-    public function set(string $name, $value)
-    {
-        $this->extract([$name => $value,]);
-    }
-
-    public function getVariables(): array
-    {
-        if (! $this->isLoaded()) {
-            $this->load();
-        }
-
-        return $this->vars;
-    }
-
-    public function isLoaded(): bool
-    {
-        return $this->loaded;
     }
 }

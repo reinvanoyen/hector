@@ -21,5 +21,6 @@ class RollTo extends MigrateCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->getMigrator()->rollTo((int) $input->getArgument('version'));
+        $output->writeLine('Rollto complete', OutputInterface::TYPE_INFO);
     }
 }

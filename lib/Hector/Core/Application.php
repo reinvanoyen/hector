@@ -92,6 +92,7 @@ final class Application extends Container
     private function bootServiceProvider(ServiceProvider $provider)
     {
         if (! $provider->isBooted()) {
+
             if (method_exists($provider, 'boot')) {
                 $provider->boot($this);
             }
@@ -146,12 +147,12 @@ final class Application extends Container
         // We set this application as the container for the facade
         \Hector\Facade\Facade::setContainer($this);
 
-        // We boot all service providers
-        $this->boot();
-
         if (file_exists($this->path.'/config/providers.php')) {
             $app = $this;
             require_once $this->path.'/config/providers.php';
         }
+
+        // We boot all service providers
+        $this->boot();
     }
 }

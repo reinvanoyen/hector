@@ -19,5 +19,6 @@ class Downdate extends MigrateCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->getMigrator()->downdate();
+        $output->writeLine('Downdate complete', OutputInterface::TYPE_INFO);
     }
 }

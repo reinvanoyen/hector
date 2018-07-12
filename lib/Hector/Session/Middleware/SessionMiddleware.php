@@ -10,13 +10,26 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class SessionMiddleware implements MiddlewareInterface
 {
+    /**
+     * @var Session
+     */
     private $session;
 
+    /**
+     * SessionMiddleware constructor.
+     * @param Session $session
+     */
     public function __construct(Session $session)
     {
         $this->session = $session;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param Closure $next
+     * @return mixed|ResponseInterface
+     */
     public function handle(ServerRequestInterface $request, ResponseInterface $response, Closure $next)
     {
         // Garbage collection lottery

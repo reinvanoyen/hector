@@ -51,13 +51,13 @@ class Session
     /**
      * Session constructor.
      *
-     * @param SessionHandlerInterface $handler
      * @param string $name
+     * @param SessionHandlerInterface $handler
      */
-    public function __construct(string $name, SessionHandlerInterface $handler)
+    public function __construct(SessionHandlerInterface $handler, string $name)
     {
-        $this->name = $name;
         $this->handler = $handler;
+        $this->name = $name;
     }
 
     /**

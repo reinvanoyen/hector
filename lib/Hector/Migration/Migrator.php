@@ -166,6 +166,26 @@ class Migrator
     }
 
     /**
+     * Gets the current version
+     *
+     * @return int
+     */
+    public function getVersion(): int
+    {
+        return $this->versionStorage->get();
+    }
+
+    /**
+     * Gets the maximum version
+     *
+     * @return int
+     */
+    public function getMaxVersion(): int
+    {
+        return $this->maxVersion;
+    }
+
+    /**
      * Check if we're up-to-date with the current version
      *
      * @param int $version

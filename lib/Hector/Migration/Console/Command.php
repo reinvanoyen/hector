@@ -3,6 +3,8 @@
 namespace Hector\Migration\Console;
 
 use Hector\Console\Command\Signature;
+use Hector\Console\Input\Contract\InputInterface;
+use Hector\Console\Output\Contract\OutputInterface;
 use Hector\Migration\Migrator;
 
 class Command extends MigrateCommand
@@ -25,6 +27,32 @@ class Command extends MigrateCommand
             ->addSubCommand(new Update($this->getMigrator()))
             ->addSubCommand(new Downdate($this->getMigrator()))
             ->addSubCommand(new Reset($this->getMigrator()))
+            ->addSubCommand(new Version($this->getMigrator()))
         ;
+    }
+
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $output->newline();
+        $output->writeLine('Migrator status:', OutputInterface::TYPE_WARNING);
+
+        $version = $this->getMigrator()->getVersion();
+        $max = $this->getMigrator()->getMaxVersion();
+
+        if ($version < $max) {
+            $output->writeLine(' Not up-to-date', OutputInterface::TYPE_ERROR);
+        } else {
+            $output->writeLine(' Up-to-date', OutputInterface::TYPE_INFO);
+        }
+
+        $output->write(' Currently on version ');
+        $output->write($this->getMigrator()->getVersion(), OutputInterface::TYPE_INFO);
+        $output->write(' of ');
+        $output->write($this->getMigrator()->getMaxVersion(), OutputInterface::TYPE_INFO);
+
+        $output->newline();
+        $output->newline();
+
+        parent::execute($input, $output);
     }
 }
