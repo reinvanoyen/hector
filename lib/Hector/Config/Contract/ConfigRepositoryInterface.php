@@ -8,5 +8,5 @@ interface ConfigRepositoryInterface
     public function get(string $name, $default = null);
     public function has(string $name) : bool;
     public function set(string $name, $value);
-    public function all() : array;
+    public function all(): array;
 }

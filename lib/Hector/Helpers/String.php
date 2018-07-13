@@ -21,9 +21,9 @@ function clipOnWord($string, $length, $terminator = '...')
 {
     if (strlen($string) > $length) {
         return rtrim(preg_replace('/^(.{0,' . $length . '})\b.*$/s', '\\1', $string)) . $terminator;
-    } else {
-        return $string;
     }
+
+    return $string;
 }
 
 function random($length = 16)
@@ -31,7 +31,6 @@ function random($length = 16)
     $string = '';
 
     while (($len = strlen($string)) < $length) {
-
         $size = $length - $len;
         $bytes = random_bytes($size);
         $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
