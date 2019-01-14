@@ -9,13 +9,13 @@ class Select extends QueryPart
 
     const CONNECTS_WITH = [ 'where', 'orderBy', 'limit', ];
 
-    public function __construct($columns = [], $table)
+    public function __construct($columns, $table)
     {
         $this->columns = $columns;
         $this->table = $table;
     }
 
-    public function build() : String
+    public function build(): string
     {
         return 'SELECT ' . implode(', ', $this->columns) . ' FROM `' . $this->table . '`';
     }

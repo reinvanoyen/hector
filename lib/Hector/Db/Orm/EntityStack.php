@@ -2,23 +2,26 @@
 
 namespace Hector\Db\Orm;
 
-class ModelStack implements \Countable, \SeekableIterator
+class EntityStack implements \Countable, \SeekableIterator
 {
-    private $model;
-    private $rows;
+    private $manager;
+    private $entityClass;
+    private $rowData;
+    private $entities = [];
     private $count;
     private $index;
 
-    public function __construct($model, $rows = [])
+    public function __construct(string $manager, string $entityClass, $rowData = [])
     {
-        $this->model = $model;
-        $this->rows = $rows;
+        $this->manager = $manager;
+        $this->entityClass = $entityClass;
+        $this->rowData = $rowData;
     }
 
     public function count()
     {
         if (! $this->count) {
-            $this->count = count($this->rows);
+            $this->count = count($this->rowData);
         }
 
         return $this->count;
@@ -56,20 +59,15 @@ class ModelStack implements \Countable, \SeekableIterator
             return false;
         }
 
-        return new $this->model($this->rows[ $this->index ]);
+        if (! isset($this->entities[$this->index])) {
+            $this->entities[$this->index] = new $this->entityClass($this->manager, $this->rowData[$this->index]);
+        }
+
+        return $this->entities[$this->index];
     }
 
     public function valid()
     {
         return $this->index > -1 && $this->index < $this->count();
-    }
-
-    // ORM specific methods
-
-    public function delete()
-    {
-        foreach ($this as $model) {
-            $model->delete();
-        }
     }
 }

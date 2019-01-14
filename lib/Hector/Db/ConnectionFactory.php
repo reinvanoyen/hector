@@ -2,7 +2,7 @@
 
 namespace Hector\Db;
 
-use Hector\Config\ConfigRepositoryInterface;
+use Hector\Config\Contract\ConfigRepositoryInterface;
 use Hector\Db\Connector\MysqlConnector;
 
 class ConnectionFactory

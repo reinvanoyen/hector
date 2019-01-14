@@ -19,20 +19,18 @@ class MysqlConnector extends Connector implements ConnectorInterface
         $this->dbname = $dbname;
     }
 
-    public function connect() : \PDO
+    public function connect(): \PDO
     {
         return $this->createPdoConnection('mysql', $this->host, $this->port, $this->username, $this->password, $this->dbname);
     }
 
-    private function createStatement($query, $bindings = [])
+    private function createStatement(string $query)
     {
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute($bindings);
-        return $stmt;
+        return $this->pdo->prepare($query);
     }
 
-    public function query($query, $bindings = [])
+    public function query(string $query)
     {
-        return $this->createStatement($query, $bindings);
+        return $this->createStatement($query);
     }
 }

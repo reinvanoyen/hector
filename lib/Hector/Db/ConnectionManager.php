@@ -14,7 +14,7 @@ class ConnectionManager
         $this->factory = $factory;
     }
 
-    public function get($name = '') : ConnectorInterface
+    public function get($name = ''): ConnectorInterface
     {
         if (!isset($this->connections[$name])) {
             $this->createConnection($name);

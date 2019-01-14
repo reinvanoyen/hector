@@ -4,24 +4,16 @@ namespace Hector\Db\QueryBuilder;
 
 class Query
 {
-    private $query = '';
     private $bindings = [];
-
     private $queryParts = [];
 
     public static $methodMap = [
-        'where' => 'Hector\\Db\\QueryBuilder\\Where',
-        'limit' => 'Hector\\Db\\QueryBuilder\\Limit',
-        'orderBy' => 'Hector\\Db\\QueryBuilder\\OrderBy',
-        'values' => 'Hector\\Db\\QueryBuilder\\Values',
-        'set' => 'Hector\\Db\\QueryBuilder\\Set',
+        'where' => Where::class,
+        'limit' => Limit::class,
+        'orderBy' => OrderBy::class,
+        'values' => Values::class,
+        'set' => Set::class,
     ];
-
-    public function addQueryPart(QueryPart $queryPart)
-    {
-        $queryPart->setQuery($this);
-        $this->queryParts[] = $queryPart;
-    }
 
     public function build()
     {
@@ -29,9 +21,7 @@ class Query
             return $part->build();
         }, $this->queryParts);
 
-        $this->query = implode(' ', $queryParts);
-
-        return $this->query;
+        return implode(' ', $queryParts);
     }
 
     public function addBinding($value)
@@ -50,6 +40,34 @@ class Query
         return $this->bindings;
     }
 
+    public function addQueryPart(QueryPart $queryPart)
+    {
+        $queryPart->setQuery($this);
+        $this->queryParts[] = $queryPart;
+    }
+
+    private function getLastQueryPart(): QueryPart
+    {
+        return end($this->queryParts);
+    }
+
+    // Automatically try to chain methods
+
+    public function __call($method, $arguments)
+    {
+        $allowedQueryParts = $this->getLastQueryPart()::CONNECTS_WITH;
+
+        if (in_array($method, $allowedQueryParts)) {
+
+            $queryPartClass = self::$methodMap[$method];
+            $queryPart = new $queryPartClass(...$arguments);
+            $this->addQueryPart($queryPart);
+            return $this;
+        }
+
+        throw new \Exception('Can\'t chain method ' . $method . ' to query here');
+    }
+
     // Query create functions
 
     public static function select($columns, $table)
@@ -57,7 +75,7 @@ class Query
         $query = new static();
         $select = new Select($columns, $table);
         $query->addQueryPart($select);
-        return $select;
+        return $select->getQuery();
     }
 
     public static function delete($table)
@@ -65,7 +83,7 @@ class Query
         $query = new static();
         $delete = new Delete($table);
         $query->addQueryPart($delete);
-        return $delete;
+        return $delete->getQuery();
     }
 
     public static function insert($table)
@@ -73,7 +91,7 @@ class Query
         $query = new static();
         $insert = new Insert($table);
         $query->addQueryPart($insert);
-        return $insert;
+        return $insert->getQuery();
     }
 
     public static function update($table)
@@ -81,7 +99,7 @@ class Query
         $query = new static();
         $update = new Update($table);
         $query->addQueryPart($update);
-        return $update;
+        return $update->getQuery();
     }
 
     public static function dropTable($table)
@@ -89,7 +107,7 @@ class Query
         $query = new static();
         $drop = new DropTable($table);
         $query->addQueryPart($drop);
-        return $drop;
+        return $drop->getQuery();
     }
 
     public static function createTable($table, $columns = [])
@@ -97,6 +115,6 @@ class Query
         $query = new static();
         $create = new CreateTable($table, $columns);
         $query->addQueryPart($create);
-        return $create;
+        return $create->getQuery();
     }
 }

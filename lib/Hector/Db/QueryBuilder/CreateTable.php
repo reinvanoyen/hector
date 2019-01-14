@@ -15,8 +15,8 @@ class CreateTable extends QueryPart
 
     public function build() : String
     {
-        $columns = implode(', ', $this->columns);
+        $explodedCols = implode(', ', $this->columns);
 
-        return 'CREATE TABLE `' . $this->table . '`' . ' (' .  $columns . ' )';
+        return 'CREATE TABLE `' . $this->table . '`' . (count($this->columns) ? ' ('.$explodedCols.' )' : '');
     }
 }
