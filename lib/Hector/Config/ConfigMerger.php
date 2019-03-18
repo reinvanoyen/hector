@@ -2,14 +2,14 @@
 
 namespace Hector\Config;
 
-use Hector\Config\Contract\ConfigLoaderInterface;
-use Hector\Config\Contract\ConfigRepositoryInterface;
+use Hector\Contracts\Config\LoaderInterface;
+use Hector\Contracts\Config\RepositoryInterface;
 
-class ConfigMerger implements ConfigLoaderInterface
+class ConfigMerger implements LoaderInterface
 {
     private $repositories = [];
 
-    public function registerRepository(ConfigRepositoryInterface $configRepository)
+    public function registerRepository(RepositoryInterface $configRepository)
     {
         $this->repositories[] = $configRepository;
     }

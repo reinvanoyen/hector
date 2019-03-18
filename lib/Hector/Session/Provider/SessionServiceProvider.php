@@ -2,7 +2,7 @@
 
 namespace Hector\Session\Provider;
 
-use Hector\Config\Contract\ConfigRepositoryInterface;
+use Hector\Contracts\Config\RepositoryInterface;
 use Hector\Core\Container\Container;
 use Hector\Core\Provider\ServiceProvider;
 use Hector\Core\Routing\Facade\Router;
@@ -18,7 +18,7 @@ class SessionServiceProvider extends ServiceProvider
 
         $app->singleton(Session::class, function () use ($app) {
 
-            $config = $app->get(ConfigRepositoryInterface::class);
+            $config = $app->get(RepositoryInterface::class);
             $path = $config->get('SESSION_DIR', 'sessions');
             $sessionName = $config->get('SESSION_NAME', 'session');
 

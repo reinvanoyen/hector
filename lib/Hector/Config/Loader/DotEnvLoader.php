@@ -2,10 +2,10 @@
 
 namespace Hector\Config\Loader;
 
-use Hector\Config\Contract\ConfigLoaderInterface;
-use Hector\Fs\Contract\FilesystemInterface;
+use Hector\Contracts\Config\LoaderInterface;
+use Hector\Contracts\Filesystem\FilesystemInterface;
 
-class DotEnvLoader implements ConfigLoaderInterface
+class DotEnvLoader implements LoaderInterface
 {
     /**
      * Handles working with files

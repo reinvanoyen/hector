@@ -2,7 +2,7 @@
 
 namespace Hector\Session;
 
-use Hector\Fs\Contract\FilesystemInterface;
+use Hector\Contracts\Filesystem\FilesystemInterface;
 use SessionHandlerInterface;
 
 class FileSessionHandler implements SessionHandlerInterface

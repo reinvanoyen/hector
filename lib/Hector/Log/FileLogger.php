@@ -2,7 +2,7 @@
 
 namespace Hector\Log;
 
-use Hector\Fs\Contract\FilesystemInterface;
+use Hector\Contracts\Filesystem\FilesystemInterface;
 use Psr\Log\AbstractLogger;
 
 class FileLogger extends AbstractLogger

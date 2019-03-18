@@ -2,10 +2,11 @@
 
 namespace Hector\Migration;
 
-use Hector\Console\Output\Contract\OutputInterface;
-use Hector\Migration\Contract\RevisionInterface;
+use Hector\Contracts\Console\OutputInterface;
+use Hector\Contracts\Migration\MigrationLoggerInterface;
+use Hector\Contracts\Migration\RevisionInterface;
 
-class ConsoleMigrationLogger implements Contract\MigrationLoggerInterface
+class ConsoleMigrationLogger implements MigrationLoggerInterface
 {
     private $output;
 

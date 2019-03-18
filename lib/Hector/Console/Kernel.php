@@ -2,11 +2,12 @@
 
 namespace Hector\Console;
 
+use Hector\Contracts\Console\KernelInterface;
+use Hector\Contracts\Console\InputInterface;
+use Hector\Contracts\Console\OutputInterface;
+
 use Hector\Console\Command\Command;
 use Hector\Console\Command\Signature;
-use Hector\Console\Contract\KernelInterface;
-use Hector\Console\Input\Contract\InputInterface;
-use Hector\Console\Output\Contract\OutputInterface;
 use Hector\Core\Container\Container;
 
 class Kernel extends Command implements KernelInterface

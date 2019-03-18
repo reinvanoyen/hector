@@ -2,9 +2,10 @@
 
 namespace Hector\Migration\Console;
 
+use Hector\Contracts\Console\InputInterface;
+use Hector\Contracts\Console\OutputInterface;
+
 use Hector\Console\Command\Signature;
-use Hector\Console\Input\Contract\InputInterface;
-use Hector\Console\Output\Contract\OutputInterface;
 
 class Reset extends MigrateCommand
 {

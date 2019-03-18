@@ -2,7 +2,7 @@
 
 namespace Hector\Core;
 
-use Hector\Core\Container\Container;
+use Hector\Container\Container;
 use Hector\Core\Provider\ServiceProvider;
 
 final class Application extends Container

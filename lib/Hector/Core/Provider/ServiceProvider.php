@@ -2,7 +2,7 @@
 
 namespace Hector\Core\Provider;
 
-use Hector\Core\Container\Container;
+use Hector\Contracts\Container\ContainerInterface;
 
 abstract class ServiceProvider
 {
@@ -25,7 +25,7 @@ abstract class ServiceProvider
         $this->booted = true;
     }
 
-    abstract public function register(Container $app);
+    abstract public function register(ContainerInterface $app);
 
     public function provides() : array
     {

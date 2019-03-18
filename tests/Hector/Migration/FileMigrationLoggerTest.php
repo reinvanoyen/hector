@@ -12,7 +12,7 @@ class FileMigrationLoggerTest extends PHPUnit_Framework_TestCase
         file_put_contents(__DIR__ . '/version.txt', 0);
         file_put_contents(__DIR__ . '/migration-log.txt', '');
 
-        $fs = new \Hector\Fs\LocalFilesystem();
+        $fs = new \Hector\Filesystem\LocalFilesystem();
 
         $this->fileVersionStorage = new \Hector\Migration\FileVersionStorage($fs, __DIR__ . '/version.txt');
         $this->fileMigrationLogger = new \Hector\Migration\FileMigrationLogger($fs, __DIR__ . '/migration-log.txt');

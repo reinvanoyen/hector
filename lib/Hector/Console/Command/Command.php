@@ -2,8 +2,8 @@
 
 namespace Hector\Console\Command;
 
-use Hector\Console\Input\Contract\InputInterface;
-use Hector\Console\Output\Contract\OutputInterface;
+use Hector\Contracts\Console\InputInterface;
+use Hector\Contracts\Console\OutputInterface;
 
 abstract class Command
 {

@@ -2,9 +2,9 @@
 
 namespace Hector\Migration;
 
-use Hector\Migration\Contract\MigrationLoggerInterface;
-use Hector\Migration\Contract\RevisionInterface;
-use Hector\Migration\Contract\VersionStorageInterface;
+use Hector\Contracts\Migration\MigrationLoggerInterface;
+use Hector\Contracts\Migration\RevisionInterface;
+use Hector\Contracts\Migration\VersionStorageInterface;
 
 class Migrator
 {

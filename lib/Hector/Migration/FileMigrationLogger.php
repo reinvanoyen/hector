@@ -2,10 +2,11 @@
 
 namespace Hector\Migration;
 
-use Hector\Fs\Contract\FilesystemInterface;
-use Hector\Migration\Contract\RevisionInterface;
+use Hector\Contracts\Filesystem\FilesystemInterface;
+use Hector\Contracts\Migration\MigrationLoggerInterface;
+use Hector\Contracts\Migration\RevisionInterface;
 
-class FileMigrationLogger implements Contract\MigrationLoggerInterface
+class FileMigrationLogger implements MigrationLoggerInterface
 {
     /**
      * Handles working with files

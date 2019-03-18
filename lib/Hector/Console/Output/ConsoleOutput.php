@@ -2,7 +2,7 @@
 
 namespace Hector\Console\Output;
 
-use Hector\Console\Output\Contract\OutputInterface;
+use Hector\Contracts\Console\OutputInterface;
 
 class ConsoleOutput implements OutputInterface
 {

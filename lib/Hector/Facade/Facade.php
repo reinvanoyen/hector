@@ -2,7 +2,7 @@
 
 namespace Hector\Facade;
 
-use Hector\Core\Container\ContainerInterface;
+use Hector\Contracts\Container\ContainerInterface;
 
 abstract class Facade
 {

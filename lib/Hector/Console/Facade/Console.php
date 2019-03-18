@@ -2,7 +2,7 @@
 
 namespace Hector\Console\Facade;
 
-use Hector\Console\Contract\KernelInterface;
+use Hector\Contracts\Console\KernelInterface;
 use Hector\Facade\Facade;
 
 class Console extends Facade

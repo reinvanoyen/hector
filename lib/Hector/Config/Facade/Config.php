@@ -2,13 +2,13 @@
 
 namespace Hector\Config\Facade;
 
-use Hector\Config\Contract\ConfigRepositoryInterface;
+use Hector\Contracts\Config\RepositoryInterface;
 use Hector\Facade\Facade;
 
 class Config extends Facade
 {
     protected static function getContract(): string
     {
-        return ConfigRepositoryInterface::class;
+        return RepositoryInterface::class;
     }
 }

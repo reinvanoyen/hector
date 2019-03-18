@@ -2,15 +2,15 @@
 
 namespace Hector\Config;
 
-use Hector\Config\Contract\ConfigLoaderInterface;
-use Hector\Config\Contract\ConfigRepositoryInterface;
+use Hector\Contracts\Config\LoaderInterface;
+use Hector\Contracts\Config\RepositoryInterface;
 
-class ConfigRepository implements ConfigRepositoryInterface
+class ConfigRepository implements RepositoryInterface
 {
     /**
      * Handles loading the config
      *
-     * @var ConfigLoaderInterface
+     * @var LoaderInterface
      */
     private $configLoader;
 
@@ -26,9 +26,9 @@ class ConfigRepository implements ConfigRepositoryInterface
 
     /**
      * ConfigRepository constructor.
-     * @param ConfigLoaderInterface $configLoader
+     * @param LoaderInterface $configLoader
      */
-    public function __construct(ConfigLoaderInterface $configLoader)
+    public function __construct(LoaderInterface $configLoader)
     {
         $this->configLoader = $configLoader;
     }

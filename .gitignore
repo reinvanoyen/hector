@@ -2,5 +2,6 @@
 /vendor
 /cache
 /app
+.idea
 .DS_Store
 index.php

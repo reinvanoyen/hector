@@ -2,7 +2,7 @@
 
 namespace Hector\Db\Orm;
 
-class EntityStack implements \Countable, \SeekableIterator
+class EntityStack implements \Countable, \SeekableIterator, \JsonSerializable
 {
     private $manager;
     private $entityClass;
@@ -69,5 +69,10 @@ class EntityStack implements \Countable, \SeekableIterator
     public function valid()
     {
         return $this->index > -1 && $this->index < $this->count();
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->rowData;
     }
 }

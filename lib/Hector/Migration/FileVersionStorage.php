@@ -2,10 +2,10 @@
 
 namespace Hector\Migration;
 
-use Hector\Fs\Contract\FilesystemInterface;
-use Hector\Migration\Contract\VersionStorageInterface as Contract;
+use Hector\Contracts\Filesystem\FilesystemInterface;
+use Hector\Contracts\Migration\VersionStorageInterface;
 
-class FileVersionStorage implements Contract
+class FileVersionStorage implements VersionStorageInterface
 {
     /**
      * Handles working with files

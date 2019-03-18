@@ -2,8 +2,8 @@
 
 namespace Hector\Console\Output;
 
-use Hector\Console\Output\Contract\OutputInterface;
-use Hector\Fs\Contract\FilesystemInterface;
+use Hector\Contracts\Console\OutputInterface;
+use Hector\Filesystem\Contract\FilesystemInterface;
 
 class FileOutput implements OutputInterface
 {

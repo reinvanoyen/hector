@@ -2,8 +2,8 @@
 
 namespace Hector\Core\Http;
 
+use Hector\Contracts\Http\KernelInterface;
 use Hector\Core\Container\Container;
-use Hector\Core\Http\Contract\KernelInterface;
 use Hector\Core\Routing\Contract\RouterInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
